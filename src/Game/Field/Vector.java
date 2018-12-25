@@ -31,7 +31,7 @@ public class Vector extends Observable {
     public final void add(final Vector vector){
         location = new Location(location.getX() + vector.location.getX(), location.getY() + vector.location.getY());
         calculateChangeByPoint();
-        updateObservers();
+        updateObservers(Location.LocationKey.LOCATION_VECTOR_KEY, this);
     }
 
     public final double getChangeX(){

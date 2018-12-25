@@ -32,15 +32,15 @@ public class Main {
         final int xOLocation = 30;
         final int xDLocation = 35;
         final int xDLocation2 = 25;
-        gameField.addPlayer(offensivePlayer, new Location(xOLocation, - 2));
-        gameField.addPlayer(defensivePlayer1, new Location(xDLocation, Field.FIELD_HEIGHT - 2));
+        gameField.addPlayer(offensivePlayer, new Location(xOLocation, Field.FIELD_HEIGHT));
+//        gameField.addPlayer(defensivePlayer1, new Location(xDLocation, Field.FIELD_HEIGHT - 2));
 //        gameField.addPlayer(defensivePlayer2, new Location(xDLocation2, Field.FIELD_HEIGHT - 2));
 
         gameField.lock();
 
 //        Quick loop to cycle movements.
         while(!GameManager.DEBUG_DUN){
-            if(offensivePlayer.getLocation() != null && offensivePlayer.getLocation().getSecond() >= 330){
+            if(offensivePlayer.getLocation().getSecond() <= 29 && offensivePlayer.getLocation().getSecond() >= 0){
 //                Just a break because we dont have any way to handle touchdowns yet
                 int i = 0;
             }

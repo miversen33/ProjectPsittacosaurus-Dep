@@ -40,8 +40,8 @@ public class Observable {
         }
     }
 
-    public final void updateObservers(){
-        updateObservers(null, null);
-    }
+//    public final void updateObservers(){
+//        updateObservers(NULL_KEY, null);
+//    }
 
 }

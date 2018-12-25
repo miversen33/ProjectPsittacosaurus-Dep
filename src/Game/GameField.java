@@ -95,13 +95,14 @@ public final class GameField{
 //            Handle logging of invalid player/ownership
             return;
         }
+        newPlayer.placeOnField(this);
         mPlayersToLocations.put(newPlayer, startingLocation);
         mLocationToPlayers.put(startingLocation, newPlayer);
-        newPlayer.placeOnField(this);
         startingLocation.registerObserver(newPlayer);
         for(Enum key : playerObservingKeys){
             startingLocation.registerObserver(key, playerLocationObserver);
         }
+        startingLocation.updateObservers(Location.LocationKey.LOCATION_UPDATED_KEY, startingLocation.getLocation());
     }
 
     public final void addPlayer(final GamePlayer newPlayer){
