@@ -15,7 +15,7 @@ public class BallCarrierStrategy extends OffensivePlayerStrategy {
     private int MAX_DISTANCE = 45;
     private final static double DEFAULT_AVOIDANCE = 6;
     private final static double DEFAULT_AVOIDANCE_CUSHION = 15;
-    private final static double DEFAULT_AVOIDANCE_INFLUENCE = 2;
+    private final static double DEFAULT_AVOIDANCE_INFLUENCE = 1;
     private final static double DEFAULT_CUSHION_INFLUENCE = .5;
 
     public BallCarrierStrategy() {
@@ -40,9 +40,16 @@ public class BallCarrierStrategy extends OffensivePlayerStrategy {
     private final void handleDefenders(final GamePlayer hostPlayer, final List<GamePlayer> defenders){
         double angle = 0;
         for(GamePlayer defender : defenders){
+
             if(Math.abs(hostPlayer.getLocation().getFirst() - defender.getLocation().getFirst()) >= DEFAULT_AVOIDANCE_CUSHION) continue;
             double influence = Math.abs(hostPlayer.getLocation().getFirst() - defender.getLocation().getFirst()) <= DEFAULT_AVOIDANCE ? DEFAULT_AVOIDANCE_INFLUENCE : DEFAULT_CUSHION_INFLUENCE;
-            angle += calculateAngleOfMove(defender.getLocation(), hostPlayer.getLocation(), MAX_DISTANCE, influence);
+            double tAngle = calculateAngleOfMove(defender.getLocation(), hostPlayer.getLocation(), MAX_DISTANCE, influence);
+//            Calculate if the defender is "behind" the ball carrier. If they are, add Math.pi
+            if((hostPlayer.getGoal().getSecond() < hostPlayer.getLocation().getSecond() && hostPlayer.getLocation().getSecond() < defender.getLocation().getSecond()) ||
+               (hostPlayer.getGoal().getSecond() > hostPlayer.getLocation().getSecond() && hostPlayer.getLocation().getSecond() > defender.getLocation().getSecond())){
+                    tAngle += Math.PI;
+            }
+            angle += tAngle;
         }
 ////            Technically this should actually cause a different form of influence, IE angling by the ball carrier
 //            if(dLocation.getSecond() <= hLocation.getSecond()) continue;

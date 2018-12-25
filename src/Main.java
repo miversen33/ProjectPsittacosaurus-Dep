@@ -33,7 +33,7 @@ public class Main {
         final int xDLocation = 35;
         final int xDLocation2 = 25;
         gameField.addPlayer(offensivePlayer, new Location(xOLocation, Field.FIELD_HEIGHT));
-//        gameField.addPlayer(defensivePlayer1, new Location(xDLocation, Field.FIELD_HEIGHT - 2));
+        gameField.addPlayer(defensivePlayer1, new Location(xDLocation, - 2));
 //        gameField.addPlayer(defensivePlayer2, new Location(xDLocation2, Field.FIELD_HEIGHT - 2));
 
         gameField.lock();
@@ -44,13 +44,10 @@ public class Main {
 //                Just a break because we dont have any way to handle touchdowns yet
                 int i = 0;
             }
-            if(offensivePlayer.getLocation() != null &&
-            (defensivePlayer1.getLocation().getSecond() - offensivePlayer.getLocation().getSecond()) <= 45 &&
-            (defensivePlayer1.getLocation().getSecond() >= offensivePlayer.getLocation().getSecond())){
-                System.out.println("Offensive Player Location is | ("+offensivePlayer.getLocation().getFirst()+","+offensivePlayer.getLocation().getSecond()+")");
-                System.out.println("Defensive Player Location (1) is | ("+defensivePlayer1.getLocation().getFirst()+","+defensivePlayer1.getLocation().getSecond()+")");
-//                System.out.println("Defensive Player Location (2) is | ("+defensivePlayer2.getLocation().getFirst()+","+defensivePlayer2.getLocation().getSecond()+")");
-            }
+            System.out.println("Offensive Player Location is | ("+offensivePlayer.getLocation().getFirst()+","+offensivePlayer.getLocation().getSecond()+")");
+            System.out.println("Defensive Player Location (1) is | ("+defensivePlayer1.getLocation().getFirst()+","+defensivePlayer1.getLocation().getSecond()+")");
+//            System.out.println("Defensive Player Location (2) is | ("+defensivePlayer2.getLocation().getFirst()+","+defensivePlayer2.getLocation().getSecond()+")");
+
             offense.cycle();
             defense.cycle();
             engine.cycleQueue(gameField.getMovementQueue(), gameField);

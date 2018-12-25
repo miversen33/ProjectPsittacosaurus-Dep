@@ -13,9 +13,8 @@ public class RusherStrategy extends DefensivePlayerStrategy {
     @Override
     public void calculateMove(final GamePlayer hostPlayer, final GameField field) {
 
-
-
-        move = new MovementInstruction(hostPlayer, new Vector(new Location(0, -1)));
+        double velocity = + 1;
+        move = new MovementInstruction(hostPlayer, new Vector(new Location(0, velocity)));
 
     }
 

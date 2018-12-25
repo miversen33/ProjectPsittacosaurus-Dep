@@ -37,7 +37,8 @@ public abstract class OffensivePlayerStrategy implements IPlayerStrategy {
 
         double theta = Math.acos((a*a + b*b - c*c) / (2*a*b));
 //                We need to determine which side of the field is desirable for this, and then allow the influence to guide us to it
-        return ((theta * ((maxDefenderDistance - a)/(maxDefenderDistance - 1))) * influenceDistanceModifier) * angleCorrection;
+        theta = ((theta * ((maxDefenderDistance - a)/(maxDefenderDistance - 1))) * influenceDistanceModifier) * angleCorrection;
+        return theta;
     }
 
 }

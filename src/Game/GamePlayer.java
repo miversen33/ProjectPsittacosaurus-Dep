@@ -36,7 +36,6 @@ public final class GamePlayer implements Observer {
     public final void updateObserver(Object key, Object itemChanged) {
         if(key.equals(Location.LocationKey.LOCATION_UPDATED_KEY)) mLocation = (Tuple2<Double, Double>) itemChanged;
         if(key.equals(Location.LocationKey.LOCATION_VECTOR_KEY))  mPreviousLocations.add((Vector) itemChanged);
-
     }
 
     public final Tuple2<Double, Double> getLocation(){
