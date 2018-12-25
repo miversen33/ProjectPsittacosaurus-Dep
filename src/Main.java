@@ -26,8 +26,8 @@ public class Main {
         final GamePlayer defensivePlayer1 = new GamePlayer("Linebacker1", defensiveStrategy);
         final GamePlayer defensivePlayer2 = new GamePlayer("Linebacker2",defensiveStrategy);
 
-        final GameTeam offense = new GameTeam(Collections.singletonList(offensivePlayer), field.getSouthEndzone());
-        final GameTeam defense = new GameTeam(Arrays.asList(defensivePlayer1, defensivePlayer2), field.getNorthEndzone());
+        final GameTeam offense = new GameTeam(Collections.singletonList(offensivePlayer), field.getNorthEndzone());
+        final GameTeam defense = new GameTeam(Arrays.asList(defensivePlayer1, defensivePlayer2), field.getSouthEndzone());
 
         final int xOLocation = 30;
         final int xDLocation = 35;
