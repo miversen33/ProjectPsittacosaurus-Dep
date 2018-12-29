@@ -41,19 +41,18 @@ public class BallCarrierStrategy extends OffensivePlayerStrategy {
         double angle = 0;
         for(GamePlayer defender : defenders){
 
+//            For now disregard the current defender if the defender is not between the ballcarrier
+//            and the goal. This will be corrected at a later point when we have more
+//            stuff to work with
+            if((hostPlayer.getGoal().getSecond() < hostPlayer.getLocation().getSecond() && hostPlayer.getLocation().getSecond() < defender.getLocation().getSecond()) ||
+               (hostPlayer.getGoal().getSecond() > hostPlayer.getLocation().getSecond() && hostPlayer.getLocation().getSecond() > defender.getLocation().getSecond())){
+                continue;
+            }
             if(Math.abs(hostPlayer.getLocation().getFirst() - defender.getLocation().getFirst()) >= DEFAULT_AVOIDANCE_CUSHION) continue;
             double influence = Math.abs(hostPlayer.getLocation().getFirst() - defender.getLocation().getFirst()) <= DEFAULT_AVOIDANCE ? DEFAULT_AVOIDANCE_INFLUENCE : DEFAULT_CUSHION_INFLUENCE;
             double tAngle = calculateAngleOfMove(defender.getLocation(), hostPlayer.getLocation(), MAX_DISTANCE, influence);
-//            Calculate if the defender is "behind" the ball carrier. If they are, add Math.pi
-            if((hostPlayer.getGoal().getSecond() < hostPlayer.getLocation().getSecond() && hostPlayer.getLocation().getSecond() < defender.getLocation().getSecond()) ||
-               (hostPlayer.getGoal().getSecond() > hostPlayer.getLocation().getSecond() && hostPlayer.getLocation().getSecond() > defender.getLocation().getSecond())){
-                    tAngle += Math.PI;
-            }
             angle += tAngle;
         }
-////            Technically this should actually cause a different form of influence, IE angling by the ball carrier
-//            if(dLocation.getSecond() <= hLocation.getSecond()) continue;
-//        }
         Vector movement = new Vector(move.getVector().getDirection()+angle, move.getVector().getMagnitude());
         move = new MovementInstruction(hostPlayer, movement);
     }
