@@ -4,18 +4,20 @@ import Game.Field.Location;
 import Game.Field.Vector;
 import Game.GameField;
 import Game.GamePlayer;
+import Game.IFieldObject;
+import Game.IGamePlayerOwner;
 import PhysicsEngine.MovementInstruction;
 import Tuple.Tuple2;
 
 import java.util.List;
 
-public class BallCarrierStrategy extends OffensivePlayerStrategy {
+public final class BallCarrierStrategy extends OffensivePlayerStrategy {
 
     private MovementInstruction move = null;
-    private int MAX_DISTANCE = 45;
+    private int MAX_DISTANCE = 60;
     private final static double DEFAULT_AVOIDANCE = 6;
     private final static double DEFAULT_AVOIDANCE_CUSHION = 15;
-    private final static double DEFAULT_AVOIDANCE_INFLUENCE = 1;
+    private final static double DEFAULT_AVOIDANCE_INFLUENCE = 1.5;
     private final static double DEFAULT_CUSHION_INFLUENCE = .5;
 
     public BallCarrierStrategy() {
@@ -24,12 +26,13 @@ public class BallCarrierStrategy extends OffensivePlayerStrategy {
     }
 
     @Override
-    public void calculateMove(final GamePlayer hostPlayer, final GameField field) {
+    public final void calculateMove(final GamePlayer hostPlayer, final GameField field) {
+//        Optimize me
 //        This should be polled from the host player
         final double velocity = hostPlayer.getGoal().getSecond() < hostPlayer.getLocation().getSecond() ? -1 : +1;
-        move = new MovementInstruction(hostPlayer, new Vector(new Location(0, velocity)));
+        move = new MovementInstruction(hostPlayer, new Vector(new Tuple2<>(0.0, velocity)));
 
-        final List<GamePlayer> defendersInRange = field.getPlayersInLocation(new Location(hostPlayer.getLocation().getFirst(), hostPlayer.getLocation().getSecond()), MAX_DISTANCE);
+        final List<IFieldObject> defendersInRange = field.getPlayersInLocation(new Location(hostPlayer.getLocation().getFirst(), hostPlayer.getLocation().getSecond()), MAX_DISTANCE);
         defendersInRange.remove(hostPlayer);
         if(defendersInRange.size() > 0){
             handleDefenders(hostPlayer, defendersInRange);
@@ -37,9 +40,9 @@ public class BallCarrierStrategy extends OffensivePlayerStrategy {
     }
 
 //    Please remove the host player from the list
-    private final void handleDefenders(final GamePlayer hostPlayer, final List<GamePlayer> defenders){
+    private final void handleDefenders(final GamePlayer hostPlayer, final List<IFieldObject> defenders){
         double angle = 0;
-        for(GamePlayer defender : defenders){
+        for(IFieldObject defender : defenders){
 
 //            For now disregard the current defender if the defender is not between the ballcarrier
 //            and the goal. This will be corrected at a later point when we have more
@@ -48,6 +51,7 @@ public class BallCarrierStrategy extends OffensivePlayerStrategy {
                (hostPlayer.getGoal().getSecond() > hostPlayer.getLocation().getSecond() && hostPlayer.getLocation().getSecond() > defender.getLocation().getSecond())){
                 continue;
             }
+
             if(Math.abs(hostPlayer.getLocation().getFirst() - defender.getLocation().getFirst()) >= DEFAULT_AVOIDANCE_CUSHION) continue;
             double influence = Math.abs(hostPlayer.getLocation().getFirst() - defender.getLocation().getFirst()) <= DEFAULT_AVOIDANCE ? DEFAULT_AVOIDANCE_INFLUENCE : DEFAULT_CUSHION_INFLUENCE;
             double tAngle = calculateAngleOfMove(defender.getLocation(), hostPlayer.getLocation(), MAX_DISTANCE, influence);
@@ -60,5 +64,11 @@ public class BallCarrierStrategy extends OffensivePlayerStrategy {
     @Override
     public MovementInstruction getMove() {
         return move;
+    }
+
+    @Override
+    public final Tuple2<Double, Double> calculateGoal(final GamePlayer hostPlayer, final GameField field, final IGamePlayerOwner hostTeam) {
+//        TODO Put some sort of thinking logic here
+        return hostTeam.getGoal();
     }
 }

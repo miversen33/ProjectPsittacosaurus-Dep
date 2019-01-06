@@ -36,6 +36,23 @@ public class Field{
         return isInNorthEndzone(location) || isInSouthEndzone(location);
     }
 
+    public final boolean isInBounds(final Tuple2<Double, Double> location){
+        return location.getFirst() > leftBoundary && location.getFirst() < rightBoundary &&
+               location.getSecond() > topBoundary  && location.getSecond() < bottomBoundary;
+    }
+
+    public final boolean isInNorthEndzone(final Tuple2<Double, Double> location){
+        return location.getSecond() >= topBoundary && location.getSecond() <= topBoundary + ENDZONE_HEIGHT;
+    }
+
+    public final boolean isInSouthEndzone(final Tuple2<Double, Double> location){
+        return location.getSecond() >= bottomBoundary - ENDZONE_HEIGHT && location.getSecond() <= bottomBoundary;
+    }
+
+    public final boolean isInEndzone(final Tuple2<Double, Double> location){
+        return isInNorthEndzone(location) || isInSouthEndzone(location);
+    }
+
 //    This will return the top left corner of the north endzone
     public final Tuple2<Double, Double> getNorthEndzone(){
         return new Tuple2<>(1.0,1.0);

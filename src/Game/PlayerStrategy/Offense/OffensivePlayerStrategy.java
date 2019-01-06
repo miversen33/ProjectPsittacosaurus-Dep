@@ -20,7 +20,8 @@ public abstract class OffensivePlayerStrategy implements IPlayerStrategy {
         baseAvoidance = avoidance;
         baseCushion = cushion;
     }
-    
+
+//        There is very likely a much cleaner way to do this whole method. Consider coming back to that later
     final double calculateAngleOfMove(final Tuple2<Double, Double> defenderLocation, final Tuple2<Double, Double> hostLocation,
                                       final double maxDefenderDistance, final double influenceDistanceModifier){
         if(baseAvoidance == Double.NEGATIVE_INFINITY || baseCushion == Double.NEGATIVE_INFINITY){

@@ -2,7 +2,9 @@ package Game.PlayerStrategy.Offense;
 
 import Game.GameField;
 import Game.GamePlayer;
+import Game.IGamePlayerOwner;
 import PhysicsEngine.MovementInstruction;
+import Tuple.Tuple2;
 
 public class BlockerStrategy extends OffensivePlayerStrategy{
 
@@ -17,6 +19,11 @@ public class BlockerStrategy extends OffensivePlayerStrategy{
 
     @Override
     public MovementInstruction getMove() {
+        return null;
+    }
+
+    @Override
+    public Tuple2<Double, Double> calculateGoal(GamePlayer hostPlayer, GameField field, IGamePlayerOwner hostTeam) {
         return null;
     }
 }

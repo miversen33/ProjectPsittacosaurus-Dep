@@ -19,4 +19,5 @@ public class MovementInstruction {
     public final Vector getVector(){
         return mVector;
     }
+
 }

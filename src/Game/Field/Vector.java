@@ -1,15 +1,16 @@
 package Game.Field;
 
 import Observable.Observable;
+import Tuple.Tuple2;
 
 public class Vector extends Observable {
 
     private double magnitude;
     private double direction;
-    private Location location;
+    private Tuple2<Double, Double> changeInXY;
 
-    public Vector(final Location location){
-        this.location = location;
+    public Vector(final Tuple2<Double, Double> changeInXY){
+        this.changeInXY = changeInXY;
         calculateChangeByPoint();
     }
 
@@ -20,26 +21,31 @@ public class Vector extends Observable {
     }
 
     private final void calculateChangeByPoint(){
-        magnitude = Math.sqrt((Math.pow(location.getX(),2)+Math.pow(location.getY(),2)));
-        direction = Math.atan2(location.getY(),location.getX());
+        magnitude = Math.sqrt((Math.pow(changeInXY.getFirst(),2)+Math.pow(changeInXY.getSecond(),2)));
+        direction = Math.atan2(changeInXY.getSecond(),changeInXY.getFirst());
     }
 
     private final void calculateChangeByDirection(){
-        location = new Location(magnitude * Math.cos(direction), magnitude * Math.sin(direction));
+        changeInXY = new Tuple2<>(magnitude * Math.cos(direction), magnitude * Math.sin(direction));
     }
 
     public final void add(final Vector vector){
-        location = new Location(location.getX() + vector.location.getX(), location.getY() + vector.location.getY());
+        changeInXY = new Tuple2<>(changeInXY.getFirst() + vector.changeInXY.getFirst(), changeInXY.getSecond() + vector.changeInXY.getSecond());
         calculateChangeByPoint();
         updateObservers(Location.LocationKey.LOCATION_VECTOR_KEY, this);
     }
 
+    public final void scale(final double scalar){
+        changeInXY = new Tuple2<>(changeInXY.getFirst() * scalar, changeInXY.getSecond() * scalar);
+        calculateChangeByPoint();
+    }
+
     public final double getChangeX(){
-        return location.getX();
+        return changeInXY.getFirst();
     }
 
     public final double getChangeY(){
-        return location.getY();
+        return changeInXY.getSecond();
     }
 
     public final double getDirection(){

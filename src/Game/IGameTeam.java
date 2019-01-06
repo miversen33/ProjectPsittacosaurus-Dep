@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class GameTeam implements GamePlayerOwner{
+public class IGameTeam implements IGamePlayerOwner {
 
 //    It is worth considering if this should be an array since it cannot change after being
 //    initialized
@@ -14,7 +14,7 @@ public class GameTeam implements GamePlayerOwner{
     private final String mHash = UUID.randomUUID().toString();
     private Tuple2<Double, Double> mGoal;
 
-    public GameTeam(final List<GamePlayer> players, final Tuple2<Double, Double> currentGoal){
+    public IGameTeam(final List<GamePlayer> players, final Tuple2<Double, Double> currentGoal){
         mPlayers = new ArrayList<>(players);
         mGoal = currentGoal;
         requestPlayerOwnership();

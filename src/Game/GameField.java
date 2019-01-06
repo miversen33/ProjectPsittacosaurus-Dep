@@ -10,6 +10,8 @@ import Tuple.Tuple2;
 import java.util.*;
 
 public final class GameField{
+//    This should also keep track of the ability of a player to be able to see the "ball carrier"
+//    This should be based on a players awareness as well as location and eventually weather (if we ever get that far).
 
     private class FieldLockException extends RuntimeException{}
     private Observer playerLocationObserver = new Observer() {
@@ -20,7 +22,7 @@ public final class GameField{
 //            This is ugly, fix it
             Tuple2<Double, Double> tuple = (Tuple2<Double, Double>) itemChanged;
             Location location = new Location(tuple.getFirst(), tuple.getSecond());
-            GamePlayer playerInQuestion = getPlayerFromExactLocation(location);
+            IFieldObject playerInQuestion = getPlayerFromExactLocation(location);
             if(playerInQuestion == null){
                 System.out.println("Invalid something or other");
             }
@@ -46,15 +48,15 @@ public final class GameField{
         mField = field;
     }
 
-    private final GamePlayer getPlayerFromExactLocation(final Location location){
+    private final IFieldObject getPlayerFromExactLocation(final Location location){
         if(mLocationToPlayers.containsKey(location)) {
             return mLocationToPlayers.get(location);
         }else{
-            List<GamePlayer> playersInSpace = getPlayersInLocation(location, 0);
+            List<IFieldObject> playersInSpace = getPlayersInLocation(location, 0);
             if(playersInSpace.size() > 1){
 //                Handle logging due to something mathematically broken
                 System.out.println("Something is broken and more than 1 player was returned for the ");
-                throw new NullPointerException("Not actually null pointer, Just dont feel like creating a new one for multiple players in one space");
+                throw new RuntimeException("Multiple Players In Exact Same Space");
             }
             return playersInSpace.get(0);
         }
@@ -64,12 +66,30 @@ public final class GameField{
         return mFieldLock != null;
     }
 
+    public final void setBallCarrier(final GamePlayer player){
+        if(isFieldLocked()){
+//            Handle logging due to fuckery attempt
+            System.out.println("You cannot change the ballcarrier manually while the field is locked");
+            return;
+        }
+        if(!mPlayersToLocations.containsKey(player)){
+//            Handle logging due to "possessing" player not being on the field
+            System.out.println("Requested possession player is not on the field. Throwing exception");
+            throw new RuntimeException("Unable to set BallCarrier status of player "+player.getName()+" | Player is not on field. Please check logs");
+        }
+        player.setIsBallCarrier(true);
+    }
+
+//    Should be called every time a new play is executed.
     public final String lock(){
         if(isFieldLocked()) throw new FieldLockException();
+        clearMovementQueue();
+        clearPlayersHistory();
         mFieldLock = UUID.randomUUID().toString();
         return toString().substring(0, toString().length()/2) + mFieldLock + toString().substring(toString().length()/2);
     }
 
+//    Should be called as soon as the play execution is finished.
     public final boolean unlock(final String key){
         final String firstHalf = toString().substring(0, toString().length()/2);
         final String secondHalf = toString().substring(toString().length()/2);
@@ -80,6 +100,21 @@ public final class GameField{
         } else {
             return false;
         }
+    }
+
+    private final void clearPlayersHistory(){
+        for(GamePlayer player : mPlayersToLocations.keySet()){
+            player.clearMovementHistory(this);
+        }
+    }
+
+    public final IFieldObject DEBUG_requestBallCarrierLocation(){
+        for(GamePlayer player : mPlayersToLocations.keySet()){
+            if(player.isBallCarrier()) return player;
+        }
+//        Handle logging due to inability to find player on field
+        System.out.println("No ball carrier found");
+        return null;
     }
 
     public final Tuple2<Double, Double> requestPlayerLocation(final GamePlayer player){
@@ -110,8 +145,8 @@ public final class GameField{
     }
 
 //     Remember to remove the player you are comparing this to, from the list it returns.
-    public final List<GamePlayer> getPlayersInLocation(final Location location, final double distanceCheck){
-        final List<GamePlayer> players = new ArrayList<>();
+    public final List<IFieldObject> getPlayersInLocation(final Location location, final double distanceCheck){
+        final List<IFieldObject> players = new ArrayList<>();
         for(Location l : mLocationToPlayers.keySet()){
             if(location.getDistanceFromLocation(l) <= distanceCheck){
                 players.add(mLocationToPlayers.get(l));

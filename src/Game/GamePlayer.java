@@ -2,9 +2,9 @@ package Game;
 
 import Game.Field.Location;
 import Game.Field.PlayerLocationState;
-import Game.Field.Vector;
 import Game.PlayerStrategy.IPlayerStrategy;
 import Observable.Observer;
+import PhysicsEngine.Movement;
 import PhysicsEngine.MovementInstruction;
 import Tuple.Tuple2;
 
@@ -12,19 +12,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public final class GamePlayer implements Observer {
+public final class GamePlayer implements Observer, IFieldObject {
 
-    private GamePlayerOwner mTeam;
+//    This should be pulled from the attributes when we get that far. It should be either acceleration or speed,
+//    depending on if we have finished accelerating or not
+//    Measured in Feet Per Second
+    private final static double MAX_VELOCITY = 3;
+
+    private IGamePlayerOwner mTeam;
     private GameField mOwner = null;
     private final String mName;
     private IPlayerStrategy mStrategy;
     private PlayerState mPlayerState = null;
     private Tuple2<Double, Double> mLocation = new Tuple2<Double, Double>(Double.NEGATIVE_INFINITY,Double.NEGATIVE_INFINITY);
-    private List<Vector> mPreviousLocations = new ArrayList<>();
+    private final List<Movement> mMovements = new ArrayList<>();
     private PlayerLocationState mLocationState = null;
+    private double currentVelocity;
+//    ICKY NOPE FIX TODO
+    private boolean ballCarrier = false;
 
     public GamePlayer(final String name, final IPlayerStrategy playerStrategy){
-//        Save the Hash from the Game.GameTeam
+//        Save the Hash from the Game.IGameTeam
         mName = name;
         setStrategy(playerStrategy);
     }
@@ -34,19 +42,47 @@ public final class GamePlayer implements Observer {
 //    of its location
     @Override
     public final void updateObserver(Object key, Object itemChanged) {
-        if(key.equals(Location.LocationKey.LOCATION_UPDATED_KEY)) mLocation = (Tuple2<Double, Double>) itemChanged;
-        if(key.equals(Location.LocationKey.LOCATION_VECTOR_KEY))  mPreviousLocations.add((Vector) itemChanged);
+        if(key.equals(Location.LocationKey.LOCATION_UPDATED_KEY)){
+            Tuple2 previousLocation = mLocation;
+            mLocation = (Tuple2<Double, Double>) itemChanged;
+            mMovements.add(new Movement(previousLocation, mLocation));
+        }
     }
 
+    protected final void clearMovementHistory(final GameField owner){
+        if(mOwner != owner){
+//            Log invalid attempt to change player
+            System.out.println("Cant clear movement history as the field passed is not correct");
+            return;
+        }
+        mMovements.clear();
+    }
+
+    @Override
     public final Tuple2<Double, Double> getLocation(){
         return mLocation;
+    }
+
+//    previousDistance needs to be the number of steps previous you want.
+//    IE, if you want the place 10 steps back, you would pass 10 as the param.
+//    If there aren't enough previous positions, we will just pass the furthest back we have.
+//    If there are no previous positions, we will pass back our current location
+    @Override
+    public final Tuple2<Double, Double> getPreviousLocation(final int previousDistance){
+        if(mMovements.isEmpty()){
+            return getLocation();
+        }
+        if((mMovements.size()-1) < previousDistance){
+            return mMovements.get(0).getEndingLocation();
+        }
+        return mMovements.get((mMovements.size()-1)-previousDistance).getEndingLocation();
     }
 
     public final void setStrategy(final IPlayerStrategy playerStrategy){
         mStrategy = playerStrategy;
     }
 
-    public final void assignTeam(final GamePlayerOwner team){
+    public final void assignTeam(final IGamePlayerOwner team){
         if(mTeam != null){
 //            Handle logging of already owned player.
 //            Refuse to assign new owner
@@ -62,7 +98,16 @@ public final class GamePlayer implements Observer {
 //    At some point create logic here so we can determine goal point logic
     public final Tuple2<Double, Double> getGoal(){
 //        For now we are just going to return the endzone
-        return mTeam.getGoal();
+        return mStrategy.calculateGoal(this, mOwner, mTeam);
+    }
+
+    final void setIsBallCarrier(final boolean isBallCarrier){
+//        We are trusting this is coming from the field. We should probably have a way to secure that a bit. For now, package level methods will work
+        ballCarrier = isBallCarrier;
+    }
+
+    public final boolean isBallCarrier(){
+        return ballCarrier;
     }
 
     final void placeOnField(final GameField field){
@@ -73,12 +118,13 @@ public final class GamePlayer implements Observer {
             return;
         }
         mOwner = field;
-        mPreviousLocations.clear();
+        mMovements.clear();
         mLocation = new Tuple2<>(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY);
         mPlayerState = PlayerState.UP;
     }
 
-    final void setLocationState(final GameField field, final PlayerLocationState newState){
+    @Override
+    public final void setLocationState(final GameField field, final PlayerLocationState newState){
         if(!field.equals(mOwner)){
 //            Yell some profanity for trying to abuse the system
 //            Log event and do not do anything
@@ -100,6 +146,7 @@ public final class GamePlayer implements Observer {
         return mLocationState;
     }
 
+    @Override
     public final PlayerState getPlayerState(){
         return mPlayerState;
     }
@@ -119,11 +166,17 @@ public final class GamePlayer implements Observer {
         return mName;
     }
 
+    @Override
     public final boolean isOnField(){
         return mOwner != null;
     }
 
     public final void calculateMovement(){
+        if(!isOnField()){
+//            Handle logging due to trying to move player while player is not on field
+            System.out.println(getName()+" | Unable to move player due to player not being on field");
+            return;
+        }
         mStrategy.calculateMove(this, mOwner);
         requestMovement(mStrategy.getMove());
     }

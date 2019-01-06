@@ -2,12 +2,12 @@ package Game;
 
 public class GameManager {
 
-    private final GameTeam mHomeTeam;
-    private final GameTeam mAwayTeam;
+    private final IGameTeam mHomeTeam;
+    private final IGameTeam mAwayTeam;
 
     public static boolean DEBUG_DUN = false;
 
-    public GameManager(final GameTeam homeTeam, final GameTeam awayTeam){
+    public GameManager(final IGameTeam homeTeam, final IGameTeam awayTeam){
 //        Create new field object, place the teams on the field,
 //        And then await the startGame call.
         mHomeTeam = homeTeam;

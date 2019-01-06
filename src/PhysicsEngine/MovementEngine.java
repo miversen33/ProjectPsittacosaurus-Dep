@@ -1,21 +1,17 @@
 package PhysicsEngine;
 
-import FieldDep.FieldCell;
-import Game.Field.Location;
+import Game.Field.Vector;
 import Game.GameField;
 import Game.GameManager;
 import Game.GamePlayer;
 import Tuple.Tuple2;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 public class MovementEngine {
-//    These are debug values until we figure out dynamic movement ranges
-    private final static int DEBUG_MIN_DISTANCE   = 1;
-    private final static int DEBUG_HALF_DISTANCE  = 2;
-    private final static int DEBUG_MAX_DISTANCE   = 3;
+
+    private final static int MAX_DISTANCE   = 3;
 
 
     public final void prioritizeQueue(final List<MovementInstruction> movementQueue){
@@ -37,16 +33,10 @@ public class MovementEngine {
         final Iterator movementIterator = movementQueue.iterator();
         while(movementIterator.hasNext()){
             MovementInstruction instructions = (MovementInstruction) movementIterator.next();
-//            Check endLocation for player already being there
-            final Tuple2<Double, Double> currentLocation = field.requestPlayerLocation(instructions.getPlayer());
-            final Location endLocation =
-                    new Location(
-                            currentLocation.getFirst() + instructions.getVector().getChangeX(),
-                            currentLocation.getSecond() + instructions.getVector().getChangeY());
-//            final List<GamePlayer> collisionDetection = field.getPlayersInLocation(endLocation, TACKLE_DISTANCE);
-//            collisionDetection.remove(instructions.getPlayer());
-//            if(collisionDetection.size() > 0) handleCollision(instructions.getPlayer(), collisionDetection);
-            field.movePlayer(instructions.getPlayer(), instructions.getVector());
+            Vector movement = instructions.getVector();
+            if(instructions.getVector().getLength() > MAX_DISTANCE) movement.scale(MAX_DISTANCE / movement.getLength());
+//            We need to handle collisions, other wise stuff goes breaky break
+            field.movePlayer(instructions.getPlayer(), movement);
         }
         field.clearMovementQueue();
     }
@@ -56,6 +46,11 @@ public class MovementEngine {
 
 //        DAS BAD
         GameManager.DEBUG_DUN = true;
+    }
+
+//    This should probably be somewhere else more accessible
+    private final double distanceBetweenPoints(final Tuple2<Double, Double> firstPoint, final Tuple2<Double, Double> secondPoint){
+        return Math.sqrt(Math.pow(secondPoint.getFirst() - firstPoint.getFirst(),2) + Math.pow(secondPoint.getSecond() - firstPoint.getSecond(),2));
     }
 
 }
