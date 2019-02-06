@@ -1,8 +1,8 @@
 package Game;
 
-import Tuple.Tuple2;
+import Game.Field.Endzone;
 
 public interface IGamePlayerOwner {
-    Tuple2<Double, Double> getGoal();
+    Endzone getGoal();
     String getTeamHash();
 }

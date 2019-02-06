@@ -1,65 +1,85 @@
 package Game.Field;
 
 import Tuple.Tuple2;
+import Utils.Location;
 
 public class Field{
 
     public static final double ENDZONE_HEIGHT = 30.0;
+    public static final double REDZONE_HEIGHT = 20.0;
     public static final double FIELD_WIDTH    = 160.0;
     public static final double FIELD_HEIGHT   = 360.0;
+    public static final double FIELD_LEFT_CENTER = ((FIELD_WIDTH/2) - (FIELD_WIDTH * .15));
+    public static final double FIELD_RIGHT_CENTER = ((FIELD_WIDTH/2) + (FIELD_WIDTH * .15));
 
-    private final double leftBoundary   = 0.0;
-    private final double topBoundary    = 0.0;
-    private final double rightBoundary  = leftBoundary + FIELD_WIDTH;
-    private final double bottomBoundary = topBoundary + FIELD_HEIGHT;
+    private static final Tuple2<Double, Double> NORTH_ENDZONE_LOCATION = new Tuple2<>(FIELD_WIDTH/2,ENDZONE_HEIGHT-1);
+    private static final Tuple2<Double, Double> SOUTH_ENDZONE_LOCATION = new Tuple2<>(FIELD_WIDTH/2,FIELD_HEIGHT-ENDZONE_HEIGHT+1);
 
-    public final PlayerLocationState getLocationState(final Location location){
-        if(!isInBounds(location)) return PlayerLocationState.OutOfBounds;
-        if(isInEndzone(location)) return PlayerLocationState.FieldOfPlay_Endzone;
+    private final static double LeftBoundary = 0.0;
+    private final static double TopBoundary = 0.0;
+    private final static double RightBoundary = LeftBoundary + FIELD_WIDTH;
+    private final static double BottomBoundary = TopBoundary + FIELD_HEIGHT;
+
+
+    public final static PlayerLocationState GetLocationState(final Location location){
+        if(!IsInBounds(location)) return PlayerLocationState.OutOfBounds;
+        if(IsInEndzone(location)) return PlayerLocationState.FieldOfPlay_Endzone;
         return PlayerLocationState.FieldOfPlay;
     }
 
-    public final boolean isInBounds(final Location location){
-        return location.getX() > leftBoundary && location.getX() < rightBoundary &&
-               location.getY() > topBoundary  && location.getY() < bottomBoundary;
+    public final static boolean IsInBounds(final Location location){
+        return location.getX() > LeftBoundary && location.getX() < RightBoundary &&
+               location.getY() > TopBoundary && location.getY() < BottomBoundary;
     }
 
-    public final boolean isInNorthEndzone(final Location location){
-        return location.getY() >= topBoundary && location.getY() <= topBoundary + ENDZONE_HEIGHT;
+    public final static boolean IsInNorthEndzone(final Location location){
+        return location.getY() >= TopBoundary && location.getY() <= TopBoundary + ENDZONE_HEIGHT;
     }
 
-    public final boolean isInSouthEndzone(final Location location){
-        return location.getY() >= bottomBoundary - ENDZONE_HEIGHT && location.getY() <= bottomBoundary;
+    public final static boolean IsInSouthEndzone(final Location location){
+        return location.getY() >= BottomBoundary - ENDZONE_HEIGHT && location.getY() <= BottomBoundary;
     }
 
-    public final boolean isInEndzone(final Location location){
-        return isInNorthEndzone(location) || isInSouthEndzone(location);
+    public final static boolean IsInEndzone(final Location location){
+        return IsInNorthEndzone(location) || IsInSouthEndzone(location);
     }
 
-    public final boolean isInBounds(final Tuple2<Double, Double> location){
-        return location.getFirst() > leftBoundary && location.getFirst() < rightBoundary &&
-               location.getSecond() > topBoundary  && location.getSecond() < bottomBoundary;
+    public final static boolean IsInBounds(final Tuple2<Double, Double> location){
+        return location.getFirst() > LeftBoundary && location.getFirst() < RightBoundary &&
+               location.getSecond() > TopBoundary && location.getSecond() < BottomBoundary;
     }
 
-    public final boolean isInNorthEndzone(final Tuple2<Double, Double> location){
-        return location.getSecond() >= topBoundary && location.getSecond() <= topBoundary + ENDZONE_HEIGHT;
+    public final static boolean IsInNorthEndzone(final Tuple2<Double, Double> location){
+        return location.getSecond() >= TopBoundary && location.getSecond() <= TopBoundary + ENDZONE_HEIGHT;
     }
 
-    public final boolean isInSouthEndzone(final Tuple2<Double, Double> location){
-        return location.getSecond() >= bottomBoundary - ENDZONE_HEIGHT && location.getSecond() <= bottomBoundary;
+    public final static boolean IsInSouthEndzone(final Tuple2<Double, Double> location){
+        return location.getSecond() >= BottomBoundary - ENDZONE_HEIGHT && location.getSecond() <= BottomBoundary;
     }
 
-    public final boolean isInEndzone(final Tuple2<Double, Double> location){
-        return isInNorthEndzone(location) || isInSouthEndzone(location);
+    public final static boolean IsInEndzone(final Tuple2<Double, Double> location){
+        return IsInNorthEndzone(location) || IsInSouthEndzone(location);
+    }
+
+    public final static boolean IsInEndzone(final Endzone endzone, final FieldObject location){
+        if(endzone.isNorth()) return IsInNorthEndzone(location.getLocation());
+        if(endzone.isSouth()) return IsInSouthEndzone(location.getLocation());
+//        Handle logging due to invalid endzone flag
+        return false;
     }
 
 //    This will return the top left corner of the north endzone
-    public final Tuple2<Double, Double> getNorthEndzone(){
-        return new Tuple2<>(1.0,1.0);
+    public final static Endzone GetNorthEndzone(){
+        return Endzone.NORTH;
     }
 
 //    This will return the bottom left corner of the south endzone
-    public final Tuple2<Double, Double> getSouthEndzone(){
-        return new Tuple2<>(1.0, bottomBoundary - 1);
+    public final static Endzone GetSouthEndzone(){
+        return Endzone.SOUTH;
     }
+
+    public final static Tuple2<Double, Double> GetLocationForEndzone(final Endzone endzone){
+        return endzone == Endzone.NORTH ? NORTH_ENDZONE_LOCATION : SOUTH_ENDZONE_LOCATION;
+    }
+
 }

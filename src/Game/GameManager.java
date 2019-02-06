@@ -1,13 +1,15 @@
 package Game;
 
+import Game.Field.GamePlayer;
+
 public class GameManager {
 
-    private final IGameTeam mHomeTeam;
-    private final IGameTeam mAwayTeam;
+    private final GameTeam mHomeTeam;
+    private final GameTeam mAwayTeam;
 
     public static boolean DEBUG_DUN = false;
 
-    public GameManager(final IGameTeam homeTeam, final IGameTeam awayTeam){
+    public GameManager(final GameTeam homeTeam, final GameTeam awayTeam){
 //        Create new field object, place the teams on the field,
 //        And then await the startGame call.
         mHomeTeam = homeTeam;
@@ -38,11 +40,11 @@ public class GameManager {
 
     private final void calculateMovements(){
         for(GamePlayer offensivePlayer : mHomeTeam.getPlayers()){
-            offensivePlayer.calculateMovement();
+            offensivePlayer.calculateMove();
         }
 
         for(GamePlayer defensivePlayer : mAwayTeam.getPlayers()){
-            defensivePlayer.calculateMovement();
+            defensivePlayer.calculateMove();
         }
     }
 

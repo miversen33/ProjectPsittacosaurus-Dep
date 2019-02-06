@@ -1,9 +1,9 @@
 package Game.PlayerStrategy.Offense;
 
-import Game.GameField;
-import Game.GamePlayer;
+import Game.Field.GameField;
+import Game.Field.GamePlayer;
 import Game.IGamePlayerOwner;
-import PhysicsEngine.MovementInstruction;
+import PhysicsEngine.Movements.MovementInstruction;
 import Tuple.Tuple2;
 
 public class ReceiverStrategy extends OffensivePlayerStrategy{

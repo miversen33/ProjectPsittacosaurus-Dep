@@ -1,6 +1,6 @@
-package Game.Field;
+package PhysicsEngine;
 
-import Observable.Observable;
+import Utils.Observable.Observable;
 import Tuple.Tuple2;
 
 public class Vector extends Observable {
@@ -20,6 +20,10 @@ public class Vector extends Observable {
         calculateChangeByDirection();
     }
 
+    public Vector(final Tuple2<Double, Double> startingLocation, final Tuple2<Double, Double> endingLocation){
+        this(new Tuple2<>(endingLocation.getFirst() - startingLocation.getFirst(), endingLocation.getSecond() - startingLocation.getSecond()));
+    }
+
     private final void calculateChangeByPoint(){
         magnitude = Math.sqrt((Math.pow(changeInXY.getFirst(),2)+Math.pow(changeInXY.getSecond(),2)));
         direction = Math.atan2(changeInXY.getSecond(),changeInXY.getFirst());
@@ -29,15 +33,20 @@ public class Vector extends Observable {
         changeInXY = new Tuple2<>(magnitude * Math.cos(direction), magnitude * Math.sin(direction));
     }
 
-    public final void add(final Vector vector){
-        changeInXY = new Tuple2<>(changeInXY.getFirst() + vector.changeInXY.getFirst(), changeInXY.getSecond() + vector.changeInXY.getSecond());
-        calculateChangeByPoint();
-        updateObservers(Location.LocationKey.LOCATION_VECTOR_KEY, this);
+    /**
+     * NOTICE! THIS DOES NOT ACTUALLY CHANCE THE VECTOR, RATHER IT RETURNS A NEW VECTOR THAT
+     * IS A COPY OF THIS ONE, BUT WITH THE OTHER VECTOR ADDED TO IT!
+     */
+    public final Vector add(final Vector vector){
+        return new Vector(new Tuple2<>(vector.getChangeX() + getChangeX(), vector.getChangeY() + getChangeY()));
     }
 
-    public final void scale(final double scalar){
-        changeInXY = new Tuple2<>(changeInXY.getFirst() * scalar, changeInXY.getSecond() * scalar);
-        calculateChangeByPoint();
+    /**
+     * NOTICE! THIS DOES NOT ACTUALLY CHANGE THE VECTOR, RATHER IT RETURNS A NEW VECTOR THAT
+     * IS A COPY OF THIS ONE, BUT SCALED
+     */
+    public final Vector scale(final double scale){
+        return new Vector(new Tuple2<>(changeInXY.getFirst() * scale, changeInXY.getSecond() * scale));
     }
 
     public final double getChangeX(){
@@ -62,6 +71,13 @@ public class Vector extends Observable {
 
     public final double getMagnitude(){
         return magnitude;
+    }
+
+    /**
+     * This will return the vector in tuple2 form, with ChangeX and ChangeY as the values
+     */
+    public final Tuple2<Double, Double> getVectorAsTuple2(){
+        return new Tuple2<>(getChangeX(), getChangeY());
     }
 
 }

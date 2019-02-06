@@ -1,12 +1,11 @@
 package Game.PlayerStrategy.Offense;
 
-import Game.Field.Location;
-import Game.Field.Vector;
-import Game.GameField;
-import Game.GamePlayer;
-import Game.IFieldObject;
+import Game.Field.Field;
+import Game.Field.GameField;
+import PhysicsEngine.Vector;
+import Game.Field.GamePlayer;
 import Game.IGamePlayerOwner;
-import PhysicsEngine.MovementInstruction;
+import PhysicsEngine.Movements.MovementInstruction;
 import Tuple.Tuple2;
 
 import java.util.List;
@@ -28,21 +27,23 @@ public final class BallCarrierStrategy extends OffensivePlayerStrategy {
     @Override
     public final void calculateMove(final GamePlayer hostPlayer, final GameField field) {
 //        Optimize me
+//        Optimize me
 //        This should be polled from the host player
-        final double velocity = hostPlayer.getGoal().getSecond() < hostPlayer.getLocation().getSecond() ? -1 : +1;
+        final double velocity = hostPlayer.getGoal().getSecond() < hostPlayer.getLocation().getSecond() ? -hostPlayer.getMaxMovement() : +hostPlayer.getMaxMovement();
         move = new MovementInstruction(hostPlayer, new Vector(new Tuple2<>(0.0, velocity)));
 
-        final List<IFieldObject> defendersInRange = field.getPlayersInLocation(new Location(hostPlayer.getLocation().getFirst(), hostPlayer.getLocation().getSecond()), MAX_DISTANCE);
-        defendersInRange.remove(hostPlayer);
-        if(defendersInRange.size() > 0){
-            handleDefenders(hostPlayer, defendersInRange);
-        }
+//        TODO CORRECT THIS
+//        final List<GamePlayer> defendersInRange = field.checkLocation(hostPlayer, MAX_DISTANCE);
+//        defendersInRange.remove(hostPlayer);
+//        if(defendersInRange.size() > 0){
+//            handleDefenders(hostPlayer, defendersInRange);
+//        }
     }
 
 //    Please remove the host player from the list
-    private final void handleDefenders(final GamePlayer hostPlayer, final List<IFieldObject> defenders){
+    private final void handleDefenders(final GamePlayer hostPlayer, final List<GamePlayer> defenders){
         double angle = 0;
-        for(IFieldObject defender : defenders){
+        for(GamePlayer defender : defenders){
 
 //            For now disregard the current defender if the defender is not between the ballcarrier
 //            and the goal. This will be corrected at a later point when we have more
@@ -69,6 +70,7 @@ public final class BallCarrierStrategy extends OffensivePlayerStrategy {
     @Override
     public final Tuple2<Double, Double> calculateGoal(final GamePlayer hostPlayer, final GameField field, final IGamePlayerOwner hostTeam) {
 //        TODO Put some sort of thinking logic here
-        return hostTeam.getGoal();
+//        We should be using something like the PerceivedGoal structure to determine where we actually need to go
+        return Field.GetLocationForEndzone(hostTeam.getGoal());
     }
 }

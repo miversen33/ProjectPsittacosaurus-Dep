@@ -1,20 +1,22 @@
 package Game;
 
-import Tuple.Tuple2;
+import Game.Field.Endzone;
+import Game.Field.GamePlayer;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class IGameTeam implements IGamePlayerOwner {
+public class GameTeam implements IGamePlayerOwner {
 
+//    TODO
 //    It is worth considering if this should be an array since it cannot change after being
 //    initialized
     private final List<GamePlayer> mPlayers;
     private final String mHash = UUID.randomUUID().toString();
-    private Tuple2<Double, Double> mGoal;
+    private Endzone mGoal;
 
-    public IGameTeam(final List<GamePlayer> players, final Tuple2<Double, Double> currentGoal){
+    public GameTeam(final List<GamePlayer> players, final Endzone currentGoal){
         mPlayers = new ArrayList<>(players);
         mGoal = currentGoal;
         requestPlayerOwnership();
@@ -32,13 +34,12 @@ public class IGameTeam implements IGamePlayerOwner {
 
     public final void cycle(){
         for(GamePlayer player : mPlayers){
-            player.calculateMovement();
+            player.calculateMove();
         }
     }
 
-
     @Override
-    public Tuple2<Double, Double> getGoal() {
+    public Endzone getGoal() {
         return mGoal;
     }
 
