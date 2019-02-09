@@ -8,7 +8,7 @@ import Game.PlayerState;
 import Game.GamePlay.PlayerStrategy.IPlayerStrategy;
 import PhysicsEngine.Movements.MovementEngine;
 import PhysicsEngine.Movements.MovementInstruction;
-import PhysicsEngine.Vector;
+import PhysicsEngine.PhysicsObjects.Vector;
 import Tuple.Tuple2;
 
 import java.util.ArrayList;

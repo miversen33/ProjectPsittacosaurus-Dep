@@ -1,4 +1,4 @@
-package PhysicsEngine;
+package PhysicsEngine.PhysicsObjects;
 
 public class PhysicsObject {
 

@@ -1,4 +1,4 @@
-package PhysicsEngine;
+package PhysicsEngine.PhysicsObjects;
 
 public interface CommonScalarTypes {
     public final static String MASS = "MASS";

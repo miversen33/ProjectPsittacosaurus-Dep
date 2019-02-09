@@ -5,7 +5,7 @@ import Game.Field.FieldObject;
 import Game.GamePlay.GameField;
 import Game.GamePlay.GamePlayer;
 import Game.GamePlay.PlayerInfluences;
-import PhysicsEngine.Vector;
+import PhysicsEngine.PhysicsObjects.Vector;
 import PhysicsEngine.Movements.MovementInstruction;
 import Tuple.Tuple2;
 import Utils.Location;

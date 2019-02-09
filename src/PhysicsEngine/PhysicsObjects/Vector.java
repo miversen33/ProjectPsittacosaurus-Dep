@@ -1,4 +1,4 @@
-package PhysicsEngine;
+package PhysicsEngine.PhysicsObjects;
 
 import Utils.Observable.Observable;
 import Tuple.Tuple2;
@@ -80,4 +80,10 @@ public class Vector extends Observable {
         return new Tuple2<>(getChangeX(), getChangeY());
     }
 
+    public final static Tuple2<Double, Double> GetVectorIntersectionPoint(final Tuple2<Double, Double> firstStartPoint, final Tuple2<Double, Double> secondStartPoint, final Vector firstVector, final Vector secondVector) {
+        final Line firstLine = new Line(firstStartPoint, new Tuple2<>(firstStartPoint.getFirst() + firstVector.getChangeX(), firstStartPoint.getSecond() + firstVector.getChangeY()));
+        final Line secondLine = new Line(secondStartPoint, new Tuple2<>(secondStartPoint.getFirst() + secondVector.getChangeX(), secondStartPoint.getSecond() + secondVector.getChangeY()));
+
+        return firstLine.doesIntersect(secondLine);
+    }
 }

@@ -2,7 +2,7 @@ package Game.GamePlay;
 
 import Game.Field.Field;
 import PhysicsEngine.Movements.MovementEngine;
-import PhysicsEngine.Vector;
+import PhysicsEngine.PhysicsObjects.Vector;
 import Tuple.Tuple2;
 import Utils.Exceptions.FieldLockException;
 import Utils.Location;

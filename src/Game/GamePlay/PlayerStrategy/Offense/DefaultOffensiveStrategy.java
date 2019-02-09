@@ -7,7 +7,7 @@ import Game.GamePlay.GameField;
 import Game.GamePlay.PlayerInfluences;
 import Utils.Location;
 import PhysicsEngine.Movements.MovementInstruction;
-import PhysicsEngine.Vector;
+import PhysicsEngine.PhysicsObjects.Vector;
 import Tuple.Tuple2;
 
 import java.util.ArrayList;

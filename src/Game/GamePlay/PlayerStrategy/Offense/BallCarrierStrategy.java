@@ -3,7 +3,7 @@ package Game.GamePlay.PlayerStrategy.Offense;
 import Game.Field.Field;
 import Game.GamePlay.GameField;
 import Game.GamePlay.PlayerInfluences;
-import PhysicsEngine.Vector;
+import PhysicsEngine.PhysicsObjects.Vector;
 import Game.GamePlay.GamePlayer;
 import Game.IGamePlayerOwner;
 import PhysicsEngine.Movements.MovementInstruction;

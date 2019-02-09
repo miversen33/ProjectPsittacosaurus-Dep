@@ -1,7 +1,7 @@
 package Utils;
 
 import Game.Field.FieldObject;
-import PhysicsEngine.Vector;
+import PhysicsEngine.PhysicsObjects.Vector;
 import Utils.Observable.Observable;
 import Tuple.Tuple2;
 

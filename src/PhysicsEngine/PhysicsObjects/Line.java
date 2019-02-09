@@ -1,7 +1,7 @@
-package Utils;
+package PhysicsEngine.PhysicsObjects;
 
-import PhysicsEngine.Vector;
 import Tuple.Tuple2;
+import Utils.Location;
 
 /**
  * Is this really the best place to do this?
