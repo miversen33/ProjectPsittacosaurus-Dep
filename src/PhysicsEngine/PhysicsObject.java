@@ -7,6 +7,7 @@ public class PhysicsObject {
     private double acceleration = 0;
 //    Eventually we want this to be based on the currentMovement Vector, and the
 //    difference between that and the new proposed vector. For now we will simply say 3
+//    TODO
     private double maxMovement = 3;
 
     /**
@@ -38,7 +39,7 @@ public class PhysicsObject {
     }
 
     public final double getForce(){
-        return acceleration / mass;
+        return acceleration * mass;
     }
 
     public final double getMaxMovement(){

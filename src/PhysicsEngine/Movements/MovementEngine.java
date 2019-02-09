@@ -1,7 +1,8 @@
 package PhysicsEngine.Movements;
 
-import Game.Field.GameField;
-import Game.Field.GamePlayer;
+import Game.GamePlay.GameClock;
+import Game.GamePlay.GameField;
+import Game.GamePlay.GamePlayer;
 import PhysicsEngine.Vector;
 import Tuple.Tuple2;
 import Utils.GeometricLine;
@@ -59,16 +60,21 @@ public final class MovementEngine {
         int interval = 1;
 
         boolean keepLooping = false;
+        boolean tickClock = false;
 //        First we need to handle existing collisions
         for(final GamePlayer player : playerQueue){
             if(player.getMovementInstruction().getAction().getActionState().isColliding()){
                 handleCollision(player.getMovementInstruction(), field);
+                if(!tickClock) tickClock = true;
             }
 //            } else {
 ////        Then we need to handle other movements
 //                handleMovement(player.getMovementInstruction(), field);
 //            }
         }
+
+        if(tickClock) GameClock.microTickQuarterClock();
+        tickClock = false;
 
         playerQueue = prioritizeQueue(playerQueue);
 
@@ -81,8 +87,8 @@ public final class MovementEngine {
                     if(!p2.getMovementInstruction().getAction().getActionState().isColliding()){
                         final Tuple2<Double, Double> collision = checkMovementVectorsForCollision(p1, p2);
                         if(collision != null){
-                            final Vector p1Vector = p1.getCurrentMovement();
-                            final Vector p2Vector = p2.getCurrentMovement();
+                            final Vector p1Vector = p1.getMovementInstruction().getVector();
+                            final Vector p2Vector = p2.getMovementInstruction().getVector();
 
                             final Vector revisedP1Vector = new Vector(p1.getLocation(), collision);
                             final Vector revisedP2Vector = new Vector(p2.getLocation(), collision);
@@ -109,6 +115,7 @@ public final class MovementEngine {
 
         for(final GamePlayer player : playerQueue){
             if(!player.getMovementInstruction().getAction().getActionState().isColliding()){
+                if(!tickClock) tickClock = true;
                 handleMovement(player.getMovementInstruction(), field);
             } else {
                 keepLooping = true;
@@ -116,7 +123,7 @@ public final class MovementEngine {
         }
 
         if(!keepLooping) interval = 3;
-
+        if(tickClock) GameClock.tickQuarterClock();
 //        If the queue cycles and there are no existing collisions, we can set the count to 3 and return true
 //        Otherwise, we need to increment the count +1 and cycle again. If a player is not currently
 //        in a collision, they receive a NULL MovementAction, indicating that they are not currently
@@ -127,13 +134,13 @@ public final class MovementEngine {
 
     private final void handleCollision(final MovementInstruction instruction, final GameField field){
         /**
-         * (2(m2v2)+(m1v1)-(m2v1))
-         * ----------------------- = v1f
-         *          (m1+m2)
+         * (m1v1 + m2v2)
+         * -------------  = Vf
+         *   (m1 + m2)
          *
-         * (2(m1v1)+(m2v2)-(m1v2))
-         * ----------------------- = v2f
-         *         (m1+m2)
+         * vf * (f1 / ff) = v1
+         * vf * (f2 / ff) = v2
+         *
          */
 //        Quick catch to make sure that this is indeed a collision
         if(!instruction.getAction().getActionState().isColliding()) {
@@ -141,7 +148,7 @@ public final class MovementEngine {
             return;
         }
 
-        final Vector p1Movement = instruction.getVector();
+        final Vector p1Movement = instruction.getAction().getAffectingPlayer().getMovementInstruction().getVector();
         final Vector p2Movement = instruction.getAction().getAffectedPlayer().getMovementInstruction().getVector();
 
         final double mass1 = instruction.getAction().getAffectingPlayer().getMass();
@@ -152,10 +159,16 @@ public final class MovementEngine {
         final double velX2 = p2Movement.getChangeX();
         final double velY2 = p2Movement.getChangeY();
 
-        final double resultVelX1 = (2*(mass2 * velX2) + (mass1 * velX1) - (mass2 * velX1)) / (mass1 + mass2);
-        final double resultVelY1 = (2*(mass2 * velY2) + (mass1 * velY1) - (mass2 * velY1)) / (mass1 + mass2);
-        final double resultVelX2 = (2*(mass1 * velX1) + (mass2 * velX2) - (mass1 * velX2)) / (mass1 + mass2);
-        final double resultVelY2 = (2*(mass1 * velY1) + (mass2 * velY2) - (mass1 * velY2)) / (mass1 + mass2);
+        final double totalForce = instruction.getAction().getAffectingPlayer().getForce() + instruction.getAction().getAffectedPlayer().getForce();
+
+        final double totalMass = mass1 + mass2;
+        final double totalVelX = ((mass1 * velX1) + (mass2 * velX2)) / totalMass;
+        final double totalVelY = ((mass1 * velY1) + (mass2 * velY2)) / totalMass;
+
+        final double resultVelX1 = totalVelX * (instruction.getAction().getAffectedPlayer().getForce() / totalForce);
+        final double resultVelY1 = totalVelY * (instruction.getAction().getAffectedPlayer().getForce() / totalForce);
+        final double resultVelX2 = totalVelX * (instruction.getAction().getAffectingPlayer().getForce() / totalForce);
+        final double resultVelY2 = totalVelY * (instruction.getAction().getAffectingPlayer().getForce() / totalForce);
 //
         final Vector resultantVector1 = new Vector(new Tuple2<>(resultVelX1, resultVelY1));
         final Vector resultantVector2 = new Vector(new Tuple2<>(resultVelX2, resultVelY2));
@@ -178,6 +191,7 @@ public final class MovementEngine {
         if(movement.getMagnitude() > instruction.getPlayer().getMaxMovement()){
             movement = movement.scale(instruction.getPlayer().getMaxMovement() / movement.getMagnitude());
         }
+        instruction.execute();
         field.movePlayer(this, instruction.getPlayer(), movement);
     }
 
@@ -185,7 +199,7 @@ public final class MovementEngine {
      * Returns true if collision is found. False if not
      */
     private final Tuple2<Double, Double> checkMovementVectorsForCollision(final GamePlayer p1, final GamePlayer p2){
-        return GeometricLine.DoVectorsIntersect(p1.getLocation(), p2.getLocation(), p1.getCurrentMovement(), p2.getCurrentMovement());
+        return GeometricLine.DoVectorsIntersect(p1.getLocation(), p2.getLocation(), p1.getMovementInstruction().getVector(), p2.getMovementInstruction().getVector());
     }
 
 }

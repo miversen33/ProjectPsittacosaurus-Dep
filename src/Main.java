@@ -1,14 +1,12 @@
 import Game.Field.Field;
-import Game.Field.GameField;
+import Game.GamePlay.*;
+import Game.GamePlay.TimeManagement.Clock;
 import Tuple.Tuple2;
 import Utils.Location;
-import Game.GameManager;
-import Game.Field.GamePlayer;
-import Game.GameTeam;
-import Game.PlayerStrategy.Defense.DefaultDefensiveStrategy;
-import Game.PlayerStrategy.IPlayerStrategy;
-import Game.PlayerStrategy.Offense.BallCarrierStrategy;
-import Game.PlayerStrategy.Offense.DefaultOffensiveStrategy;
+import Game.GamePlay.PlayerStrategy.Defense.DefaultDefensiveStrategy;
+import Game.GamePlay.PlayerStrategy.IPlayerStrategy;
+import Game.GamePlay.PlayerStrategy.Offense.BallCarrierStrategy;
+import Game.GamePlay.PlayerStrategy.Offense.DefaultOffensiveStrategy;
 import PhysicsEngine.Movements.MovementEngine;
 
 import java.util.Arrays;
@@ -36,6 +34,8 @@ public class Main {
         final double d4Mass = 90.718;
         final double d5Mass = 90.718;
         final double d6Mass = 90.718;
+
+        final GameClock gc = new GameClock(Clock.DefaultValues.QUARTER_15, Clock.DefaultValues.PLAY_CLOCK_45);
 
         final GamePlayer ballCarrier = new GamePlayer(bcMass, "BallCarrier", ballCarrierStrategy);
         final GamePlayer blockerPlayer1 = new GamePlayer(b1Mass, "Blocker1",blockerStrategy);
@@ -83,6 +83,7 @@ public class Main {
         gameField.lock();
 
 //        Quick loop to cycle movements.
+
         while(!GameManager.DEBUG_DUN){
             if(Field.IsInEndzone(ballCarrier.getTeamGoal(), ballCarrier)) {
                 int i = 0;

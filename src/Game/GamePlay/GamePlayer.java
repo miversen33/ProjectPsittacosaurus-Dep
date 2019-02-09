@@ -1,20 +1,28 @@
-package Game.Field;
+package Game.GamePlay;
 
-import Game.GameTeam;
+import Game.Field.Endzone;
+import Game.Field.Field;
+import Game.Field.FieldObject;
 import Game.IPlayerObject;
 import Game.PlayerState;
-import Game.PlayerStrategy.IPlayerStrategy;
-import PhysicsEngine.Movements.MovementAction;
+import Game.GamePlay.PlayerStrategy.IPlayerStrategy;
 import PhysicsEngine.Movements.MovementEngine;
 import PhysicsEngine.Movements.MovementInstruction;
 import PhysicsEngine.Vector;
 import Tuple.Tuple2;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GamePlayer extends FieldObject implements IPlayerObject {
 //    Find a better location than Field Package
 
     private GameTeam mTeam = null;
     private final String mName;
+//    Consider having the GamePlayer owner be the GameManager object instead of the GameField
+//    Then you can have the GameManager be a "middle" man for the 2, and allows the GamePlayer
+//    to only have access to what they need access to. Plus the GamePlayer will need access to
+//    the clock anyway, which will only be available in the GameManager
     private GameField mOwner;
     private MovementInstruction mCurrentInstructions;
 
@@ -33,6 +41,12 @@ public class GamePlayer extends FieldObject implements IPlayerObject {
 
     public final void assignTeam(final GameTeam team){
         mTeam = team;
+    }
+
+    public final List<PlayerInfluences> getPlayerInfluenceBiases(){
+//        Eventually this needs to be populated with individualized player influences.
+//        TODO
+        return new ArrayList<>();
     }
 
     public final void DEBUG_setBallCarrier(final boolean isBallCarrier){
@@ -103,7 +117,7 @@ public class GamePlayer extends FieldObject implements IPlayerObject {
     }
 
     @Override
-    public void setPlayerState(final MovementEngine engine, final PlayerState state) {
+    public final void setPlayerState(final MovementEngine engine, final PlayerState state) {
 //        For now we accept any state. We will figure out a way to verify the engine is ours
         playerState = state;
     }
@@ -117,6 +131,10 @@ public class GamePlayer extends FieldObject implements IPlayerObject {
 //            Handle logging due to invalid field
         }
         setMovementInstruction(new MovementInstruction(this, new Vector(0,0)));
+    }
+
+    public final Field.Side getSideOfField(){
+        return Field.GetSideOfField(getLocation());
     }
 
     public final void setMovementInstruction(final MovementEngine engine, final MovementInstruction instruction){
@@ -135,7 +153,7 @@ public class GamePlayer extends FieldObject implements IPlayerObject {
     }
 
     @Override
-    public void calculateMove() {
+    public final void calculateMove() {
 //        Consider making this different from the IPlayerObject
         if(!isOnField()){
 //            Handle logging due to trying to move player while player is not on field
@@ -147,12 +165,27 @@ public class GamePlayer extends FieldObject implements IPlayerObject {
     }
 
     @Override
-    void takeField(final GameField field) {
+    public final void takeField(final GameField field) {
         if(mOwner != null){
 //            Handle logging due to attempted overwrite of field
             return;
         }
         mOwner = field;
         clearMovementInstruction(field);
+    }
+
+    @Override
+    public final void updateObserver(Object key, Tuple2<Double, Double> itemChanged) {
+        super.updateObserver(key, itemChanged);
+//        If we reach here, we can assume that the movement instruction has been executed
+        if(mCurrentInstructions.hasBeenExecuted()) timeStampMovement();
+    }
+
+    private final void timeStampMovement(){
+        if(mCurrentInstructions.getAction().getActionState().isColliding()){
+            mCurrentInstructions.setUsedTime(MovementInstruction.COLLISION_USED_TIME);
+        } else {
+            mCurrentInstructions.setUsedTime(MovementInstruction.DEFAULT_USED_TIME);
+        }
     }
 }

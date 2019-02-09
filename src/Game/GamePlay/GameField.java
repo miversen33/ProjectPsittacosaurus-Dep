@@ -1,5 +1,6 @@
-package Game.Field;
+package Game.GamePlay;
 
+import Game.Field.Field;
 import PhysicsEngine.Movements.MovementEngine;
 import PhysicsEngine.Vector;
 import Tuple.Tuple2;

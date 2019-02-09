@@ -1,7 +1,7 @@
-package Game;
+package Game.GamePlay;
 
 import Game.Field.Endzone;
-import Game.Field.GamePlayer;
+import Game.IGamePlayerOwner;
 
 import java.util.ArrayList;
 import java.util.List;

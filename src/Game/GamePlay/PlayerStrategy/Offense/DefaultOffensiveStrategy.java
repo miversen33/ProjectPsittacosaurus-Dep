@@ -1,11 +1,10 @@
-package Game.PlayerStrategy.Offense;
+package Game.GamePlay.PlayerStrategy.Offense;
 
 import Game.*;
 import Game.Field.Field;
-import Game.Field.GamePlayer;
-import Game.Field.GameField;
-import Game.Field.GamePlayer;
-import PhysicsEngine.Movements.MovementEngine;
+import Game.GamePlay.GamePlayer;
+import Game.GamePlay.GameField;
+import Game.GamePlay.PlayerInfluences;
 import Utils.Location;
 import PhysicsEngine.Movements.MovementInstruction;
 import PhysicsEngine.Vector;
@@ -86,7 +85,7 @@ public class DefaultOffensiveStrategy extends OffensivePlayerStrategy{
             fieldAdjust = (d / (Field.FIELD_WIDTH/2)) * (Math.PI/2) * (directionCorrection);
         }
         final double predicatedBallCarrierAngle =
-                ballCarrier.getPreviousMovement(DEFENDER_DISTANCE_TO_POLL).getAngle();
+                ballCarrier.getPreviousMovement(DEFENDER_DISTANCE_TO_POLL).getMovement().getAngle();
         Vector movement = new Vector(hostPlayer.getMaxMovement(), predicatedBallCarrierAngle - fieldAdjust);
 //        Vector movement = new Vector(predicatedBallCarrierAngle, 1);
 //        This ends with us basically right on top of the ball carrier on the X axis. We should strive to be between 3-5 yards away in whatever
@@ -193,6 +192,11 @@ public class DefaultOffensiveStrategy extends OffensivePlayerStrategy{
 //        For now, assume TouchDown
         mCacheGoal = new Tuple2<>(hostPlayer.getBallCarrier().getLocation().getFirst(), Field.GetLocationForEndzone(hostPlayer.getTeamGoal()).getSecond());
         return mCacheGoal;
+    }
+
+    @Override
+    public List<PlayerInfluences> getInfluences(GamePlayer hostPlayer, GameField field) {
+        return null;
     }
 
 }

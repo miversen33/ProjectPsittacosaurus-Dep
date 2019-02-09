@@ -20,6 +20,14 @@ public class Field{
     private final static double RightBoundary = LeftBoundary + FIELD_WIDTH;
     private final static double BottomBoundary = TopBoundary + FIELD_HEIGHT;
 
+    public enum Side{
+        LEFT,
+        RIGHT;
+
+        public final boolean isRight(){ return this.equals(RIGHT); }
+        public final boolean isLeft(){ return this.equals(LEFT); }
+    }
+
 
     public final static PlayerLocationState GetLocationState(final Location location){
         if(!IsInBounds(location)) return PlayerLocationState.OutOfBounds;
@@ -66,6 +74,10 @@ public class Field{
         if(endzone.isSouth()) return IsInSouthEndzone(location.getLocation());
 //        Handle logging due to invalid endzone flag
         return false;
+    }
+
+    public final static Side GetSideOfField(final Tuple2<Double, Double> location){
+        return location.getFirst() <= Field.FIELD_WIDTH/2 ? Side.LEFT : Side.RIGHT;
     }
 
 //    This will return the top left corner of the north endzone

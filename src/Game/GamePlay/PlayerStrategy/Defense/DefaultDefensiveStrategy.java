@@ -1,13 +1,16 @@
-package Game.PlayerStrategy.Defense;
+package Game.GamePlay.PlayerStrategy.Defense;
 
 import Game.*;
 import Game.Field.FieldObject;
-import Game.Field.GameField;
-import Game.Field.GamePlayer;
+import Game.GamePlay.GameField;
+import Game.GamePlay.GamePlayer;
+import Game.GamePlay.PlayerInfluences;
 import PhysicsEngine.Vector;
 import PhysicsEngine.Movements.MovementInstruction;
 import Tuple.Tuple2;
 import Utils.Location;
+
+import java.util.List;
 
 //This will be the "fallBack" strategy. This may be moved to DefensivePlayerStrategy instead, but for now its on its own.
 public class DefaultDefensiveStrategy extends DefensivePlayerStrategy {
@@ -59,5 +62,10 @@ public class DefaultDefensiveStrategy extends DefensivePlayerStrategy {
         if(TARGET_FEET > 1 ) TARGET_FEET -=1 ;
 
         return new Tuple2<>(ballCarrier.getLocation().getFirst() + ballCarrierPredictedMovement.getChangeX(), ballCarrier.getLocation().getSecond() + ballCarrierPredictedMovement.getChangeY());
+    }
+
+    @Override
+    public List<PlayerInfluences> getInfluences(GamePlayer hostPlayer, GameField field) {
+        return null;
     }
 }

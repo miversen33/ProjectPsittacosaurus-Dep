@@ -3,20 +3,24 @@ package Utils;
 import PhysicsEngine.Vector;
 import Tuple.Tuple2;
 
+/**
+ * Is this really the best place to do this?
+ * TODO
+ */
 final class Line{
     private final Tuple2<Double, Double> startingPoint;
     private final Tuple2<Double, Double> endingPoint;
 
     private enum Orientation{
         COUNTERCLOCKWISE,
-        COLINEAR,
-        CLOCKWISE;
+        COLLINEAR,
+        CLOCKWISE
     }
 
     private final static Orientation FindOrientation(final Tuple2<Double, Double> point1, final Tuple2<Double, Double> point2, final Tuple2<Double, Double> point3){
         double slopeDiff = (point2.getSecond() - point1.getSecond()) * (point3.getFirst() - point2.getFirst())-
                 (point2.getFirst()  - point1.getFirst()) *  (point3.getSecond() - point2.getSecond());
-        if(slopeDiff == 0) return Orientation.COLINEAR;
+        if(slopeDiff == 0) return Orientation.COLLINEAR;
         return slopeDiff > 0 ? Orientation.CLOCKWISE : Orientation.COUNTERCLOCKWISE;
     }
     
@@ -26,7 +30,7 @@ final class Line{
     }
 
     final Tuple2<Double, Double> doesIntersect(final Line line){
-        final Orientation firstLineFirsthalf = FindOrientation(startingPoint, endingPoint, line.endingPoint);
+        final Orientation firstLineFirstHalf = FindOrientation(startingPoint, endingPoint, line.endingPoint);
         final Orientation firstLineSecondHalf = FindOrientation(startingPoint, endingPoint, line.startingPoint);
         final Orientation secondLineFirstHalf = FindOrientation(line.startingPoint, line.endingPoint, startingPoint);
         final Orientation secondLineSecondHalf = FindOrientation(line.startingPoint, line.endingPoint, endingPoint);
@@ -34,10 +38,10 @@ final class Line{
         double intX;
         double intY;
 
-        if(firstLineFirsthalf == Orientation.COLINEAR &&
-           firstLineSecondHalf == Orientation.COLINEAR &&
-           secondLineFirstHalf == Orientation.COLINEAR &&
-           secondLineSecondHalf == Orientation.COLINEAR){
+        if(firstLineFirstHalf == Orientation.COLLINEAR &&
+           firstLineSecondHalf == Orientation.COLLINEAR &&
+           secondLineFirstHalf == Orientation.COLLINEAR &&
+           secondLineSecondHalf == Orientation.COLLINEAR){
             final Tuple2<Double, Double> point = handleCollinearFirstIntersection(line);
             intX = point.getFirst();
             intY = point.getSecond();

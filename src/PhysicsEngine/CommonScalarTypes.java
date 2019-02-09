@@ -1,6 +1,6 @@
 package PhysicsEngine;
 
 public interface CommonScalarTypes {
-    String MASS = "MASS";
-    String ACCELERATION = "ACCELERATION";
+    public final static String MASS = "MASS";
+    public final static String ACCELERATION = "ACCELERATION";
 }

@@ -1,6 +1,6 @@
 package PhysicsEngine.Movements;
 
-import Game.Field.GamePlayer;
+import Game.GamePlay.GamePlayer;
 
 public final class MovementAction {
 
@@ -9,6 +9,7 @@ public final class MovementAction {
          * Jamming a receiver is technically blocking, so it receives the same state
          */
         BLOCK,
+        IS_BLOCKED,
         TACKLE,
         BREAK_BLOCK,
         BREAK_TACKLE,
@@ -16,6 +17,7 @@ public final class MovementAction {
         NULL;
 
         public final boolean block(){ return this.equals(BLOCK); }
+        public final boolean isBlocked(){ return this.equals(IS_BLOCKED); }
         public final boolean tackle(){ return this.equals(TACKLE); }
         public final boolean breakBlock(){ return this.equals(BREAK_BLOCK); }
         public final boolean breakTackle(){ return this.equals(BREAK_TACKLE); }
@@ -48,4 +50,6 @@ public final class MovementAction {
      * Player the action is happening to
      */
     public final GamePlayer getAffectedPlayer(){ return mAffectedPlayer; }
+
+
 }

@@ -1,6 +1,6 @@
 package PhysicsEngine.Movements;
 
-import Game.Field.GamePlayer;
+import Game.GamePlay.GamePlayer;
 import PhysicsEngine.Vector;
 import Tuple.Tuple2;
 import Utils.Location;
@@ -9,10 +9,15 @@ public final class MovementInstruction implements Comparable<MovementInstruction
     private final GamePlayer mPlayer;
     private final Vector mVector;
     private final MovementAction mAction;
+    private boolean isExecuted = false;
+    private int totalTimeInSeconds;
 
     private final static int GREATER_THAN = 1;
     private final static int EQUALS = 0;
     private final static int LESS_THAN = -1;
+
+    public final static int COLLISION_USED_TIME = 200;
+    public final static int DEFAULT_USED_TIME = 1000;
 
     public MovementInstruction(final GamePlayer player, final Vector vector){
         mPlayer = player;
@@ -42,6 +47,23 @@ public final class MovementInstruction implements Comparable<MovementInstruction
 
     public final MovementAction getAction(){
         return mAction;
+    }
+
+    public final boolean hasBeenExecuted(){
+        return isExecuted;
+    }
+
+    final void execute(){
+//        Consider a way to verify ownership here
+        isExecuted = true;
+    }
+
+    public final void setUsedTime(final int time){
+        totalTimeInSeconds = time;
+    }
+
+    public final int getUsedTime(){
+        return totalTimeInSeconds;
     }
 
     @Override

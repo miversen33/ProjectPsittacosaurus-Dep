@@ -1,6 +1,4 @@
-package Game;
-
-import Game.Field.GamePlayer;
+package Game.GamePlay;
 
 public class GameManager {
 

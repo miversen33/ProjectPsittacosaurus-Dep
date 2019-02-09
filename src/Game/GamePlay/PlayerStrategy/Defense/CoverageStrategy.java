@@ -1,16 +1,15 @@
-package Game.PlayerStrategy.Offense;
+package Game.GamePlay.PlayerStrategy.Defense;
 
-import Game.Field.GameField;
-import Game.Field.GamePlayer;
+import Game.GamePlay.GameField;
+import Game.GamePlay.GamePlayer;
+import Game.GamePlay.PlayerInfluences;
 import Game.IGamePlayerOwner;
 import PhysicsEngine.Movements.MovementInstruction;
 import Tuple.Tuple2;
 
-public class ThrowerStrategy extends OffensivePlayerStrategy{
+import java.util.List;
 
-    public ThrowerStrategy() {
-        super();
-    }
+public class CoverageStrategy extends DefensivePlayerStrategy{
 
     @Override
     public void calculateMove(final GamePlayer hostPlayer, final GameField field) {
@@ -24,6 +23,11 @@ public class ThrowerStrategy extends OffensivePlayerStrategy{
 
     @Override
     public Tuple2<Double, Double> calculateGoal(GamePlayer hostPlayer, GameField field, IGamePlayerOwner hostTeam) {
+        return null;
+    }
+
+    @Override
+    public List<PlayerInfluences> getInfluences(GamePlayer hostPlayer, GameField field) {
         return null;
     }
 }
