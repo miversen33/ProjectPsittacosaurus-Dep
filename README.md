@@ -8,4 +8,5 @@ A Football Simulation with no chosen name yet.
 * Dynamic Path Creation (aStar)
 * Static Path Creation
 * Vector Math/Logic
-* How to implement physics into gameplay
+* How to implement inelastic collisions into gameplay
+* How to implement elastic collisions into gameplay
