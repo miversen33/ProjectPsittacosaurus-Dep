@@ -33,6 +33,8 @@ public final class BallCarrierStrategy implements IPlayerStrategy {
     private final static String TOUCHDOWN_TAG_SOUTH = "TOUCHDOWN_SOUTH";
     private final static String FIRSTDOWN_TAG = "FIRST DOWN";
 
+    private final boolean DEBUG_RAILS = false;
+
     public BallCarrierStrategy() {
 //        Consider having the defaults be provided so that every player has a "custom" strategy as they progress
     }
@@ -40,6 +42,11 @@ public final class BallCarrierStrategy implements IPlayerStrategy {
     @Override
     public final void calculateMove(final GamePlayer hostPlayer, final GameField field) {
 //        Optimize me
+        if(DEBUG_RAILS){
+            final Vector movement = new Vector(new Tuple2<>(0.0, hostPlayer.getTeamGoal().isNorth() ? -3.0 : 3.0));
+            move = new MovementInstruction(hostPlayer, movement);
+            return;
+        }
 
         final List<PlayerInfluence> playerInfluences = getInfluences(hostPlayer, field);
         Vector movement = new Vector(0,0);

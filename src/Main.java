@@ -29,6 +29,7 @@ public class Main {
         final IPlayerStrategy blockerStrategy   = new DefaultOffensiveStrategy();
         final IPlayerStrategy defensivePlayerStrategy1 = new DefaultDefensiveStrategy();
         final IPlayerStrategy defensivePlayerStrategy2 = new DefaultDefensiveStrategy();
+        final IPlayerStrategy defensivePlayerStrategy3 = new DefaultDefensiveStrategy();
 
         final double bcMass = 74.84;
         final double b1Mass = 108.86;
@@ -43,9 +44,9 @@ public class Main {
 
         final GamePlayer ballCarrier = new GamePlayer(bcMass, "BallCarrier", ballCarrierStrategy);
         final GamePlayer blockerPlayer1 = new GamePlayer(b1Mass, "Blocker1",blockerStrategy);
-        final GamePlayer defensivePlayer1 = new GamePlayer(d1Mass, "Linebacker1", defensivePlayerStrategy1);
-        final GamePlayer defensivePlayer2 = new GamePlayer(d2Mass, "Linebacker2", defensivePlayerStrategy1);
-        final GamePlayer defensivePlayer3 = new GamePlayer(d3Mass, "Linebacker3",defensivePlayerStrategy1);
+        final GamePlayer defensivePlayer1 = new GamePlayer(d1Mass, "Linebacker1",defensivePlayerStrategy1);
+        final GamePlayer defensivePlayer2 = new GamePlayer(d2Mass, "Linebacker2",defensivePlayerStrategy2);
+        final GamePlayer defensivePlayer3 = new GamePlayer(d3Mass, "Linebacker3",defensivePlayerStrategy3);
         final GamePlayer defensivePlayer4 = new GamePlayer(d4Mass, "Linebacker4",defensivePlayerStrategy1);
         final GamePlayer defensivePlayer5 = new GamePlayer(d5Mass, "Linebacker5",defensivePlayerStrategy1);
         final GamePlayer defensivePlayer6 = new GamePlayer(d6Mass, "Linebacker6",defensivePlayerStrategy1);
@@ -54,7 +55,7 @@ public class Main {
                 Arrays.asList(
                         ballCarrier
                         ,blockerPlayer1
-                ), Field.GetNorthEndzone());
+                ), Field.GetSouthEndzone());
         final GameTeam defense = new GameTeam(
                 Arrays.asList(
                         defensivePlayer1
@@ -63,10 +64,10 @@ public class Main {
                        ,defensivePlayer4
                        ,defensivePlayer5
                        ,defensivePlayer6
-                ), Field.GetSouthEndzone());
-        final Tuple2<Double, Double> ballCarrierLocation = new Tuple2<>(30.0,Field.FIELD_HEIGHT);
+                ), Field.GetNorthEndzone());
+        final Tuple2<Double, Double> ballCarrierLocation = new Tuple2<>(30.0,Field.ENDZONE_HEIGHT);
         final Tuple2<Double, Double> blockerLocation = new Tuple2<>(21.0, 15.0);
-        final Tuple2<Double, Double> defender1Location = new Tuple2<>(30.0, Field.ENDZONE_HEIGHT);
+        final Tuple2<Double, Double> defender1Location = new Tuple2<>(100.0, Field.FIELD_HEIGHT);
         final Tuple2<Double, Double> defender2Location = new Tuple2<>(10.0, 75.0);
         final Tuple2<Double, Double> defender3Location = new Tuple2<>(35.0, Field.FIELD_HEIGHT - Field.ENDZONE_HEIGHT);
 //        final Tuple2<Double, Double> defender4Location = new Tuple2<>(Field.FIELD_WIDTH - 60, Field.FIELD_HEIGHT - Field.ENDZONE_HEIGHT);
@@ -76,7 +77,7 @@ public class Main {
         gameField.addPlayer(ballCarrier, new Location(ballCarrierLocation));
 //        gameField.addPlayer(blockerPlayer1, new Location(blockerLocation));
         gameField.addPlayer(defensivePlayer1, new Location(defender1Location));
-        gameField.addPlayer(defensivePlayer2, new Location(defender2Location));
+//        gameField.addPlayer(defensivePlayer2, new Location(defender2Location));
 //        gameField.addPlayer(defensivePlayer3, new Location(defender3Location));
 //        gameField.addPlayer(defensivePlayer4, new Location(defender4Location));
 //        gameField.addPlayer(defensivePlayer5, new Location(defender5Location));

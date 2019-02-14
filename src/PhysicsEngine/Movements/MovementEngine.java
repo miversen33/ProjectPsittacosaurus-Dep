@@ -1,15 +1,11 @@
 package PhysicsEngine.Movements;
 
-import Game.GamePlay.GameClock;
-import Game.GamePlay.GameField;
 import Game.GamePlay.GamePlayer;
-import PhysicsEngine.PhysicsObjects.Vector;
-import Tuple.Tuple2;
-import Utils.Location;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Vector;
 
 public final class MovementEngine {
 
@@ -164,11 +160,9 @@ public final class MovementEngine {
         handleMovement(instruction2, field);
 
         if(Location.GetDistance(instruction.getAction().getAffectingPlayer(), instruction.getAction().getAffectedPlayer()) <= 1) return;
-
         instruction.getAction().getAffectingPlayer().getMovementInstruction().execute();
         instruction.getAction().getAffectedPlayer().getMovementInstruction().execute();
 //        Also need to handle if collision force generated causes injury
-//        TODO
     }
 
     private final void handleMovement(final MovementInstruction instruction, final GameField field) {

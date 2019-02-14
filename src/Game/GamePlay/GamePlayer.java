@@ -1,18 +1,10 @@
 package Game.GamePlay;
 
-import Game.Field.Endzone;
-import Game.Field.Field;
-import Game.Field.FieldObject;
-import Game.IPlayerObject;
-import Game.PlayerState;
-import Game.GamePlay.PlayerStrategy.IPlayerStrategy;
 import PhysicsEngine.Movements.MovementEngine;
-import PhysicsEngine.Movements.MovementInstruction;
-import PhysicsEngine.PhysicsObjects.Vector;
-import Tuple.Tuple2;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 public class GamePlayer extends FieldObject implements IPlayerObject {
 //    Find a better location than Field Package
