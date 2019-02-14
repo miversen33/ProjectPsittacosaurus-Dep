@@ -43,7 +43,7 @@ public class GamePlayer extends FieldObject implements IPlayerObject {
         mTeam = team;
     }
 
-    public final List<PlayerInfluences> getPlayerInfluenceBiases(){
+    public final List<PlayerInfluence> getPlayerInfluenceBiases(){
 //        Eventually this needs to be populated with individualized player influences.
 //        TODO
         return new ArrayList<>();
@@ -120,6 +120,11 @@ public class GamePlayer extends FieldObject implements IPlayerObject {
     public final void setPlayerState(final MovementEngine engine, final PlayerState state) {
 //        For now we accept any state. We will figure out a way to verify the engine is ours
         playerState = state;
+    }
+
+    @Override
+    public boolean sameTeamCheck(final GamePlayer comparePlayer) {
+        return comparePlayer.mTeam.equals(mTeam);
     }
 
     public final Tuple2<Double, Double> getGoal(){

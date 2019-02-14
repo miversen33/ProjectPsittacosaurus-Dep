@@ -5,10 +5,13 @@ import PhysicsEngine.PhysicsObjects.Vector;
 import Tuple.Tuple2;
 import Utils.Location;
 
+import java.util.UUID;
+
 public final class MovementInstruction implements Comparable<MovementInstruction> {
     private final GamePlayer mPlayer;
     private final Vector mVector;
     private final MovementAction mAction;
+    private final String signature = UUID.randomUUID().toString();
     private boolean isExecuted = false;
     private int totalTimeInSeconds;
 
@@ -77,6 +80,7 @@ public final class MovementInstruction implements Comparable<MovementInstruction
     }
 
     private final int handleCollisionComparison(final MovementInstruction movementInstruction){
+
         if(getAction().getAffectedPlayer().equals(movementInstruction.getAction().getAffectingPlayer()) ||
           (getAction().getAffectingPlayer().equals(movementInstruction.getPlayer()))) return EQUALS;
         if(getAction().getActionState().isColliding()) return LESS_THAN;

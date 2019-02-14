@@ -2,17 +2,18 @@ package Game.GamePlay.PlayerStrategy.Offense;
 
 import Game.GamePlay.GameField;
 import Game.GamePlay.GamePlayer;
-import Game.GamePlay.PlayerInfluences;
+import Game.GamePlay.PlayerInfluence;
+import Game.GamePlay.PlayerStrategy.IPlayerStrategy;
 import Game.IGamePlayerOwner;
 import PhysicsEngine.Movements.MovementInstruction;
 import Tuple.Tuple2;
 
 import java.util.List;
 
-public class ReceiverStrategy extends OffensivePlayerStrategy{
+public class ReceiverStrategy implements IPlayerStrategy {
 
     public ReceiverStrategy() {
-        super(0,0);
+
     }
 
     @Override
@@ -31,7 +32,7 @@ public class ReceiverStrategy extends OffensivePlayerStrategy{
     }
 
     @Override
-    public List<PlayerInfluences> getInfluences(GamePlayer hostPlayer, GameField field) {
+    public List<PlayerInfluence> getInfluences(GamePlayer hostPlayer, GameField field) {
         return null;
     }
 }

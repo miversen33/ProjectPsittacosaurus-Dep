@@ -19,4 +19,9 @@ public class Tuple2<First, Second> {
     public final Second getSecond(){
         return second;
     }
+
+    @Override
+    public String toString() {
+        return "("+first.toString()+","+second.toString()+")";
+    }
 }

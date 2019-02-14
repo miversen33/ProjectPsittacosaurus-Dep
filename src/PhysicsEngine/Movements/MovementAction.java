@@ -36,7 +36,7 @@ public final class MovementAction {
     }
 
     public MovementAction(){
-        this(State.NULL, null, null);
+        this(State.NULL, new GamePlayer(0.0, null, null), new GamePlayer(0.0, null, null));
     }
 
     public final State getActionState(){ return mActionState; }
@@ -50,6 +50,5 @@ public final class MovementAction {
      * Player the action is happening to
      */
     public final GamePlayer getAffectedPlayer(){ return mAffectedPlayer; }
-
 
 }

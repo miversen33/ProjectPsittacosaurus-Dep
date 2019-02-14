@@ -101,6 +101,12 @@ public final class GameField {
         mPlayers.remove(player);
     }
 
+    public final void DEBUG_DumpPlayerLocations(){
+        for(final GamePlayer player : mPlayers.keySet()) {
+            System.out.println(player.getName() + " Location is | "+player.getLocation());
+        }
+    }
+
     public final void movePlayer(final MovementEngine engine, final GamePlayer player, final Vector movement){
 //        Validate engine
         mPlayers.get(player).move(movement);

@@ -94,4 +94,12 @@ public class Field{
         return endzone == Endzone.NORTH ? NORTH_ENDZONE_LOCATION : SOUTH_ENDZONE_LOCATION;
     }
 
+    public final static double GetDistanceFromLeftSideLine(final FieldObject object){
+        return object.getLocation().getFirst();
+    }
+
+    public final static double GetDistanceFromRightSideLine(final FieldObject object){
+        return Field.FIELD_WIDTH - object.getLocation().getFirst();
+    }
+
 }

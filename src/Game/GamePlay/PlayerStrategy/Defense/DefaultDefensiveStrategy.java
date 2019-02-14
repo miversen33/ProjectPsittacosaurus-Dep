@@ -4,7 +4,7 @@ import Game.*;
 import Game.Field.FieldObject;
 import Game.GamePlay.GameField;
 import Game.GamePlay.GamePlayer;
-import Game.GamePlay.PlayerInfluences;
+import Game.GamePlay.PlayerInfluence;
 import PhysicsEngine.PhysicsObjects.Vector;
 import PhysicsEngine.Movements.MovementInstruction;
 import Tuple.Tuple2;
@@ -28,7 +28,7 @@ public class DefaultDefensiveStrategy extends DefensivePlayerStrategy {
 //        being blocked. If we are, we should engage in block shedding,
 //        as opposed to tackle targeting
 
-        move = new MovementInstruction(hostPlayer, new Vector(new Tuple2<>(0.0, - hostPlayer.getMaxMovement())));
+        move = new MovementInstruction(hostPlayer, new Vector(new Tuple2<>(0.0, + hostPlayer.getMaxMovement(0))));
 //        targetPoint = calculateGoal(hostPlayer, field, null);
 //        final Vector movement = new Vector(new Tuple2<>(targetPoint.getFirst() - hostPlayer.getLocation().getFirst(), targetPoint.getSecond() - hostPlayer.getLocation().getSecond()));
 //
@@ -65,7 +65,7 @@ public class DefaultDefensiveStrategy extends DefensivePlayerStrategy {
     }
 
     @Override
-    public List<PlayerInfluences> getInfluences(GamePlayer hostPlayer, GameField field) {
+    public List<PlayerInfluence> getInfluences(GamePlayer hostPlayer, GameField field) {
         return null;
     }
 }

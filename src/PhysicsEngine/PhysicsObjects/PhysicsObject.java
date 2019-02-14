@@ -42,7 +42,7 @@ public class PhysicsObject {
         return acceleration * mass;
     }
 
-    public final double getMaxMovement(){
+    public final double getMaxMovement(final double direction){
         return maxMovement;
     }
 

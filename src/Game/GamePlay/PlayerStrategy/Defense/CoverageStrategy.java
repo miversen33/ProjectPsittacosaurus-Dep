@@ -2,7 +2,7 @@ package Game.GamePlay.PlayerStrategy.Defense;
 
 import Game.GamePlay.GameField;
 import Game.GamePlay.GamePlayer;
-import Game.GamePlay.PlayerInfluences;
+import Game.GamePlay.PlayerInfluence;
 import Game.IGamePlayerOwner;
 import PhysicsEngine.Movements.MovementInstruction;
 import Tuple.Tuple2;
@@ -27,7 +27,7 @@ public class CoverageStrategy extends DefensivePlayerStrategy{
     }
 
     @Override
-    public List<PlayerInfluences> getInfluences(GamePlayer hostPlayer, GameField field) {
+    public List<PlayerInfluence> getInfluences(GamePlayer hostPlayer, GameField field) {
         return null;
     }
 }

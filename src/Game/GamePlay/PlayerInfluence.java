@@ -1,14 +1,19 @@
 package Game.GamePlay;
 
-public final class PlayerInfluences {
+import PhysicsEngine.PhysicsObjects.Vector;
 
-    private final double influence;
+public final class PlayerInfluence {
+
+    private final Vector influence;
     private final double readableInfluence;
     private final String influencingObjectName;
 
-    public PlayerInfluences(final double influence, final double readableInfluence, final String objectName){
+    /**
+     * Remember that a positive direction will be a pull, while a negative direction will be a push
+     */
+    public PlayerInfluence(final Vector influence, final double readableInfluence, final String objectName){
         this.influence = influence;
-        this.readableInfluence = readableInfluence;
+        this.readableInfluence = Math.abs(readableInfluence);
         this.influencingObjectName = objectName;
     }
 
@@ -16,7 +21,7 @@ public final class PlayerInfluences {
         return influencingObjectName;
     }
 
-    public final double getInfluence(){
+    public final Vector getInfluence(){
         return influence;
     }
 
