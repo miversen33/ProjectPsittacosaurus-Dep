@@ -8,8 +8,10 @@ import Game.GamePlay.PlayerStrategy.IPlayerStrategy;
 import Game.GamePlay.PlayerStrategy.Offense.BallCarrierStrategy;
 import Game.GamePlay.PlayerStrategy.Offense.DefaultOffensiveStrategy;
 import PhysicsEngine.Movements.MovementEngine;
+import Utils.Signature;
 
 import java.util.Arrays;
+import java.util.UUID;
 
 public class Main {
 
@@ -21,10 +23,10 @@ public class Main {
 //        This is a pseudo gameManager class. Eventually this will be cleaned up
 //        And placed in its own class.
 
-        Field field = new Field();
-        GameField gameField = new GameField(field);
-        MovementEngine engine = new MovementEngine();
+        Signature signature = Signature.GenerateNewSignature();
+        MovementEngine engine = new MovementEngine(signature);
 
+        GameField gameField = new GameField(signature);
         final IPlayerStrategy ballCarrierStrategy = new BallCarrierStrategy();
         final IPlayerStrategy blockerStrategy   = new DefaultOffensiveStrategy();
         final IPlayerStrategy defensivePlayerStrategy1 = new DefaultDefensiveStrategy();
@@ -40,7 +42,7 @@ public class Main {
         final double d5Mass = 90.718;
         final double d6Mass = 90.718;
 
-        final GameClock gc = new GameClock(Clock.DefaultValues.QUARTER_15, Clock.DefaultValues.PLAY_CLOCK_45);
+        final GameClock gc = new GameClock(signature, Clock.DefaultQuarterLength.QUARTER_15, Clock.DefaultPlayClock.PLAY_CLOCK_45);
 
         final GamePlayer ballCarrier = new GamePlayer(bcMass, "BallCarrier", ballCarrierStrategy);
         final GamePlayer blockerPlayer1 = new GamePlayer(b1Mass, "Blocker1",blockerStrategy);
@@ -89,7 +91,7 @@ public class Main {
 
 //        Quick loop to cycle movements.
 
-        while(!GameManager.DEBUG_DUN){
+        while(true){
             gameField.DEBUG_DumpPlayerLocations();
             offense.cycle();
             defense.cycle();

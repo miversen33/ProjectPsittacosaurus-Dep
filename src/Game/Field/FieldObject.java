@@ -84,6 +84,10 @@ public abstract class FieldObject extends PhysicsObject implements Observer<Tupl
         mOwner = null;
     }
 
+    public final PlayerLocationState getLocationState(){
+        return locationState;
+    }
+
     public final void clearMovementsQueue(final GameField owner){
         if (!(owner.equals(mOwner))) {
 //            Spit out some shit about being the wrong field

@@ -21,6 +21,7 @@ public final class BallCarrierStrategy implements IPlayerStrategy {
     private final static double MAX_DISTANCE_Y = 60;
     private final static double MAX_DISTANCE_X = 30;
 //    This is terrible. Fix it
+//    We need a way to allow a ball carrier to be "worse" or "better" based on their attributes
     private final static double MAX_DISTANCE = MAX_DISTANCE_X > MAX_DISTANCE_Y ? MAX_DISTANCE_X : MAX_DISTANCE_Y;
     private final static double DEFAULT_AVOIDANCE_INFLUENCE = 1.5;
     private final static double DEFAULT_CUSHION_INFLUENCE = 1;
@@ -33,7 +34,7 @@ public final class BallCarrierStrategy implements IPlayerStrategy {
     private final static String TOUCHDOWN_TAG_SOUTH = "TOUCHDOWN_SOUTH";
     private final static String FIRSTDOWN_TAG = "FIRST DOWN";
 
-    private final boolean DEBUG_RAILS = false;
+    private final boolean DEBUG_RAILS = true;
 
     public BallCarrierStrategy() {
 //        Consider having the defaults be provided so that every player has a "custom" strategy as they progress

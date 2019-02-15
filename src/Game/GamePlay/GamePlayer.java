@@ -1,10 +1,18 @@
 package Game.GamePlay;
 
+import Game.Field.Endzone;
+import Game.Field.Field;
+import Game.Field.FieldObject;
+import Game.GamePlay.PlayerStrategy.IPlayerStrategy;
+import Game.IPlayerObject;
+import Game.PlayerState;
 import PhysicsEngine.Movements.MovementEngine;
+import PhysicsEngine.Movements.MovementInstruction;
+import PhysicsEngine.PhysicsObjects.Vector;
+import Tuple.Tuple2;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 public class GamePlayer extends FieldObject implements IPlayerObject {
 //    Find a better location than Field Package
@@ -106,6 +114,11 @@ public class GamePlayer extends FieldObject implements IPlayerObject {
     @Override
     public final PlayerState getPlayerState() {
         return playerState;
+    }
+
+    @Override
+    public String toString() {
+        return getName()+" | "+getLocation();
     }
 
     @Override

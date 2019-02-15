@@ -1,13 +1,13 @@
 package Game.GamePlay;
 
-import Game.Field.Field;
+import Game.GamePlay.Events.PlayerOutOfBoundsEvent;
+import Game.GamePlay.Events.PlayerInEndzoneEvent;
 import PhysicsEngine.Movements.MovementEngine;
 import PhysicsEngine.PhysicsObjects.Vector;
-import Tuple.Tuple2;
 import Utils.Exceptions.FieldLockException;
 import Utils.Location;
 import Utils.Location.LocationKey;
-import Utils.Observable.Observer;
+import Utils.Signature;
 
 import java.util.*;
 
@@ -15,15 +15,13 @@ public final class GameField {
 
     private String mFieldLock;
     private final FieldLockException fieldLockException = new FieldLockException();
-    private final Field mField;
     private Map<GamePlayer, Location> mPlayers = new HashMap<>();
     private Map<Location, GamePlayer> mLocationMap = new HashMap<>();
-    private final LocationKey observerKey = LocationKey.LOCATION_UPDATED_KEY;
-    private final LocationObserver playerLocationObserver = new LocationObserver();
+    private final Signature mSignature;
+    private final double COLLISION_DISTANCE_CHECK = 2;
 
-    public GameField(final Field field){
-        if(field == null) throw new NullPointerException("Field Cannot be null");
-        mField = field;
+    public GameField(final Signature signature){
+        mSignature = signature;
     }
 
     public final List<GamePlayer> checkLocation(final GamePlayer player, final double radius){
@@ -33,7 +31,6 @@ public final class GameField {
         for(final Location l : mLocationMap.keySet()){
             if(Location.GetDistance(playerLocation, l) <= radius) offendingLocations.add(l);
         }
-//        Very high chance this breaks
         offendingLocations.sort((Comparator.comparingDouble(firstLocation -> Location.GetDistance(playerLocation, (Location) firstLocation))).reversed());
 
         for(final Location l : offendingLocations){
@@ -41,11 +38,6 @@ public final class GameField {
         }
         playersInLocation.remove(player);
         return playersInLocation;
-    }
-
-    public final void signEngine(final MovementEngine engine){
-//        Check to see if we already have an engine. Yell if we do. Otherwise
-//        Sign engine. Store it as our engine.
     }
 
     public final String lock(){
@@ -68,11 +60,6 @@ public final class GameField {
         }
     }
 
-    public final boolean validateEngine(final MovementEngine engine){
-//        Handle validity check
-        return true;
-    }
-
     public final boolean isLocked(){
         return mFieldLock != null;
     }
@@ -86,7 +73,6 @@ public final class GameField {
         mPlayers.put(newPlayer, startingLocation);
         mLocationMap.put(startingLocation, newPlayer);
         startingLocation.registerObserver(newPlayer);
-        startingLocation.registerObserver(playerLocationObserver);
         startingLocation.updateObservers(LocationKey.LOCATION_UPDATED_KEY, startingLocation.getLocation());
     }
 
@@ -95,7 +81,6 @@ public final class GameField {
 //            Handle logging due to player not being on the field
             return;
         }
-        mPlayers.get(player).unregisterObserver(playerLocationObserver);
         mPlayers.get(player).unregisterObserver(player);
         mLocationMap.remove(mPlayers.get(player));
         mPlayers.remove(player);
@@ -107,9 +92,19 @@ public final class GameField {
         }
     }
 
-    public final void movePlayer(final MovementEngine engine, final GamePlayer player, final Vector movement){
+    public final List<GamePlayer> movePlayer(final MovementEngine engine, final GamePlayer player, final Vector movement){
 //        Validate engine
+        if(!Signature.ValidateSignatures(mSignature, engine.getSignature())){
+//            Log possible malicious attempt to move players. Do not move players
+//            TODO
+            System.out.println("Unable to verify engine");
+            return null;
+        }
         mPlayers.get(player).move(movement);
+        List<GamePlayer> playersInSpace = checkLocation(player, COLLISION_DISTANCE_CHECK);
+        if(player.getLocationState().isOutOfBounds()) new PlayerOutOfBoundsEvent(mSignature, player).fire();
+        if(player.getLocationState().isInEndzone()) new PlayerInEndzoneEvent(mSignature, player).fire();
+        return playersInSpace;
     }
 
     public final void giveMovementsToEngine(final MovementEngine engine){
@@ -130,35 +125,12 @@ public final class GameField {
     private final void handlePlayerLocationMoved(final GamePlayer player, final Location newLocation){
 //        Set listen for endzone/out of bounds of player. Should be
 //        pretty easy though
+
     }
 
     private final void clearMovements(){
         for(final GamePlayer player : mPlayers.keySet()){
             player.clearMovementInstruction(this);
-        }
-    }
-
-    /**
-     * Probably should consider moving this to its own class
-     * instead of making it an inner class
-     */
-    class LocationObserver implements Observer<Tuple2<Double, Double>>{
-
-        @Override
-        public void updateObserver(Object key, Tuple2<Double, Double> newLocation) {
-//            The only way we get here is if we have a key registered,
-//            or if a null key is passed. So check to see if
-//            its null (in which we need to update the entire object, ps, thats bad and should probably be removed later)
-//            if its not, figure out which key we got.
-//            if(key.equals(Observable.NULL_KEY)) handleNullObserverKey(newLocation);
-            if(key.equals(observerKey)) handleLocationMoved(newLocation);
-        }
-
-
-        private final void handleLocationMoved(final Tuple2<Double, Double> locationMoved){
-            final Location newLocation = new Location(locationMoved);
-//            This might not be as clean as we would hope.
-            handlePlayerLocationMoved(mLocationMap.get(newLocation), newLocation);
         }
     }
 

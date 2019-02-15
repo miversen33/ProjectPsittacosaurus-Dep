@@ -1,19 +1,29 @@
 package PhysicsEngine.Movements;
 
+import Game.GamePlay.GameClock;
+import Game.GamePlay.GameField;
 import Game.GamePlay.GamePlayer;
+import PhysicsEngine.Movements.Events.CollisionEvent;
+import PhysicsEngine.PhysicsObjects.Vector;
+import Tuple.Tuple2;
+import Utils.Location;
+import Utils.Signature;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Vector;
 
 public final class MovementEngine {
 
     private final static int CYCLE_LIMIT = 3;
+    private final Signature mSig;
 
-    public MovementEngine() {
-//        We should probably have some sort of hash provided by the field so we can
-//        help ensure movement validity
+    public MovementEngine(final Signature signature) {
+        mSig = signature;
+    }
+
+    public final Signature getSignature(){
+        return mSig;
     }
 
     private final List<GamePlayer> prioritizeQueue(final List<GamePlayer> playerQueue) {
@@ -95,7 +105,7 @@ public final class MovementEngine {
         for (final GamePlayer player : playerQueue) {
             if (!player.getMovementInstruction().getAction().getActionState().isColliding()) {
                 if (!tickClock) tickClock = true;
-                handleMovement(player.getMovementInstruction(), field);
+                keepLooping = !handleMovement(player.getMovementInstruction(), field);
             } else {
                 keepLooping = true;
             }
@@ -108,7 +118,6 @@ public final class MovementEngine {
 //        in a collision, they receive a NULL MovementAction, indicating that they are not currently
 //        moving (done moving) and waiting to finish
 
-//        This isn't perfect, is will still return a null action even if the players are within 1 of each other
         return cycleQueue(count + interval, playerQueue, field);
     }
 
@@ -162,21 +171,40 @@ public final class MovementEngine {
         if(Location.GetDistance(instruction.getAction().getAffectingPlayer(), instruction.getAction().getAffectedPlayer()) <= 1) return;
         instruction.getAction().getAffectingPlayer().getMovementInstruction().execute();
         instruction.getAction().getAffectedPlayer().getMovementInstruction().execute();
+
+//        Throws new collision event
+        new CollisionEvent(getSignature(), instruction1.getPlayer(), instruction2.getPlayer()).fire();
 //        Also need to handle if collision force generated causes injury
+
     }
 
-    private final void handleMovement(final MovementInstruction instruction, final GameField field) {
+    /**
+     * Returns true is the movement is "clean" or (doesn't end in a collision)
+     * Returns false otherwise
+     */
+    private final boolean handleMovement(final MovementInstruction instruction, final GameField field) {
 //        Quick catch to make sure that the movement is not a collision
         if (instruction.getAction().getActionState().isColliding()) {
             handleCollision(instruction, field);
-            return;
+            return false;
         }
         Vector movement = instruction.getVector();
         if (movement.getMagnitude() > instruction.getPlayer().getMaxMovement(movement.getDirection())) {
             movement = movement.scale(instruction.getPlayer().getMaxMovement(movement.getDirection()) / movement.getMagnitude());
         }
         instruction.execute();
-        field.movePlayer(this, instruction.getPlayer(), movement);
+        List<GamePlayer> collidingPlayers = field.movePlayer(this, instruction.getPlayer(), movement);
+
+        if(collidingPlayers.size() == 0) return true;
+
+        GamePlayer collidingPlayer = collidingPlayers.get(0);
+        final MovementInstruction firstPlayerRevisedInstruction = new MovementInstruction(new MovementAction(MovementAction.State.COLLIDING, instruction.getPlayer(), collidingPlayer), instruction.getVector());
+        final MovementInstruction secondPlayerRevisedInstruction = new MovementInstruction(new MovementAction(MovementAction.State.COLLIDING, collidingPlayer, instruction.getPlayer()), collidingPlayer.getMovementInstruction().getVector());
+
+        instruction.getPlayer().setMovementInstruction(this, firstPlayerRevisedInstruction);
+        collidingPlayer.setMovementInstruction(this, secondPlayerRevisedInstruction);
+
+        return false;
     }
 
     /**

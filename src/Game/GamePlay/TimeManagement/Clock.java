@@ -6,26 +6,34 @@ public final class Clock {
         void outOfTime();
     }
 
-    public enum DefaultValues{
-
+    public enum DefaultQuarterLength {
         QUARTER_15(900000),
         QUARTER_10(600000),
-        QUARTER_7(420000),
-        PLAY_CLOCK_45(45000),
-        PLAY_CLOCK_30(30000);
+        QUARTER_7(420000);
 
         private final int time;
 
-        DefaultValues(int amount){
-            time = amount;
+        DefaultQuarterLength(final int  t){
+            time = t;
         }
 
         public final int getTime(){
             return time;
         }
+    }
 
-        public final boolean isQuarterTime(){
-            return (QUARTER_15.equals(this) || QUARTER_10.equals(this) || QUARTER_7.equals(this));
+    public enum DefaultPlayClock{
+        PLAY_CLOCK_45(45000),
+        PLAY_CLOCK_30(30000);
+
+        private final int time;
+
+        DefaultPlayClock(final int t){
+            time = t;
+        }
+
+        public final int getTime(){
+            return time;
         }
     }
 
@@ -47,13 +55,6 @@ public final class Clock {
         timeLimit = startTime;
         remainingTime = timeLimit;
         owner = clockOwner;
-    }
-
-    /**
-     * Clock operates in milliseconds.
-     */
-    public Clock(final DefaultValues startTime, final ClockOwner clockOwner){
-        this(startTime.getTime(), clockOwner);
     }
 
     public final void resetClock(final ClockOwner clockOwner){

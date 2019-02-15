@@ -1,6 +1,10 @@
 package Game.GamePlay;
 
+import Event.Event;
 import Game.GamePlay.TimeManagement.Clock;
+import Game.GamePlay.TimeManagement.Events.GameClockEmptyEvent;
+import Game.GamePlay.TimeManagement.Events.PlayClockEmptyEvent;
+import Utils.Signature;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,22 +30,22 @@ public final class GameClock{
     private static Clock currentQuarterClock;
     private static Clock.ClockOwner quarterClockListener;
 
+    private final Signature mSig;
+
     private Map<Integer, Clock> quarterClockManager = new HashMap<>();
 
-    public GameClock(final Clock.DefaultValues quarterLength, final Clock.DefaultValues playclockLength){
-        if(!quarterLength.isQuarterTime()){
-//            Log that an invalid DefaultValue was passed
-        }
+    public GameClock(final Signature signature, final Clock.DefaultQuarterLength quarterLength, final Clock.DefaultPlayClock playClockLength){
         mQuarterLength = quarterLength.getTime();
-        mPlayClockLength = playclockLength.getTime();
+        mPlayClockLength = playClockLength.getTime();
+        mSig = signature;
         init();
     }
 
-    public GameClock(final int quarterLength, final int playClockLength){
-        mQuarterLength = quarterLength;
-        mPlayClockLength = playClockLength;
-        init();
-    }
+//    public GameClock(final int quarterLength, final int playClockLength){
+//        mQuarterLength = quarterLength;
+//        mPlayClockLength = playClockLength;
+//        init();
+//    }
 
     private final void init(){
         quarterClockListener = this::handleQuarterTimeIsDun;
@@ -89,9 +93,11 @@ public final class GameClock{
 
     private final void handleQuarterTimeIsDun(){
 //        For now we dont care much
+        new GameClockEmptyEvent(mSig, quarter).fire();
     }
 
     private final void handlePlayClockTimeIsDun(){
 //        For now we dont care much
+        new PlayClockEmptyEvent(mSig).fire();
     }
 }

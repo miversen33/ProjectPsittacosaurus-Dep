@@ -51,4 +51,8 @@ public final class MovementAction {
      */
     public final GamePlayer getAffectedPlayer(){ return mAffectedPlayer; }
 
+    @Override
+    public String toString() {
+        return getActionState().toString();
+    }
 }
