@@ -4,7 +4,7 @@ import Utils.Event.IEvent;
 import Utils.Event.IEventType;
 
 public final class PlayerInEndzoneEventType implements IEventType {
-    private final String NAME = "Player Is In Endzone";
+    public final static String NAME = "Player Is In Endzone";
 
     @Override
     public String getEventType() {

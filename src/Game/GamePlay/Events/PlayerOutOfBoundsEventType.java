@@ -3,7 +3,7 @@ package Game.GamePlay.Events;
 import Utils.Event.IEventType;
 
 public final class PlayerOutOfBoundsEventType implements IEventType {
-    private final String NAME = "Out Of Bounds";
+    public final static String NAME  = "Out Of Bounds";
 
     @Override
     public final String getEventType() {

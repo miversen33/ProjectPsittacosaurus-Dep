@@ -3,7 +3,7 @@ package PhysicsEngine.Movements.Events;
 import Utils.Event.IEventType;
 
 public final class TackleEventType implements IEventType {
-    private final String NAME = "Tackle";
+    public final static String NAME  = "Tackle";
 
     @Override
     public final String getEventType() {

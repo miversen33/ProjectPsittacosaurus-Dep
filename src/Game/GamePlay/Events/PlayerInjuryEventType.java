@@ -3,7 +3,7 @@ package Game.GamePlay.Events;
 import Utils.Event.IEventType;
 
 public final class PlayerInjuryEventType implements IEventType {
-    private final String NAME = "Player Injured";
+    public final static String NAME  = "Player Injured";
 
     @Override
     public String getEventType() {

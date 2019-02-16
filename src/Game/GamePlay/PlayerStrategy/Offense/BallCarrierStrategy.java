@@ -4,6 +4,7 @@ import Game.Field.CardinalDirection;
 import Game.Field.Field;
 import Game.GamePlay.GameField;
 import Game.GamePlay.PlayerInfluence;
+import Game.GamePlay.PlayerStrategy.BasePlayerStrategy;
 import Game.GamePlay.PlayerStrategy.IPlayerStrategy;
 import PhysicsEngine.PhysicsObjects.Vector;
 import Game.GamePlay.GamePlayer;
@@ -15,16 +16,13 @@ import Utils.Location;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class BallCarrierStrategy implements IPlayerStrategy {
+public final class BallCarrierStrategy extends BasePlayerStrategy{
 
     private MovementInstruction move = null;
+    //    We need a way to allow a ball carrier to be "worse" or "better" based on their attributes
     private final static double MAX_DISTANCE_Y = 60;
     private final static double MAX_DISTANCE_X = 30;
-//    This is terrible. Fix it
-//    We need a way to allow a ball carrier to be "worse" or "better" based on their attributes
-    private final static double MAX_DISTANCE = MAX_DISTANCE_X > MAX_DISTANCE_Y ? MAX_DISTANCE_X : MAX_DISTANCE_Y;
-    private final static double DEFAULT_AVOIDANCE_INFLUENCE = 1.5;
-    private final static double DEFAULT_CUSHION_INFLUENCE = 1;
+    private final static double MAX_DISTANCE = MAX_DISTANCE_Y;
     private final static double SIDELINE_LEFT_MAX_DISTANCE = 12;
     private final static double SIDELINE_RIGHT_MAX_DISTANCE = Field.FIELD_WIDTH - SIDELINE_LEFT_MAX_DISTANCE;
 
@@ -34,7 +32,7 @@ public final class BallCarrierStrategy implements IPlayerStrategy {
     private final static String TOUCHDOWN_TAG_SOUTH = "TOUCHDOWN_SOUTH";
     private final static String FIRSTDOWN_TAG = "FIRST DOWN";
 
-    private final boolean DEBUG_RAILS = true;
+    private final boolean DEBUG_RAILS = false;
 
     public BallCarrierStrategy() {
 //        Consider having the defaults be provided so that every player has a "custom" strategy as they progress
@@ -81,30 +79,37 @@ public final class BallCarrierStrategy implements IPlayerStrategy {
          *      approaches the goal endzone, this should also have its own bias attached to it, making a player
          *      view it more importantly. This should not outweigh the first down bias if it is applicable, as
          *      reaching a first down may still be more important than getting a touchdown
+         *
          * First Down (Only if we have not yet reached it. This bias needs to be null if we are past it already.
          *  -It might be helpful to grab this value (the Y value for the first down marker) on play set, and
          *      set a negative influence that is proportional to the distance away from the point. This would
          *      hopefully entice the player to strive for the first down marker first
+         *
          * Time
          *  -This will be well down the road, but eventually we might care about getting out of bounds/stopping
          *      the clock more than gaining significant yards. This would be handled here, and likely a bias that could
          *      be pulled from the team/coach
+         *
          * *Sideline
          *  -This bias should only ever be enough to push the player to stay away from it. It should be enough to keep the ball
          *      carrier away from it, until a defender is within 4 yards of them (to which the defender should be
          *      able to outweigh this bias). Really, this bias should just amount to keeping the ball carrier
          *      from accidentally stepping out of bounds before they are ready.
+         *
          *  -This bias is null unless the ballcarrier is within 3 yards of a sideline, and it is at full force if the player is
          *      1 yard away from the sideline.
+         *
          * Field Position
          *  -A rather vague bias, but there are times where reaching a certain point on the field is important,
          *      say to get an easier setup for a field goal, for example.
+         *
          * *Defenders
          *  -All defenders within our MAX_DISTANCE_Y from us will have an influence.
          *  -If the defender is blocked it will receive a percentage of the original influence. This percentage will
          *      be calculated based on the player blocking them
          *  -If the defender is unblocked they will receive 100% of their influence
-         * *Lead Blockers
+         *
+         * Lead Blockers
          *  -A Lead Blocker will have a negative influence.
          */
         playerBiases.addAll(getEndzoneInfluence(hostPlayer));
@@ -276,52 +281,4 @@ public final class BallCarrierStrategy implements IPlayerStrategy {
 
 //    All of these should not be housed in the BallCarrierStrat. Setup up
 //    Some sort of heirarchy
-
-    private final PlayerInfluence getNullInfluence(final String name){
-        return new PlayerInfluence(new Vector(0,0), 0, name);
-    }
-
-    private final List<GamePlayer> filterByDirection(final GamePlayer hostPlayer, final List<GamePlayer> players, final CardinalDirection direction){
-        final ArrayList<GamePlayer> filteredPlayers = new ArrayList<>();
-
-        switch(direction){
-            case NORTH:
-                for(final GamePlayer player : players){
-                    if(player.getLocation().getSecond() <= hostPlayer.getLocation().getSecond()) filteredPlayers.add(player);
-                }
-                break;
-            case SOUTH:
-                for(final GamePlayer player : players){
-                        if(player.getLocation().getSecond() >= hostPlayer.getLocation().getSecond()) filteredPlayers.add(player);
-                }
-                break;
-            case EAST:
-                for(final GamePlayer player : players){
-                    if(player.getLocation().getFirst() >= hostPlayer.getLocation().getFirst()) filteredPlayers.add(player);
-                }
-                break;
-            case WEST:
-                for(final GamePlayer player : players){
-                    if(player.getLocation().getFirst() <= hostPlayer.getLocation().getFirst()) filteredPlayers.add(player);
-                }
-                break;
-        }
-        return filteredPlayers;
-    }
-
-    private final List<GamePlayer> filterBySameTeam(final GamePlayer hostPlayer, final List<GamePlayer> players){
-        final ArrayList<GamePlayer> filteredList = new ArrayList<>();
-        for(final GamePlayer player : players){
-            if(player.sameTeamCheck(hostPlayer)) filteredList.add(player);
-        }
-        return filteredList;
-    }
-
-    private final List<GamePlayer> filterByOppositeTeam(final GamePlayer hostPlayer, final List<GamePlayer> players){
-        final ArrayList<GamePlayer> filteredList = new ArrayList<>();
-        for(final GamePlayer player : players){
-            if(!player.sameTeamCheck(hostPlayer)) filteredList.add(player);
-        }
-        return filteredList;
-    }
 }

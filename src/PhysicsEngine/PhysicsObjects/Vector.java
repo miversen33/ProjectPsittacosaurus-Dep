@@ -57,19 +57,19 @@ public class Vector extends Observable {
         return changeInXY.getSecond();
     }
 
-    public final double getDirection(){
+    public final Double getDirection(){
         return direction;
     }
 
-    public final double getAngle(){
+    public final Double getAngle(){
         return direction;
     }
 
-    public final double getLength(){
+    public final Double getLength(){
         return magnitude;
     }
 
-    public final double getMagnitude(){
+    public final Double getMagnitude(){
         return magnitude;
     }
 

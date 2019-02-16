@@ -8,7 +8,6 @@ import java.util.List;
 
 public final class EventHandler extends Observable<IEvent> {
 
-    public final static String EVENT_KEY = "Event Key";
     private final List<IEventType> mTypes;
     private final Signature mSignature;
 
@@ -24,7 +23,7 @@ public final class EventHandler extends Observable<IEvent> {
     final void handleEvent(final IEvent event){
 //        TEMP LOG TODO
         System.out.println("Handling event "+event);
-        updateObservers(EVENT_KEY, event);
+        updateObservers(event.getType().getEventType(), event);
     }
 
     public final Signature getSignature(){

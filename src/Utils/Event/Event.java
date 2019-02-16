@@ -1,7 +1,5 @@
 package Utils.Event;
 
-import Utils.Event.IEvent;
-import Utils.Event.IEventType;
 import Utils.Signature;
 
 public class Event implements IEvent {

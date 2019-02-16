@@ -1,5 +1,7 @@
 package Game.GamePlay;
 
+import Game.GamePlay.Events.PlayerInEndzoneEvent;
+import Game.GamePlay.Events.PlayerOutOfBoundsEvent;
 import Game.GamePlay.TimeManagement.Clock;
 import PhysicsEngine.Movements.Events.CollisionEvent;
 import Utils.Event.EventHandler;
@@ -117,12 +119,50 @@ public final class GameManager {
     }
 
     private final Observer<IEvent> getEventObserver(){
-        return (key, itemChanged) -> {
-//            We need a better way to handle this.
-            if(itemChanged instanceof CollisionEvent){
-                int i = 0;
+        return (key, event) -> {
+            switch (key.toString()){
+                case PlayerInEndzoneEventType.NAME:
+                    handlePlayerInEndzone((PlayerInEndzoneEvent) event);
+                    break;
+
+                case GameClockOutEventType.NAME:
+                    handleQuarterClockEmpty();
+                    break;
+
+                case PlayClockOutEventType.NAME:
+                    handlePlayClockEmpty();
+                    break;
+
+                case CollisionEventType.NAME:
+                    handleCollisionCheck((CollisionEvent) event);
+                    break;
+
+                case PlayerOutOfBoundsEventType.NAME:
+                    handlePlayerOutOfBounds((PlayerOutOfBoundsEvent) event);
+                    break;
+
             }
         };
+    }
+
+    private final void handlePlayerInEndzone(final PlayerInEndzoneEvent event){
+        int i = 0;
+    }
+
+    private final void handleQuarterClockEmpty(){
+        int i = 0;
+    }
+
+    private final void handlePlayClockEmpty(){
+        int i = 0;
+    }
+
+    private final void handleCollisionCheck(final CollisionEvent event){
+        int i = 0;
+    }
+
+    private final void handlePlayerOutOfBounds(final PlayerOutOfBoundsEvent event){
+        int i = 0;
     }
 
 //    /\ Generating stuff needed for gameplay

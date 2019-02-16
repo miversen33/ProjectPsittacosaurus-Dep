@@ -3,13 +3,14 @@ package Game.GamePlay.PlayerStrategy.Defense;
 import Game.GamePlay.GameField;
 import Game.GamePlay.GamePlayer;
 import Game.GamePlay.PlayerInfluence;
+import Game.GamePlay.PlayerStrategy.BasePlayerStrategy;
 import Game.IGamePlayerOwner;
 import PhysicsEngine.Movements.MovementInstruction;
 import Tuple.Tuple2;
 
 import java.util.List;
 
-public class CoverageStrategy extends DefensivePlayerStrategy{
+public class CoverageStrategy extends BasePlayerStrategy {
 
     @Override
     public void calculateMove(final GamePlayer hostPlayer, final GameField field) {
