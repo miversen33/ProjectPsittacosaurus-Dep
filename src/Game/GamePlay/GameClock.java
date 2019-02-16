@@ -1,6 +1,5 @@
 package Game.GamePlay;
 
-import Event.Event;
 import Game.GamePlay.TimeManagement.Clock;
 import Game.GamePlay.TimeManagement.Events.GameClockEmptyEvent;
 import Game.GamePlay.TimeManagement.Events.PlayClockEmptyEvent;
@@ -26,9 +25,8 @@ public final class GameClock{
     private int mQuarterLength;
     private int mPlayClockLength;
 
-    //    TODO CORRECT THIS. REMOVE STATIC
-    private static Clock currentQuarterClock;
-    private static Clock.ClockOwner quarterClockListener;
+    private Clock currentQuarterClock;
+    private Clock.ClockOwner quarterClockListener;
 
     private final Signature mSig;
 
@@ -40,12 +38,6 @@ public final class GameClock{
         mSig = signature;
         init();
     }
-
-//    public GameClock(final int quarterLength, final int playClockLength){
-//        mQuarterLength = quarterLength;
-//        mPlayClockLength = playClockLength;
-//        init();
-//    }
 
     private final void init(){
         quarterClockListener = this::handleQuarterTimeIsDun;
@@ -70,16 +62,15 @@ public final class GameClock{
         return quarter;
     }
 
-//    TODO REMOVE STATIC
-    public static final int getRemainingTimeInQuarter(){
+    public final int getRemainingTimeInQuarter(){
         return currentQuarterClock.getRemainingTime();
     }
 
-    public static final void tickQuarterClock(){
+    public final void tickQuarterClock(){
         currentQuarterClock.tick(quarterClockListener);
     }
 
-    public static final void microTickQuarterClock(){
+    public final void microTickQuarterClock(){
         currentQuarterClock.microTick(quarterClockListener);
     }
 

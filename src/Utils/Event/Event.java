@@ -1,8 +1,10 @@
-package Event;
+package Utils.Event;
 
+import Utils.Event.IEvent;
+import Utils.Event.IEventType;
 import Utils.Signature;
 
-public class Event implements IEvent{
+public class Event implements IEvent {
 
     private final Signature mSig;
     private final IEventType mType;

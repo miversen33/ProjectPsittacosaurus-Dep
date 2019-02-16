@@ -1,6 +1,6 @@
 package Game.GamePlay.TimeManagement.Events;
 
-import Event.Event;
+import Utils.Event.Event;
 import Utils.Signature;
 
 public final class GameClockEmptyEvent extends Event {
@@ -20,4 +20,5 @@ public final class GameClockEmptyEvent extends Event {
     public String toString() {
         return getType().getEventType()+" "+getClock();
     }
+
 }

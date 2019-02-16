@@ -1,4 +1,4 @@
-package Event;
+package Utils.Event;
 
 import Utils.Observable.Observable;
 import Utils.Signature;

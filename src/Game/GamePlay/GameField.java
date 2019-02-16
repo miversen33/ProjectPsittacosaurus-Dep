@@ -107,9 +107,11 @@ public final class GameField {
         return playersInSpace;
     }
 
-    public final void giveMovementsToEngine(final MovementEngine engine){
-//        Validate engine
-        engine.cycleQueue(new ArrayList<>(mPlayers.keySet()), this);
+    final List<GamePlayer> getMovements(final Signature signature){
+        if(Signature.ValidateSignatures(mSignature, signature)) return new ArrayList<>(mPlayers.keySet());
+//        Handle possible malicious attempt at getting movement queue
+//        TODO LOGGING
+        return null;
     }
 
 //    TODO
@@ -120,12 +122,6 @@ public final class GameField {
         }
 //        Shit gonna break
         return null;
-    }
-
-    private final void handlePlayerLocationMoved(final GamePlayer player, final Location newLocation){
-//        Set listen for endzone/out of bounds of player. Should be
-//        pretty easy though
-
     }
 
     private final void clearMovements(){

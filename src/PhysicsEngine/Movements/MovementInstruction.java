@@ -11,9 +11,8 @@ public final class MovementInstruction implements Comparable<MovementInstruction
     private final GamePlayer mPlayer;
     private final Vector mVector;
     private final MovementAction mAction;
-    private final String signature = UUID.randomUUID().toString();
     private boolean isExecuted = false;
-    private int totalTimeInSeconds;
+    private int mTimeStamp;
 
     private final static int GREATER_THAN = 1;
     private final static int EQUALS = 0;
@@ -56,17 +55,19 @@ public final class MovementInstruction implements Comparable<MovementInstruction
         return isExecuted;
     }
 
-    final void execute(){
+    final void execute(final int timeStamp){
 //        Consider a way to verify ownership here
         isExecuted = true;
+        setUsedTime(timeStamp);
+        getPlayer().provideTimeStamp(getTimeStamp());
     }
 
     public final void setUsedTime(final int time){
-        totalTimeInSeconds = time;
+        mTimeStamp = time;
     }
 
-    public final int getUsedTime(){
-        return totalTimeInSeconds;
+    public final int getTimeStamp(){
+        return mTimeStamp;
     }
 
     @Override

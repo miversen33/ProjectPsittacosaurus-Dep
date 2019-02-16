@@ -1,7 +1,7 @@
 package PhysicsEngine.Movements.Events;
 
-import Event.Event;
 import Game.GamePlay.GamePlayer;
+import Utils.Event.Event;
 import Utils.Signature;
 
 import java.util.Arrays;

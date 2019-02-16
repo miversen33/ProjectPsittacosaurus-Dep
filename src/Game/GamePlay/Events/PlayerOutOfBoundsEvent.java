@@ -1,6 +1,6 @@
 package Game.GamePlay.Events;
 
-import Event.Event;
+import Utils.Event.Event;
 import Game.GamePlay.GamePlayer;
 import Utils.Signature;
 

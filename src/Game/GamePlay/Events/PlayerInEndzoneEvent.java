@@ -1,7 +1,7 @@
 package Game.GamePlay.Events;
 
-import Event.Event;
 import Game.GamePlay.GamePlayer;
+import Utils.Event.Event;
 import Utils.Signature;
 
 public final class PlayerInEndzoneEvent extends Event {

@@ -1,8 +1,8 @@
 package PhysicsEngine.Movements.Events;
 
-import Event.Event;
 import Game.GamePlay.GamePlayer;
 import Tuple.Tuple2;
+import Utils.Event.Event;
 import Utils.Signature;
 
 public final class CollisionEvent extends Event {

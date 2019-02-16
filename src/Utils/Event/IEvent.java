@@ -1,6 +1,4 @@
-package Event;
-
-import Utils.Signature;
+package Utils.Event;
 
 public interface IEvent {
     void fire();

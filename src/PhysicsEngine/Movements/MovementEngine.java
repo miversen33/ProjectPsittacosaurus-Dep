@@ -2,6 +2,7 @@ package PhysicsEngine.Movements;
 
 import Game.GamePlay.GameClock;
 import Game.GamePlay.GameField;
+import Game.GamePlay.GameManager;
 import Game.GamePlay.GamePlayer;
 import PhysicsEngine.Movements.Events.CollisionEvent;
 import PhysicsEngine.PhysicsObjects.Vector;
@@ -39,15 +40,15 @@ public final class MovementEngine {
         return sortedPlayerQueue;
     }
 
-    public final void cycleQueue(final List<GamePlayer> movementQueue, final GameField field) {
+    public final void cycleQueue(final List<GamePlayer> movementQueue, final GameField field, final GameManager gameManager) {
         final List<GamePlayer> prioritizedQueue = prioritizeQueue(movementQueue);
         boolean isDun;
         do {
-            isDun = cycleQueue(0, prioritizedQueue, field);
+            isDun = cycleQueue(0, prioritizedQueue, field, gameManager);
         } while (!isDun);
     }
 
-    private final boolean cycleQueue(final int count, List<GamePlayer> playerQueue, final GameField field) {
+    private final boolean cycleQueue(final int count, List<GamePlayer> playerQueue, final GameField field, final GameManager gameManager) {
         if (count >= CYCLE_LIMIT) return true;
         int interval = 1;
 
@@ -56,12 +57,12 @@ public final class MovementEngine {
 //        First we need to handle existing collisions
         for (final GamePlayer player : playerQueue) {
             if(!player.getMovementInstruction().hasBeenExecuted() && player.getMovementInstruction().getAction().getActionState().isColliding()) {
-                handleCollision(player.getMovementInstruction(), field);
+                handleCollision(player.getMovementInstruction(), field, gameManager.getTimeStamp());
                 if (!tickClock) tickClock = true;
             }
         }
 
-        if (tickClock) GameClock.microTickQuarterClock();
+        if (tickClock) gameManager.microTickGameClock(getSignature());
         tickClock = false;
 
         playerQueue = prioritizeQueue(playerQueue);
@@ -91,8 +92,8 @@ public final class MovementEngine {
                 p1.setMovementInstruction(this, revisedP1Instruction);
                 p2.setMovementInstruction(this, revisedP2Instruction);
 
-                handleMovement(p1.getMovementInstruction(), field);
-                handleMovement(p2.getMovementInstruction(), field);
+                handleMovement(p1.getMovementInstruction(), field, gameManager.getTimeStamp());
+                handleMovement(p2.getMovementInstruction(), field, gameManager.getTimeStamp());
 
                 revisedP1Instruction = new MovementInstruction(new MovementAction(MovementAction.State.COLLIDING, p1, p2), p1Vector);
                 revisedP2Instruction = new MovementInstruction(new MovementAction(MovementAction.State.COLLIDING, p2, p1), p2Vector);
@@ -105,23 +106,23 @@ public final class MovementEngine {
         for (final GamePlayer player : playerQueue) {
             if (!player.getMovementInstruction().getAction().getActionState().isColliding()) {
                 if (!tickClock) tickClock = true;
-                keepLooping = !handleMovement(player.getMovementInstruction(), field);
+                keepLooping = !handleMovement(player.getMovementInstruction(), field, gameManager.getTimeStamp());
             } else {
                 keepLooping = true;
             }
         }
 
         if (!keepLooping) interval = 3;
-        if (tickClock) GameClock.tickQuarterClock();
+        if (tickClock) gameManager.tickGameClock(getSignature());
 //        If the queue cycles and there are no existing collisions, we can set the count to 3 and return true
 //        Otherwise, we need to increment the count +1 and cycle again. If a player is not currently
 //        in a collision, they receive a NULL MovementAction, indicating that they are not currently
 //        moving (done moving) and waiting to finish
 
-        return cycleQueue(count + interval, playerQueue, field);
+        return cycleQueue(count + interval, playerQueue, field, gameManager);
     }
 
-    private final void handleCollision(final MovementInstruction instruction, final GameField field) {
+    private final void handleCollision(final MovementInstruction instruction, final GameField field, final int timestamp) {
         /**
          * (m1v1 + m2v2)
          * -------------  = Vf
@@ -133,7 +134,7 @@ public final class MovementEngine {
          */
 //        Quick catch to make sure that this is indeed a collision
         if (!instruction.getAction().getActionState().isColliding()) {
-            handleMovement(instruction, field);
+            handleMovement(instruction, field, timestamp);
             return;
         }
 
@@ -165,12 +166,12 @@ public final class MovementEngine {
         final MovementInstruction instruction1 = new MovementInstruction(instruction.getAction().getAffectingPlayer(), resultantVector1);
         final MovementInstruction instruction2 = new MovementInstruction(instruction.getAction().getAffectedPlayer(), resultantVector2);
 //
-        handleMovement(instruction1, field);
-        handleMovement(instruction2, field);
+        handleMovement(instruction1, field, timestamp);
+        handleMovement(instruction2, field, timestamp);
 
         if(Location.GetDistance(instruction.getAction().getAffectingPlayer(), instruction.getAction().getAffectedPlayer()) <= 1) return;
-        instruction.getAction().getAffectingPlayer().getMovementInstruction().execute();
-        instruction.getAction().getAffectedPlayer().getMovementInstruction().execute();
+        instruction.getAction().getAffectingPlayer().getMovementInstruction().execute(timestamp);
+        instruction.getAction().getAffectedPlayer().getMovementInstruction().execute(timestamp);
 
 //        Throws new collision event
         new CollisionEvent(getSignature(), instruction1.getPlayer(), instruction2.getPlayer()).fire();
@@ -182,17 +183,17 @@ public final class MovementEngine {
      * Returns true is the movement is "clean" or (doesn't end in a collision)
      * Returns false otherwise
      */
-    private final boolean handleMovement(final MovementInstruction instruction, final GameField field) {
+    private final boolean handleMovement(final MovementInstruction instruction, final GameField field, final int timeStamp) {
 //        Quick catch to make sure that the movement is not a collision
         if (instruction.getAction().getActionState().isColliding()) {
-            handleCollision(instruction, field);
+            handleCollision(instruction, field, timeStamp);
             return false;
         }
         Vector movement = instruction.getVector();
         if (movement.getMagnitude() > instruction.getPlayer().getMaxMovement(movement.getDirection())) {
             movement = movement.scale(instruction.getPlayer().getMaxMovement(movement.getDirection()) / movement.getMagnitude());
         }
-        instruction.execute();
+        instruction.execute(timeStamp);
         List<GamePlayer> collidingPlayers = field.movePlayer(this, instruction.getPlayer(), movement);
 
         if(collidingPlayers.size() == 0) return true;

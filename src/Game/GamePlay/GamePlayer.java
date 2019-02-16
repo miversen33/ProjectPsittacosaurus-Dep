@@ -23,10 +23,10 @@ public class GamePlayer extends FieldObject implements IPlayerObject {
 //    Then you can have the GameManager be a "middle" man for the 2, and allows the GamePlayer
 //    to only have access to what they need access to. Plus the GamePlayer will need access to
 //    the clock anyway, which will only be available in the GameManager
-    private GameField mOwner;
+//    private GameField mOwner;
     private MovementInstruction mCurrentInstructions;
 
-    //    private final Player player = null;
+//    private final Player player = null;
     private PlayerState playerState = PlayerState.UP;
 
     private IPlayerStrategy mPlayerStrat;
@@ -38,6 +38,11 @@ public class GamePlayer extends FieldObject implements IPlayerObject {
         mName = name;
         changePlayerStrategy(playerLogic);
     }
+
+//    // Eventually
+//    public GamePlayer(final GameTeam mTeam, final Player player, final IPlayerStrategy strategy) {
+//        super(player.getMass());
+//    }
 
     public final void assignTeam(final GameTeam team){
         mTeam = team;
@@ -60,13 +65,8 @@ public class GamePlayer extends FieldObject implements IPlayerObject {
 
 //    Recommended way to fetch ball carrier
     public final GamePlayer getBallCarrier(){
-        return mOwner.getBallCarrier(this);
+        return getOwner().getBallCarrier(this);
     }
-
-//    // Eventually
-//    public GamePlayer(final GameTeam mTeam, final Player player, final IPlayerStrategy strategy) {
-//        super(player.getMass());
-//    }
 
 //    public final void changePlayerStrategy(final Player owningPlayer, final IPlayerStrategy newStrat){
     public final void changePlayerStrategy(final IPlayerStrategy newStrat){
@@ -132,12 +132,12 @@ public class GamePlayer extends FieldObject implements IPlayerObject {
         return comparePlayer.mTeam.equals(mTeam);
     }
 
-    public final Tuple2<Double, Double> getGoal(){
-        return mPlayerStrat.calculateGoal(this, mOwner, mTeam);
-    }
+//    public final Tuple2<Double, Double> getGoal(){
+//        return mPlayerStrat.calculateGoal(this, mOwner, mTeam);
+//    }
 
-    public final void clearMovementInstruction(final GameField field){
-        if(!(mOwner.equals(field))){
+    final void clearMovementInstruction(final GameField field){
+        if(!(getOwner().equals(field))){
 //            Handle logging due to invalid field
         }
         setMovementInstruction(new MovementInstruction(this, new Vector(0,0)));
@@ -170,25 +170,25 @@ public class GamePlayer extends FieldObject implements IPlayerObject {
             System.out.println(getName()+" | Unable to move player due to player not being on field");
             return;
         }
-        mPlayerStrat.calculateMove(this, mOwner);
+        mPlayerStrat.calculateMove(this, getOwner());
         requestMovement(mPlayerStrat.getMove());
     }
 
-    @Override
-    public final void takeField(final GameField field) {
-        if(mOwner != null){
-//            Handle logging due to attempted overwrite of field
-            return;
-        }
-        mOwner = field;
-        clearMovementInstruction(field);
-    }
+//    @Override
+//    public final void takeField(final GameField field) {
+//        if(mOwner != null){
+////            Handle logging due to attempted overwrite of field
+//            return;
+//        }
+//        mOwner = field;
+//        clearMovementInstruction(field);
+//    }
 
     @Override
     public final void updateObserver(Object key, Tuple2<Double, Double> itemChanged) {
         super.updateObserver(key, itemChanged);
 //        If we reach here, we can assume that the movement instruction has been executed
-        if(mCurrentInstructions.hasBeenExecuted()) timeStampMovement();
+        if(mCurrentInstructions != null && mCurrentInstructions.hasBeenExecuted()) timeStampMovement();
     }
 
     private final void timeStampMovement(){

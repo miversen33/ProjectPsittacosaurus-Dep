@@ -22,15 +22,22 @@ public abstract class FieldObject extends PhysicsObject implements Observer<Tupl
     private Location currentLocation = null;
     private PlayerLocationState locationState = PlayerLocationState.OutOfBounds;
     private GameField mOwner;
+    private int currentTimeStamp = 0;
 
     public FieldObject(double mass) {
         super(mass);
     }
 
-    public abstract void takeField(final GameField field);
+    public final GameField getOwner(){
+        return mOwner;
+    }
+
+    public final void provideTimeStamp(final int timeStamp){
+        currentTimeStamp = timeStamp;
+    }
 
     private final void handleLocationChange(final Tuple2<Double, Double> newLocation){
-        if(currentLocation != null) movements.add(0, new Movement(currentLocation.getLocation(), currentMovement, GameClock.getRemainingTimeInQuarter()));
+        if(currentLocation != null) movements.add(0, new Movement(currentLocation.getLocation(), currentMovement, currentTimeStamp));
         currentMovement = new Vector(currentLocation.getLocation(), newLocation);
         currentLocation = new Location(newLocation);
 
@@ -72,7 +79,7 @@ public abstract class FieldObject extends PhysicsObject implements Observer<Tupl
         }
         this.mOwner = owner;
         clearMovementsQueue(owner);
-        takeField(mOwner);
+//        takeField(mOwner);
     }
 
     final void removeFromField(final GameField owner){

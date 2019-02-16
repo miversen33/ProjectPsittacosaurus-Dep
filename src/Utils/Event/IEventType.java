@@ -1,4 +1,4 @@
-package Event;
+package Utils.Event;
 
 public interface IEventType {
 
