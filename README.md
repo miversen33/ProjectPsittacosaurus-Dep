@@ -11,3 +11,4 @@ A Football Simulation with no chosen name yet.
 * How to implement inelastic collisions into gameplay
 * How to implement elastic collisions into gameplay
 * How to implement Event Handling System
+* How to create dynamic location targeting (for tacklers)
