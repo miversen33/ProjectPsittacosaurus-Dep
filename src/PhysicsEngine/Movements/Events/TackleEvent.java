@@ -18,6 +18,12 @@ public final class TackleEvent extends Event {
         mTacklers = Arrays.asList(tacklers);
     }
 
+    public TackleEvent(final Signature signature, final GamePlayer tackled, final List<GamePlayer> tacklers){
+        super(signature, new TackleEventType());
+        mTackled = tackled;
+        mTacklers = tacklers;
+    }
+
     public final GamePlayer getTackledPlayer(){
         return mTackled;
     }

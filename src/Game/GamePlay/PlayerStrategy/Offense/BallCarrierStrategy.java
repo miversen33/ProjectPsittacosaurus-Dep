@@ -5,7 +5,6 @@ import Game.Field.Field;
 import Game.GamePlay.GameField;
 import Game.GamePlay.PlayerInfluence;
 import Game.GamePlay.PlayerStrategy.BasePlayerStrategy;
-import Game.GamePlay.PlayerStrategy.IPlayerStrategy;
 import PhysicsEngine.PhysicsObjects.Vector;
 import Game.GamePlay.GamePlayer;
 import Game.IGamePlayerOwner;
@@ -130,8 +129,8 @@ public final class BallCarrierStrategy extends BasePlayerStrategy{
         } else{
             playersBetweenGoal = filterByDirection(hostPlayer, playersBetweenGoal, CardinalDirection.SOUTH);
         }
-        sameTeam = filterBySameTeam(hostPlayer, playersBetweenGoal);
-        otherTeam = filterByOppositeTeam(hostPlayer, playersBetweenGoal);
+        sameTeam = FilterBySameTeam(hostPlayer, playersBetweenGoal);
+        otherTeam = FilterByOppositeTeam(hostPlayer, playersBetweenGoal);
         for(final GamePlayer player : sameTeam){
             influences.add(getLeadBlockerInfluence(hostPlayer, player));
         }
@@ -145,8 +144,8 @@ public final class BallCarrierStrategy extends BasePlayerStrategy{
     
     private final double getDefenderIsBlockedModifier(final GamePlayer defender){
         if(defender.getMovementInstruction().getAction().getActionState().isNull()) return 1;
-//        If the defender is attempting a tackle, their influence should be much larger
-        if(defender.getMovementInstruction().getAction().getActionState().tackle()) return 2;
+//        If the defender is attempting a isTackling, their influence should be much larger
+        if(defender.getMovementInstruction().getAction().getActionState().isTackling()) return 2;
 //        Basically, if the defender is in the middle of a collision, its not impossible for them
 //        to affect us, but the chances of them doing so are so slim we might as well call it impossible.
         if(defender.getMovementInstruction().getAction().getActionState().isColliding()) return .01;
@@ -231,11 +230,11 @@ public final class BallCarrierStrategy extends BasePlayerStrategy{
         if(hostPlayer.getLocation().getFirst().equals(defender.getLocation().getFirst())){
             final List<GamePlayer> playersOnField = field.checkLocation(hostPlayer, Field.FIELD_HEIGHT);
 
-            int sideLeft = -1 * filterByDirection(hostPlayer, filterByOppositeTeam(hostPlayer, playersOnField), CardinalDirection.WEST).size();
-            sideLeft += filterByDirection(hostPlayer, filterBySameTeam(hostPlayer, playersOnField), CardinalDirection.WEST).size();
+            int sideLeft = -1 * filterByDirection(hostPlayer, FilterByOppositeTeam(hostPlayer, playersOnField), CardinalDirection.WEST).size();
+            sideLeft += filterByDirection(hostPlayer, FilterBySameTeam(hostPlayer, playersOnField), CardinalDirection.WEST).size();
 
-            int sideRight = filterByDirection(hostPlayer, filterByOppositeTeam(hostPlayer, playersOnField), CardinalDirection.EAST).size();
-            sideLeft -= filterByDirection(hostPlayer, filterBySameTeam(hostPlayer, playersOnField), CardinalDirection.EAST).size();
+            int sideRight = filterByDirection(hostPlayer, FilterByOppositeTeam(hostPlayer, playersOnField), CardinalDirection.EAST).size();
+            sideLeft -= filterByDirection(hostPlayer, FilterBySameTeam(hostPlayer, playersOnField), CardinalDirection.EAST).size();
 
             int sideTotal = sideRight + sideLeft;
             if(sideTotal == 0){

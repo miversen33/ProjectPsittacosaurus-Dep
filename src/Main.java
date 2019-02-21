@@ -50,11 +50,11 @@ public class Main {
         final GameTeam defense = new GameTeam(
                 Arrays.asList(
                         defensivePlayer1
-                        ,defensivePlayer2
-                       ,defensivePlayer3
-                       ,defensivePlayer4
-                       ,defensivePlayer5
-                       ,defensivePlayer6
+//                       ,defensivePlayer2
+//                       ,defensivePlayer3
+//                       ,defensivePlayer4
+//                       ,defensivePlayer5
+//                       ,defensivePlayer6
                 ), Field.GetNorthEndzone());
 
         final GameManager gameManager = new GameManager(offense, defense, Clock.DefaultQuarterLength.QUARTER_15, Clock.DefaultPlayClock.PLAY_CLOCK_45);

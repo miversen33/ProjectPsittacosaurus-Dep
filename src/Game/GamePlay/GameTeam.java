@@ -2,6 +2,7 @@ package Game.GamePlay;
 
 import Game.Field.Endzone;
 import Game.IGamePlayerOwner;
+import Utils.Signature;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,12 +16,28 @@ public class GameTeam implements IGamePlayerOwner {
     private final List<GamePlayer> mPlayers;
     private final String mHash = UUID.randomUUID().toString();
     private Endzone mGoal;
+    private Signature mSig;
 
     public GameTeam(final List<GamePlayer> players, final Endzone currentGoal){
         mPlayers = new ArrayList<>(players);
         mGoal = currentGoal;
         requestPlayerOwnership();
     }
+
+    public final void signTeam(final Signature signature){
+        if(mSig != null){
+//            Log invalid attempt to sign team.
+//            TODO
+            return;
+        }
+        mSig = signature;
+    }
+
+    protected final Signature getSignature(){
+        return mSig;
+    }
+
+
 
     public final List<GamePlayer> getPlayers(){
         return mPlayers;

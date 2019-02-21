@@ -1,10 +1,13 @@
 package PhysicsEngine.Movements;
 
-import Game.GamePlay.GameClock;
 import Game.GamePlay.GameField;
 import Game.GamePlay.GameManager;
 import Game.GamePlay.GamePlayer;
+import Game.GamePlay.PlayerStrategy.BasePlayerStrategy;
+import Game.PlayerState;
+import PhysicsEngine.Movements.Events.BreakTackleEvent;
 import PhysicsEngine.Movements.Events.CollisionEvent;
+import PhysicsEngine.Movements.Events.TackleEvent;
 import PhysicsEngine.PhysicsObjects.Vector;
 import Tuple.Tuple2;
 import Utils.Location;
@@ -86,8 +89,8 @@ public final class MovementEngine {
                 final Vector revisedP1Vector = new Vector(p1.getLocation(), collision);
                 final Vector revisedP2Vector = new Vector(p2.getLocation(), collision);
 
-                MovementInstruction revisedP1Instruction = new MovementInstruction(new MovementAction(MovementAction.State.NULL, p1, p2), revisedP1Vector);
-                MovementInstruction revisedP2Instruction = new MovementInstruction(new MovementAction(MovementAction.State.NULL, p2, p1), revisedP2Vector);
+                MovementInstruction revisedP1Instruction = new MovementInstruction(new MovementAction(PlayerState.NULL, p1, p2), revisedP1Vector);
+                MovementInstruction revisedP2Instruction = new MovementInstruction(new MovementAction(PlayerState.NULL, p2, p1), revisedP2Vector);
 
                 p1.setMovementInstruction(this, revisedP1Instruction);
                 p2.setMovementInstruction(this, revisedP2Instruction);
@@ -95,8 +98,8 @@ public final class MovementEngine {
                 handleMovement(p1.getMovementInstruction(), field, gameManager.getTimeStamp());
                 handleMovement(p2.getMovementInstruction(), field, gameManager.getTimeStamp());
 
-                revisedP1Instruction = new MovementInstruction(new MovementAction(MovementAction.State.COLLIDING, p1, p2), p1Vector);
-                revisedP2Instruction = new MovementInstruction(new MovementAction(MovementAction.State.COLLIDING, p2, p1), p2Vector);
+                revisedP1Instruction = new MovementInstruction(new MovementAction(PlayerState.COLLIDING, p1, p2), p1Vector);
+                revisedP2Instruction = new MovementInstruction(new MovementAction(PlayerState.COLLIDING, p2, p1), p2Vector);
 
                 p1.setMovementInstruction(this, revisedP1Instruction);
                 p2.setMovementInstruction(this, revisedP2Instruction);
@@ -179,33 +182,137 @@ public final class MovementEngine {
 
     }
 
-    /**
-     * Returns true is the movement is "clean" or (doesn't end in a collision)
-     * Returns false otherwise
-     */
     private final boolean handleMovement(final MovementInstruction instruction, final GameField field, final int timeStamp) {
 //        Quick catch to make sure that the movement is not a collision
         if (instruction.getAction().getActionState().isColliding()) {
             handleCollision(instruction, field, timeStamp);
             return false;
         }
+
+        if(!handleMovementAction(instruction,field)) return true;
+
         Vector movement = instruction.getVector();
         if (movement.getMagnitude() > instruction.getPlayer().getMaxMovement(movement.getDirection())) {
             movement = movement.scale(instruction.getPlayer().getMaxMovement(movement.getDirection()) / movement.getMagnitude());
         }
         instruction.execute(timeStamp);
+
+        if(!instruction.getAction().getActionState().getResultState().isNull()){
+            instruction.getAction().getAffectedPlayer().setPlayerState(this, instruction.getAction().getActionState().getResultState());
+        }
+
         List<GamePlayer> collidingPlayers = field.movePlayer(this, instruction.getPlayer(), movement);
 
         if(collidingPlayers.size() == 0) return true;
 
-        GamePlayer collidingPlayer = collidingPlayers.get(0);
-        final MovementInstruction firstPlayerRevisedInstruction = new MovementInstruction(new MovementAction(MovementAction.State.COLLIDING, instruction.getPlayer(), collidingPlayer), instruction.getVector());
-        final MovementInstruction secondPlayerRevisedInstruction = new MovementInstruction(new MovementAction(MovementAction.State.COLLIDING, collidingPlayer, instruction.getPlayer()), collidingPlayer.getMovementInstruction().getVector());
-
-        instruction.getPlayer().setMovementInstruction(this, firstPlayerRevisedInstruction);
-        collidingPlayer.setMovementInstruction(this, secondPlayerRevisedInstruction);
+        handlePostMoveCollision(instruction, collidingPlayers);
 
         return false;
+    }
+
+    private final void handlePostMoveCollision(final MovementInstruction instruction, final List<GamePlayer> collidingPlayers){
+        GamePlayer collidedPlayer = collidingPlayers.get(0);
+
+        PlayerState affectingState = instruction.getAction().getActionState();
+        PlayerState affectedState = PlayerState.COLLIDING;
+
+        if(affectingState.isBlocking() || affectingState.isTackling()){
+            if(affectingState.isBlocking()) affectedState = PlayerState.IS_BLOCKED;
+            if(affectingState.isTackling()) affectedState = PlayerState.IS_TACKLED;
+        }
+
+        collidedPlayer.setPlayerState(this, affectedState);
+
+        final MovementInstruction firstPlayerRevisedInstruction = new MovementInstruction(new MovementAction(PlayerState.COLLIDING, instruction.getPlayer(), collidedPlayer), instruction.getVector());
+        final MovementInstruction secondPlayerRevisedInstruction = new MovementInstruction(new MovementAction(PlayerState.COLLIDING, collidedPlayer, instruction.getPlayer()), collidedPlayer.getMovementInstruction().getVector());
+
+        instruction.getPlayer().setMovementInstruction(this, firstPlayerRevisedInstruction);
+        collidedPlayer.setMovementInstruction(this, secondPlayerRevisedInstruction);
+    }
+
+    //Returns true if the movement it to be completed, false if not
+    private final boolean handleMovementAction(final MovementInstruction instruction, final GameField field){
+        final PlayerState movementState = instruction.getAction().getActionState();
+        final PlayerState playerCurrentState = instruction.getPlayer().getPlayerState();
+
+        if(!playerCurrentState.getCounterState().isNull()){
+            if(playerCurrentState.getCounterState().equals(movementState)) return handleCounterMovementAction(instruction);
+            if(!playerCurrentState.getCounterState().equals(movementState)) return handleMissingCounterMovementAction(instruction);
+        }
+        if(playerCurrentState.isTackled() || playerCurrentState.isTackling()) return !handleTackleEvent(instruction, field);
+
+        return true;
+    }
+
+    private final boolean handleCounterMovementAction(final MovementInstruction instruction){
+        final PlayerState movementState = instruction.getAction().getActionState();
+        final PlayerState playerCurrentState = instruction.getPlayer().getPlayerState();
+        final double minValue = 0;
+        final double maxValue = 100;
+//        TODO There should be more in this than just that. Include attributes and such
+        final double breakPoint = movementState.getDefaultCounterValue();
+
+//        Just in case we end up here when we aren't supposed to
+        if(!playerCurrentState.getCounterState().equals(movementState)){
+            return handleMissingCounterMovementAction(instruction);
+        }
+
+        double rng = Utils.RNGGenerator.Generate(minValue, maxValue);
+        return !(rng < breakPoint);
+    }
+
+    private final boolean handleMissingCounterMovementAction(final MovementInstruction instruction){
+        final PlayerState movementState = instruction.getAction().getActionState();
+        final PlayerState playerCurrentState = instruction.getPlayer().getPlayerState();
+        final double minValue = 0;
+        final double maxValue = 100;
+//        TODO There should be more in this than just that. Include attributes and such
+        final double breakPoint = playerCurrentState.getDefaultCounterValue();
+
+//        Just in case we end up here when we aren't supposed to
+        if(playerCurrentState.getCounterState().equals(movementState)){
+            return handleCounterMovementAction(instruction);
+        }
+
+        double rng = Utils.RNGGenerator.Generate(minValue, maxValue);
+        return !(rng < breakPoint);
+    }
+
+    // Returns true if movement is consumed, false if not
+    private final boolean handleTackleEvent(final MovementInstruction instruction, final GameField field){
+        if(!instruction.getAction().getActionState().isTackling() && !instruction.getAction().getActionState().isTackled()){
+//            Handle logging due to invalid instruction event
+//            TODO
+            System.out.println("Provided MovementInstruction is not a Tackle");
+            return false;
+        }
+
+        final GamePlayer tackler = instruction.getAction().getActionState().isTackling() ? instruction.getPlayer() : instruction.getAction().getAffectedPlayer();
+        final GamePlayer tackled = instruction.getAction().getActionState().isTackling() ? instruction.getAction().getAffectedPlayer() : instruction.getPlayer();
+
+        final double minValue = 0;
+        final double maxValue = 100;
+        final double breakPoint = tackled.getPlayerState().getDefaultCounterValue();
+
+        double rng = Utils.RNGGenerator.Generate(minValue, maxValue);
+        if(rng < breakPoint){
+//            Handle break tackle event
+            new BreakTackleEvent(mSig, tackled, tackler).fire();
+            return false;
+        }
+
+        List<GamePlayer> defenders = field.checkLocation(tackled, 1.0);
+        defenders = BasePlayerStrategy.FilterBySameTeam(tackler, defenders);
+        defenders.remove(tackler);
+
+        final List<GamePlayer> tacklers = new ArrayList<>();
+        tacklers.add(tackler);
+        for(final GamePlayer defender : defenders){
+            if(defender.getPlayerState().isTackling()) tacklers.add(defender);
+        }
+
+        new TackleEvent(mSig, tackled, tacklers).fire();
+        return true;
     }
 
     /**

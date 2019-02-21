@@ -1,11 +1,10 @@
 package PhysicsEngine.Movements;
 
 import Game.GamePlay.GamePlayer;
+import Game.PlayerState;
 import PhysicsEngine.PhysicsObjects.Vector;
 import Tuple.Tuple2;
 import Utils.Location;
-
-import java.util.UUID;
 
 public final class MovementInstruction implements Comparable<MovementInstruction> {
     private final GamePlayer mPlayer;
@@ -72,8 +71,8 @@ public final class MovementInstruction implements Comparable<MovementInstruction
 
     @Override
     public final int compareTo(final MovementInstruction movementInstruction) {
-        final MovementAction.State theirState = movementInstruction.getAction().getActionState();
-        final MovementAction.State ourState   = getAction().getActionState();
+        final PlayerState theirState = movementInstruction.getAction().getActionState();
+        final PlayerState ourState   = getAction().getActionState();
         if(ourState.isColliding() || theirState.isColliding()) return handleCollisionComparison(movementInstruction);
         if(getPlayer().getBallCarrier().equals(getPlayer())) return LESS_THAN;
         if(getPlayer().getBallCarrier().equals(movementInstruction.getPlayer())) return GREATER_THAN;
@@ -81,7 +80,6 @@ public final class MovementInstruction implements Comparable<MovementInstruction
     }
 
     private final int handleCollisionComparison(final MovementInstruction movementInstruction){
-
         if(getAction().getAffectedPlayer().equals(movementInstruction.getAction().getAffectingPlayer()) ||
           (getAction().getAffectingPlayer().equals(movementInstruction.getPlayer()))) return EQUALS;
         if(getAction().getActionState().isColliding()) return LESS_THAN;

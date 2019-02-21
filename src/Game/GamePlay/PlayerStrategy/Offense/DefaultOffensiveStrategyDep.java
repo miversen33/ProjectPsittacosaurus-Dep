@@ -179,7 +179,7 @@
 //        if(distanceBetweenUs > BLOCKER_RADIUS) return false;
 //        return
 ////                Goal check adds/removes endzone height so we aren't having issues
-////                with blockers failing to block on/near goal line
+////                with blockers failing to isBlocking on/near goal line
 //                (hostPlayer.getLocation().getSecond() > ballCarrier.getLocation().getSecond() &&
 //                 Field.GetLocationForEndzone(hostPlayer.getTeamGoal()).getSecond() + Field.FIELD_HEIGHT > hostPlayer.getLocation().getSecond()) ||
 //                (hostPlayer.getLocation().getSecond() < ballCarrier.getLocation().getSecond() &&

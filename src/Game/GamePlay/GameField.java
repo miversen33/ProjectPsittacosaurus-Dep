@@ -92,6 +92,11 @@ public final class GameField {
         }
     }
 
+    /**
+     * This will handle moving the player, and in return you will get a list of
+     * all the players within "Collision Radius" of the moving player, after their
+     * movement is complete
+     */
     public final List<GamePlayer> movePlayer(final MovementEngine engine, final GamePlayer player, final Vector movement){
 //        Validate engine
         if(!Signature.ValidateSignatures(mSignature, engine.getSignature())){

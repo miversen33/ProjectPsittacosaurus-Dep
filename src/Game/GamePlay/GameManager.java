@@ -3,7 +3,7 @@ package Game.GamePlay;
 import Game.GamePlay.Events.PlayerInEndzoneEvent;
 import Game.GamePlay.Events.PlayerOutOfBoundsEvent;
 import Game.GamePlay.TimeManagement.Clock;
-import PhysicsEngine.Movements.Events.CollisionEvent;
+import PhysicsEngine.Movements.Events.*;
 import Utils.Event.EventHandler;
 import Utils.Event.EventListener;
 import Utils.Event.IEvent;
@@ -13,8 +13,6 @@ import Game.GamePlay.Events.PlayerInEndzoneEventType;
 import Game.GamePlay.Events.PlayerOutOfBoundsEventType;
 import Game.GamePlay.TimeManagement.Events.GameClockOutEventType;
 import Game.GamePlay.TimeManagement.Events.PlayClockOutEventType;
-import PhysicsEngine.Movements.Events.CollisionEventType;
-import PhysicsEngine.Movements.Events.TackleEventType;
 import PhysicsEngine.Movements.MovementEngine;
 import Tuple.Tuple2;
 import Utils.Location;
@@ -43,7 +41,8 @@ public final class GameManager {
             new CollisionEventType(),
             new TackleEventType(),
             new PlayerInEndzoneEventType(),
-            new PlayerOutOfBoundsEventType()
+            new PlayerOutOfBoundsEventType(),
+            new BreakTackleEventType()
     );
 
     private GameTeam offense;
@@ -59,7 +58,10 @@ public final class GameManager {
         mGameSignature = mEventHandler.getSignature();
 
         mHomeTeam = homeTeam;
+        mHomeTeam.signTeam(mGameSignature);
         mAwayTeam = awayTeam;
+        mAwayTeam.signTeam(mGameSignature);
+
         mGameClock = generateGameClock(gameClock, playClock);
         mField = generateGameField();
         mMovementEngine = generateMovementEngine();
@@ -82,7 +84,7 @@ public final class GameManager {
         final Tuple2<Double, Double> ballCarrierLocation = new Tuple2<>(30.0, Field.ENDZONE_HEIGHT);
         final Tuple2<Double, Double> defender1Location = new Tuple2<>(100.0, Field.FIELD_HEIGHT);
 
-        final Tuple2<Double, Double> blockerLocation = new Tuple2<>(21.0, 15.0);
+        final Tuple2<Double, Double> blockerLocation = new Tuple2<>(21.0, 45.0);
         final Tuple2<Double, Double> defender2Location = new Tuple2<>(10.0, 75.0);
         final Tuple2<Double, Double> defender3Location = new Tuple2<>(35.0, Field.FIELD_HEIGHT - Field.ENDZONE_HEIGHT);
 
@@ -90,11 +92,14 @@ public final class GameManager {
         defense = mAwayTeam;
 
         final GamePlayer ballCarrier = offense.getPlayers().get(0);
+        final GamePlayer blocker = offense.getPlayers().get(1);
         ballCarrier.DEBUG_setBallCarrier(true);
+
+        mField.addPlayer(ballCarrier, new Location(ballCarrierLocation));
+        mField.addPlayer(blocker, new Location(blockerLocation));
 
         final GamePlayer defender = defense.getPlayers().get(0);
 
-        mField.addPlayer(ballCarrier, new Location(ballCarrierLocation));
         mField.addPlayer(defender, new Location(defender1Location));
 
         fieldLock = mField.lock();
@@ -141,12 +146,28 @@ public final class GameManager {
                     handlePlayerOutOfBounds((PlayerOutOfBoundsEvent) event);
                     break;
 
+                case TackleEventType.NAME:
+                    handleTackle((TackleEvent) event);
+                    break;
+
+                case BreakTackleEventType.NAME:
+                    handleBreakTackle((BreakTackleEvent) event);
             }
         };
     }
 
-    private final void handlePlayerInEndzone(final PlayerInEndzoneEvent event){
+    private final void handleBreakTackle(final BreakTackleEvent event){
         int i = 0;
+    }
+
+    private final void handleTackle(final TackleEvent event){
+        int i = 0;
+    }
+
+    private final void handlePlayerInEndzone(final PlayerInEndzoneEvent event){
+        if(event.getPlayer().getBallCarrier().equals(event.getPlayer())){
+            int i = 0;
+        }
     }
 
     private final void handleQuarterClockEmpty(){

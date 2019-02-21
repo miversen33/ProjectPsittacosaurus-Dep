@@ -7,6 +7,7 @@ import Game.GamePlay.GamePlayer;
 import Game.GamePlay.PlayerInfluence;
 import Game.GamePlay.PlayerStrategy.BasePlayerStrategy;
 import PhysicsEngine.Movements.Movement;
+import PhysicsEngine.Movements.MovementAction;
 import PhysicsEngine.PhysicsObjects.Vector;
 import PhysicsEngine.Movements.MovementInstruction;
 import Tuple.Tuple2;
@@ -15,13 +16,14 @@ import Utils.Location;
 import java.util.ArrayList;
 import java.util.List;
 
-//This will be the "fallBack" strategy. This may be moved to BasePlayerStrategy instead, but for now its on its own.
 public class DefaultDefensiveStrategy extends BasePlayerStrategy {
 
     private MovementInstruction move = null;
 
     private final Double targetPredictionDistance = 27.0;
     private final int targetPollDistance = 3;
+
+    private double tackleTargetDistance = 7;
 
     private final static String BALLCARRIER_TAG = "Ball Carrier";
     private final static String XCORRECTION_TAG = "X Correction";
@@ -32,8 +34,8 @@ public class DefaultDefensiveStrategy extends BasePlayerStrategy {
     @Override
     public void calculateMove(final GamePlayer hostPlayer, final GameField field) {
 //        Should check the player state and determine if we are currently
-//        being blocked. If we are, we should engage in block shedding,
-//        as opposed to tackle targeting
+//        being blocked. If we are, we should engage in isBlocking shedding,
+//        as opposed to isTackling targeting
 
         final List<PlayerInfluence> influences = getInfluences(hostPlayer, field);
         Vector movement = new Vector(0,0);
@@ -43,13 +45,15 @@ public class DefaultDefensiveStrategy extends BasePlayerStrategy {
 
         movement = new Vector(movement.getDirection(), hostPlayer.getMaxMovement(movement.getDirection()));
 
-        move = new MovementInstruction(hostPlayer, movement);
+        final MovementAction action = new MovementAction(generateMovementState(hostPlayer), hostPlayer, hostPlayer.getBallCarrier());
+        move = new MovementInstruction(action, movement);
     }
 
-    private final void handleIfBlocked(final GamePlayer hostPlayer){
-        if(hostPlayer.getMovementInstruction().getAction().getActionState().isBlocked()){
-
-        }
+    private final PlayerState generateMovementState(final GamePlayer host){
+//        We need some actual logic here. For now, this works
+        if(host.getPlayerState().isBlocked()) return PlayerState.BREAK_BLOCK;
+        if(Location.GetDistance(host.getLocation(), host.getBallCarrier().getLocation()) <= tackleTargetDistance) return PlayerState.TACKLING;
+        return PlayerState.NULL;
     }
 
     @Override
@@ -108,8 +112,8 @@ public class DefaultDefensiveStrategy extends BasePlayerStrategy {
         List<GamePlayer> playersBetweenUs = field.checkLocation(hostPlayer, distanceToBallCarrier);
         playersBetweenUs = filterByDirection(hostPlayer, playersBetweenUs, verticalDirection, horizontalDirection);
 
-        final List<GamePlayer> sameTeam = filterBySameTeam(hostPlayer, playersBetweenUs);
-        final List<GamePlayer> oppositeTeam = filterByOppositeTeam(hostPlayer, playersBetweenUs);
+        final List<GamePlayer> sameTeam = FilterBySameTeam(hostPlayer, playersBetweenUs);
+        final List<GamePlayer> oppositeTeam = FilterByOppositeTeam(hostPlayer, playersBetweenUs);
 
         for(final GamePlayer player : sameTeam){
             influences.add(getSameTeamPlayerInfluence(hostPlayer, player));
@@ -122,15 +126,19 @@ public class DefaultDefensiveStrategy extends BasePlayerStrategy {
     }
 
     private final PlayerInfluence getOtherTeamPlayerInfluence(final GamePlayer hostPlayer, final GamePlayer otherPlayer){
+        if(hostPlayer.getBallCarrier().equals(otherPlayer)) return getNullInfluence(otherPlayer.getName());
 
-        return getNullInfluence(otherPlayer.getName());
+        final double magnitude = 1.01;
+        Vector v = new Vector(otherPlayer.getLocation(), hostPlayer.getLocation());
+        v = new Vector(v.getDirection(), magnitude);
+        return new PlayerInfluence(v, (v.getDirection() / Math.PI) * 100, otherPlayer.getName());
     }
 
 
     private final PlayerInfluence getBallCarrierInfluence(final GamePlayer hostPlayer){
         Vector influence = new Vector(hostPlayer.getLocation(), hostPlayer.getBallCarrier().getLocation());
 
-        if(influence.getMagnitude() <= targetPredictionDistance) {
+        if(influence.getMagnitude() < targetPredictionDistance) {
             final double magnitude = targetPredictionDistance - influence.getMagnitude();
             influence = new Vector(influence.getDirection(), magnitude);
         }

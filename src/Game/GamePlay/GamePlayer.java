@@ -10,11 +10,12 @@ import PhysicsEngine.Movements.MovementEngine;
 import PhysicsEngine.Movements.MovementInstruction;
 import PhysicsEngine.PhysicsObjects.Vector;
 import Tuple.Tuple2;
+import Utils.Signature;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class GamePlayer extends FieldObject implements IPlayerObject {
+public final class GamePlayer extends FieldObject implements IPlayerObject {
 //    Find a better location than Field Package
 
     private GameTeam mTeam = null;
@@ -27,7 +28,7 @@ public class GamePlayer extends FieldObject implements IPlayerObject {
     private MovementInstruction mCurrentInstructions;
 
 //    private final Player player = null;
-    private PlayerState playerState = PlayerState.UP;
+    private PlayerState playerState = PlayerState.NULL;
 
     private IPlayerStrategy mPlayerStrat;
 
@@ -124,6 +125,11 @@ public class GamePlayer extends FieldObject implements IPlayerObject {
     @Override
     public final void setPlayerState(final MovementEngine engine, final PlayerState state) {
 //        For now we accept any state. We will figure out a way to verify the engine is ours
+        if(!Signature.ValidateSignatures(mTeam.getSignature(), engine.getSignature())){
+//            Log invalid movement engine. Do not allow state change
+//            TODO
+            return;
+        }
         playerState = state;
     }
 
@@ -149,6 +155,10 @@ public class GamePlayer extends FieldObject implements IPlayerObject {
 
     public final void setMovementInstruction(final MovementEngine engine, final MovementInstruction instruction){
 //        Pass Validity Check
+        if(!Signature.ValidateSignatures(mTeam.getSignature(), engine.getSignature())){
+//            Log invalid engine.
+            return;
+        }
         setMovementInstruction(instruction);
     }
 
