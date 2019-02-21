@@ -22,6 +22,6 @@ public class Tuple2<First, Second> {
 
     @Override
     public String toString() {
-        return "("+first.toString()+","+second.toString()+")";
+        return "("+first.toString()+" , "+second.toString()+")";
     }
 }
