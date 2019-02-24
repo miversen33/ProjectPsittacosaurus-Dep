@@ -18,8 +18,8 @@ public final class MovementAction {
         mAffectedPlayer = affectedPlayer;
     }
 
-    public MovementAction(){
-        this(PlayerState.NULL, null, null);
+    public MovementAction(final GamePlayer affectingPlayer){
+        this(PlayerState.NULL, affectingPlayer, null);
     }
 
     public final PlayerState getActionState(){ return mPlayerState; }

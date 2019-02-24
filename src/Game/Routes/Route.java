@@ -27,12 +27,6 @@ public final class Route{
     }
 
     public final IRouteAction getNextAction(){
-        if(!hasNext()){
-//            TODO
-//            Log no more actions available
-            System.out.println("No more available actions to return");
-            return null;
-        }
         return routeActions.pop();
     }
 

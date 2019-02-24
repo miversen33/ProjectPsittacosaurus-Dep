@@ -17,6 +17,7 @@ public class GameTeam implements IGamePlayerOwner {
     private final String mHash = UUID.randomUUID().toString();
     private Endzone mGoal;
     private Signature mSig;
+    private GameManager mManager;
 
     public GameTeam(final List<GamePlayer> players, final Endzone currentGoal){
         mPlayers = new ArrayList<>(players);
@@ -37,7 +38,17 @@ public class GameTeam implements IGamePlayerOwner {
         return mSig;
     }
 
-
+    final void setGameManager(final GameManager manager){
+        if(mManager != null){
+//            Log invalid attempt to overwrite game manager
+            System.out.println("Cannot Overwrite Existing GameManager ");
+            return;
+        }
+        mManager = manager;
+        for(final GamePlayer player : mPlayers){
+            player.assignManager(mManager);
+        }
+    }
 
     public final List<GamePlayer> getPlayers(){
         return mPlayers;

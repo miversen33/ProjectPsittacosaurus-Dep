@@ -3,6 +3,7 @@ package Game.GamePlay.PlayerStrategy;
 import Game.Field.CardinalDirection;
 import Game.GamePlay.GamePlayer;
 import Game.GamePlay.PlayerInfluence;
+import Game.Routes.Route;
 import PhysicsEngine.PhysicsObjects.Vector;
 
 import java.util.ArrayList;
@@ -10,11 +11,21 @@ import java.util.List;
 
 public abstract class BasePlayerStrategy implements IPlayerStrategy {
 
-    protected final PlayerInfluence getNullInfluence(final String name){
+    private final Route mPlayerRoute;
+
+    public BasePlayerStrategy(final Route route){
+        mPlayerRoute = route;
+    }
+
+    public final Route getRoute(){
+        return mPlayerRoute;
+    }
+
+    public final static PlayerInfluence GetNullInfluence(final String name){
         return new PlayerInfluence(new Vector(0,0), 0, name);
     }
 
-    protected final List<GamePlayer> filterByDirection(final GamePlayer hostPlayer, final List<GamePlayer> players, final CardinalDirection ... directions){
+    public final static List<GamePlayer> FilterByDirection(final GamePlayer hostPlayer, final List<GamePlayer> players, final CardinalDirection ... directions){
         final ArrayList<GamePlayer> filteredPlayers = new ArrayList<>();
 
         boolean passedThrough = false;
@@ -68,7 +79,7 @@ public abstract class BasePlayerStrategy implements IPlayerStrategy {
         return filteredList;
     }
 
-    protected final PlayerInfluence getSameTeamPlayerInfluence(final GamePlayer hostPlayer, final GamePlayer sameTeamPlayer){
+    public final static PlayerInfluence GetSameTeamPlayerInfluence(final GamePlayer hostPlayer, final GamePlayer sameTeamPlayer){
         final double magnitude = 1.01;
         Vector influence = new Vector(sameTeamPlayer.getLocation(), hostPlayer.getLocation());
         influence = new Vector(influence.getDirection(), magnitude);

@@ -60,12 +60,14 @@ public final class MovementEngine {
 //        First we need to handle existing collisions
         for (final GamePlayer player : playerQueue) {
             if(!player.getMovementInstruction().hasBeenExecuted() && player.getMovementInstruction().getAction().getActionState().isColliding()) {
+                if (!tickClock){
+                    tickClock = true;
+                    gameManager.microTickGameClock(getSignature());
+                }
                 handleCollision(player.getMovementInstruction(), field, gameManager.getTimeStamp());
-                if (!tickClock) tickClock = true;
             }
         }
 
-        if (tickClock) gameManager.microTickGameClock(getSignature());
         tickClock = false;
 
         playerQueue = prioritizeQueue(playerQueue);
@@ -89,6 +91,22 @@ public final class MovementEngine {
                 final Vector revisedP1Vector = new Vector(p1.getLocation(), collision);
                 final Vector revisedP2Vector = new Vector(p2.getLocation(), collision);
 
+                PlayerState p1CollisionState = PlayerState.COLLIDING;
+                PlayerState p2CollisionState = PlayerState.COLLIDING;
+
+//                Quick check to see if we are blocking instead of "colliding"
+                if(p1.getMovementInstruction().getAction().getActionState().isBlocking() || p1.getMovementInstruction().getAction().getActionState().isBlocked()){
+                    p1CollisionState = p1.getMovementInstruction().getAction().getActionState();
+                }
+                if(p2.getMovementInstruction().getAction().getActionState().isBlocking() || p2.getMovementInstruction().getAction().getActionState().isBlocked()){
+                    p2CollisionState = p2.getMovementInstruction().getAction().getActionState();
+                }
+
+                if(!tickClock){
+                    tickClock = true;
+                    gameManager.microTickGameClock(getSignature());
+                }
+
                 MovementInstruction revisedP1Instruction = new MovementInstruction(new MovementAction(PlayerState.NULL, p1, p2), revisedP1Vector);
                 MovementInstruction revisedP2Instruction = new MovementInstruction(new MovementAction(PlayerState.NULL, p2, p1), revisedP2Vector);
 
@@ -97,18 +115,23 @@ public final class MovementEngine {
 
                 handleMovement(p1.getMovementInstruction(), field, gameManager.getTimeStamp());
                 handleMovement(p2.getMovementInstruction(), field, gameManager.getTimeStamp());
-
-                revisedP1Instruction = new MovementInstruction(new MovementAction(PlayerState.COLLIDING, p1, p2), p1Vector);
-                revisedP2Instruction = new MovementInstruction(new MovementAction(PlayerState.COLLIDING, p2, p1), p2Vector);
+                
+                revisedP1Instruction = new MovementInstruction(new MovementAction(p1CollisionState, p1, p2), p1Vector);
+                revisedP2Instruction = new MovementInstruction(new MovementAction(p2CollisionState, p2, p1), p2Vector);
 
                 p1.setMovementInstruction(this, revisedP1Instruction);
                 p2.setMovementInstruction(this, revisedP2Instruction);
             }
         }
 
+        tickClock = false;
+
         for (final GamePlayer player : playerQueue) {
             if (!player.getMovementInstruction().getAction().getActionState().isColliding()) {
-                if (!tickClock) tickClock = true;
+                if (!tickClock) {
+                    tickClock = true;
+                    gameManager.tickGameClock(getSignature());
+                }
                 keepLooping = !handleMovement(player.getMovementInstruction(), field, gameManager.getTimeStamp());
             } else {
                 keepLooping = true;
@@ -116,7 +139,6 @@ public final class MovementEngine {
         }
 
         if (!keepLooping) interval = 3;
-        if (tickClock) gameManager.tickGameClock(getSignature());
 //        If the queue cycles and there are no existing collisions, we can set the count to 3 and return true
 //        Otherwise, we need to increment the count +1 and cycle again. If a player is not currently
 //        in a collision, they receive a NULL MovementAction, indicating that they are not currently
@@ -196,10 +218,13 @@ public final class MovementEngine {
             movement = movement.scale(instruction.getPlayer().getMaxMovement(movement.getDirection()) / movement.getMagnitude());
         }
         instruction.execute(timeStamp);
-
-        if(!instruction.getAction().getActionState().getResultState().isNull()){
-            instruction.getAction().getAffectedPlayer().setPlayerState(this, instruction.getAction().getActionState().getResultState());
-        }
+//
+//        if(!instruction.getAction().getActionState().getResultState().isNull()){
+////            This allows us to "freeze" anyone on the field by saying we are blocking them.
+////            Thats not ok.
+////            TODO
+//            instruction.getAction().getAffectedPlayer().setPlayerState(this, instruction.getAction().getActionState().getResultState());
+//        }
 
         List<GamePlayer> collidingPlayers = field.movePlayer(this, instruction.getPlayer(), movement);
 
@@ -221,13 +246,13 @@ public final class MovementEngine {
             if(affectingState.isTackling()) affectedState = PlayerState.IS_TACKLED;
         }
 
-        collidedPlayer.setPlayerState(this, affectedState);
-
         final MovementInstruction firstPlayerRevisedInstruction = new MovementInstruction(new MovementAction(PlayerState.COLLIDING, instruction.getPlayer(), collidedPlayer), instruction.getVector());
         final MovementInstruction secondPlayerRevisedInstruction = new MovementInstruction(new MovementAction(PlayerState.COLLIDING, collidedPlayer, instruction.getPlayer()), collidedPlayer.getMovementInstruction().getVector());
 
         instruction.getPlayer().setMovementInstruction(this, firstPlayerRevisedInstruction);
+//        instruction.getPlayer().setPlayerState(this, affectingState);
         collidedPlayer.setMovementInstruction(this, secondPlayerRevisedInstruction);
+        collidedPlayer.setPlayerState(this, affectedState);
     }
 
     //Returns true if the movement it to be completed, false if not

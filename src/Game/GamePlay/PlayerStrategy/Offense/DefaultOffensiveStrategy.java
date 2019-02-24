@@ -8,12 +8,13 @@ import Game.GamePlay.PlayerInfluence;
 import Game.GamePlay.PlayerStrategy.BasePlayerStrategy;
 import Game.IGamePlayerOwner;
 import Game.PlayerState;
+import Game.Routes.Route;
+import Game.Routes.RouteInterpreter.RouteInterpreter;
 import PhysicsEngine.Movements.Movement;
 import PhysicsEngine.Movements.MovementAction;
 import PhysicsEngine.Movements.MovementInstruction;
 import PhysicsEngine.PhysicsObjects.Vector;
 import Tuple.Tuple2;
-import Utils.Location;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,28 +30,48 @@ public class DefaultOffensiveStrategy extends BasePlayerStrategy {
 
     private final static String SIDE_OF_FIELD_TAG = "Side of Field";
     private final static String BALLCARRIER_PREDICATED_MOVEMENT_TAG = "Ball Carrier Predicated Movement";
+    private final static String ROUTE_TAG = "Route";
     private MovementInstruction move;
+    private MovementInstruction routeMove;
+
+    private RouteInterpreter routeInterpreter;
+
+    private final boolean DEBUG_RAILS = true;
+
+    public DefaultOffensiveStrategy(final Route route) {
+        super(route);
+    }
 
     @Override
     public final void calculateMove(final GamePlayer hostPlayer, final GameField field) {
         /**
          * We should be checking this in the following order.
-         * 1) Is there anyone close that we can block? If so, pick the "most dangerous" one and
+         * 1) Do we have a route to execute.
+         * 2) Is there anyone close that we can block? If so, pick the "most dangerous" one and
          *      attempt to block them
-         * 2) Handle all influences.
+         * 3) Handle all influences.
          *
          * If any of these are tripped, use it to calculate the move and move forward.
          * DO NOT DO MORE THAN 1
          */
 
+        if(getRoute() != null && routeInterpreter == null) routeInterpreter = new OffensiveRouteInterpreter(getRoute());
+
 //        1.
+        if(shouldUseRoute(hostPlayer, field)) routeMove = routeInterpreter.getMovement();
+        if(routeMove != null && !routeMove.getAction().getActionState().isOverridable()){
+            setMove(routeMove);
+            return;
+        }
+
+//        2.
         if(isBlockablePlayerNear(hostPlayer, field)){
 //            Handling setting block
             handleInitiateBlock(hostPlayer, field);
             return;
         }
 
-//        2.
+//        3.
         final List<PlayerInfluence> influences = getInfluences(hostPlayer, field);
         Vector movement = new Vector(0,0);
         for(final PlayerInfluence influence : influences){
@@ -58,12 +79,16 @@ public class DefaultOffensiveStrategy extends BasePlayerStrategy {
         }
 
         movement = new Vector(movement.getDirection(), hostPlayer.getMaxMovement(movement.getDirection()));
+        if(DEBUG_RAILS){
+            setMove(routeMove);
+            return;
+        }
 
-        setMove(new MovementInstruction(hostPlayer, movement));
-    }
-
-    private final void setBlockingMovementInstruction(final GamePlayer hostPlayer){
-        setMove(hostPlayer.getMovementInstruction());
+        if(routeMove != null){
+            if(routeMove.getAction().getActionState().isOverridable()) setMove(new MovementInstruction(routeMove.getAction(), movement));
+        } else {
+            setMove(new MovementInstruction(hostPlayer, movement));
+        }
     }
 
     private final boolean isBlockablePlayerNear(final GamePlayer hostPlayer, final GameField field){
@@ -81,7 +106,7 @@ public class DefaultOffensiveStrategy extends BasePlayerStrategy {
             v = new Vector(v.getDirection(), magnitude);
         }
 
-        final MovementAction a = new MovementAction(PlayerState.BLOCKING, hostPlayer, defender);
+        final MovementAction a = new MovementAction(PlayerState.RUN_BLOCKING, hostPlayer, defender);
 
         setMove(new MovementInstruction(a, v));
     }
@@ -138,7 +163,8 @@ public class DefaultOffensiveStrategy extends BasePlayerStrategy {
          *          help cause this, but we will still want to move towards the largest group
          *          of them possible.
          */
-
+        if(routeMove != null && routeMove.getAction().getActionState().isOverridable())
+                playerInfluences.add(new PlayerInfluence(routeMove.getVector(), (routeMove.getVector().getDirection() / Math.PI) * 100, ROUTE_TAG));
         playerInfluences.add(getBallCarrierInfluence(hostPlayer));
         playerInfluences.addAll(scanPlayers(hostPlayer, field));
         playerInfluences.add(getSideOfFieldInfluence(hostPlayer, FilterByOppositeTeam(hostPlayer, field.checkLocation(hostPlayer, Field.FIELD_HEIGHT))));
@@ -146,18 +172,32 @@ public class DefaultOffensiveStrategy extends BasePlayerStrategy {
         return playerInfluences;
     }
 
+    private final boolean shouldUseRoute(final GamePlayer hostPlayer, final GameField field){
+        if(routeInterpreter == null){
+            System.out.println("prepRoute was never called");
+            return false;
+        }
+        if(routeInterpreter.getIsIgnored()) return false;
+        routeInterpreter.calculateMovement(hostPlayer, field);
+        if(!hostPlayer.useRoute(routeInterpreter)){
+            routeInterpreter.ignoreInterpreter();
+            return false;
+        }
+        return true;
+    }
+
     private final List<PlayerInfluence> scanPlayers(final GamePlayer hostPlayer, final GameField field){
         CardinalDirection verticalDirection = hostPlayer.getBallCarrier().getLocation().getSecond() > hostPlayer.getLocation().getSecond() ? CardinalDirection.SOUTH : CardinalDirection.NORTH;
         CardinalDirection horizontalDirection = hostPlayer.getBallCarrier().getLocation().getFirst() > hostPlayer.getLocation().getFirst() ? CardinalDirection.EAST  : CardinalDirection.WEST;
         final List<PlayerInfluence> influences = new ArrayList<>();
         List<GamePlayer> playersBetweenUs = field.checkLocation(hostPlayer, Field.FIELD_HEIGHT);
-        playersBetweenUs = filterByDirection(hostPlayer, playersBetweenUs, verticalDirection, horizontalDirection);
+        playersBetweenUs = FilterByDirection(hostPlayer, playersBetweenUs, verticalDirection, horizontalDirection);
 
         final List<GamePlayer> sameTeam = FilterBySameTeam(hostPlayer, playersBetweenUs);
         final List<GamePlayer> oppositeTeam = FilterByOppositeTeam(hostPlayer, playersBetweenUs);
 
         for(final GamePlayer player : sameTeam){
-            influences.add(getSameTeamPlayerInfluence(hostPlayer, player));
+            influences.add(GetSameTeamPlayerInfluence(hostPlayer, player));
         }
         for(final GamePlayer player : oppositeTeam){
             influences.add(getOtherTeamPlayerInfluence(hostPlayer, player));
@@ -184,14 +224,14 @@ public class DefaultOffensiveStrategy extends BasePlayerStrategy {
         final Movement ballCarrierPreviousMovement = hostPlayer.getBallCarrier().getPreviousMovement(BALLCARRIER_PREDICTION_LENGTH);
         final Vector v = new Vector(ballCarrierPreviousMovement.getStartingLocation(), hostPlayer.getBallCarrier().getLocation());
 
-        if(v.getMagnitude().isNaN() || v.getDirection().isNaN()) return getNullInfluence(BALLCARRIER_PREDICATED_MOVEMENT_TAG);
+        if(v.getMagnitude().isNaN() || v.getDirection().isNaN()) return GetNullInfluence(BALLCARRIER_PREDICATED_MOVEMENT_TAG);
 
         return new PlayerInfluence(v, (v.getDirection() / Math.PI) * 100, BALLCARRIER_PREDICATED_MOVEMENT_TAG);
     }
 
     private final PlayerInfluence getSideOfFieldInfluence(final GamePlayer hostPlayer, final List<GamePlayer> otherTeam){
-        final List<GamePlayer> leftSide = filterByDirection(hostPlayer, otherTeam, CardinalDirection.WEST);
-        final List<GamePlayer> rightSide = filterByDirection(hostPlayer, otherTeam, CardinalDirection.EAST);
+        final List<GamePlayer> leftSide = FilterByDirection(hostPlayer, otherTeam, CardinalDirection.WEST);
+        final List<GamePlayer> rightSide = FilterByDirection(hostPlayer, otherTeam, CardinalDirection.EAST);
         CardinalDirection side = null;
         if(leftSide.size() > rightSide.size()) side = CardinalDirection.WEST;
         if(leftSide.size() < rightSide.size()) side = CardinalDirection.EAST;
@@ -205,6 +245,5 @@ public class DefaultOffensiveStrategy extends BasePlayerStrategy {
         double magnitude = hostPlayer.getMaxMovement(direction);
         final Vector v = new Vector(direction, magnitude);
         return new PlayerInfluence(v, (direction / Math.PI) * 100, SIDE_OF_FIELD_TAG);
-
     }
 }

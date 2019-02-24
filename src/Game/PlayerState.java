@@ -1,24 +1,22 @@
 package Game;
 
-import PhysicsEngine.Movements.Events.CollisionEvent;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public enum PlayerState {
 
     /**
      * Jamming a receiver is technically blocking, so it receives the same state
      */
-    BLOCKING (0),
+//    BLOCKING (0),
+    PASS_BLOCKING(0),
+    RUN_BLOCKING (0),
     IS_BLOCKED (85),
     TACKLING (0),
     IS_TACKLED (95),
     BREAK_BLOCK (55),
     BREAK_TACKLE (80),
     COLLIDING (0),
+    LOOK_FOR_BALL(0),
     NULL(0);
 
     private final static Map<PlayerState, PlayerState> COUNTER_STATES;
@@ -32,10 +30,15 @@ public enum PlayerState {
     private final static Map<PlayerState, PlayerState> RESULT_STATES;
     static {
         Map<PlayerState, PlayerState> map = new HashMap<>();
-        map.put(BLOCKING, IS_BLOCKED);
+        map.put(PASS_BLOCKING, IS_BLOCKED);
+        map.put(RUN_BLOCKING, IS_BLOCKED);
         map.put(TACKLING, IS_TACKLED);
         RESULT_STATES = Collections.unmodifiableMap(map);
     }
+
+    private final static List<PlayerState> OVERRIDABLE = Arrays.asList(
+        NULL, LOOK_FOR_BALL
+    );
 
     private final double defaultCounterValue;
 
@@ -54,10 +57,11 @@ public enum PlayerState {
 
     public final PlayerState getResultState(){
         if(!RESULT_STATES.containsKey(this)) return NULL;
+        PlayerState debug = RESULT_STATES.get(this);
         return RESULT_STATES.get(this);
     }
 
-    public final boolean isBlocking(){ return this.equals(BLOCKING); }
+    public final boolean isBlocking(){ return this.equals(PASS_BLOCKING) || this.equals(RUN_BLOCKING); }
     public final boolean isBlocked(){ return this.equals(IS_BLOCKED); }
     public final boolean isTackling(){ return this.equals(TACKLING); }
     public final boolean isTackled(){ return this.equals(IS_TACKLED); }
@@ -66,24 +70,6 @@ public enum PlayerState {
     public final boolean breakTackle(){ return this.equals(BREAK_TACKLE); }
     public final boolean isNull() { return this.equals(NULL); }
 
-}
+    public final boolean isOverridable(){ return OVERRIDABLE.contains(this); }
 
-//    DOWN,
-//    BLOCKED,
-//    TACKLED,
-//    CATCHING,
-//    COLLIDING,
-//    NULL;
-//
-//    public final boolean isDown(){ return DOWN.equals(this); }
-//
-//    public final boolean isBlocked(){ return BLOCKED.equals(this); }
-//
-//    public final boolean isTackled(){ return TACKLED.equals(this); }
-//
-//    public final boolean isCatching(){ return CATCHING.equals(this); }
-//
-//    public final boolean isColliding(){ return COLLIDING.equals(this); }
-//
-//    public final boolean isNull(){ return NULL.equals(this); }
-//}
+}

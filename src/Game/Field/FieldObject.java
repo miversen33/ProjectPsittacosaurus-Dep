@@ -37,9 +37,10 @@ public abstract class FieldObject extends PhysicsObject implements Observer<Tupl
     }
 
     private final void handleLocationChange(final Tuple2<Double, Double> newLocation){
-        if(currentLocation != null) movements.add(0, new Movement(currentLocation.getLocation(), currentMovement, currentTimeStamp));
-        currentMovement = new Vector(currentLocation.getLocation(), newLocation);
         currentLocation = new Location(newLocation);
+        movements.add(0, new Movement(currentLocation.getLocation(), currentMovement, currentTimeStamp));
+        currentMovement = new Vector(currentLocation.getLocation(), newLocation);
+//        currentLocation = new Location(newLocation);
 
         setCurrentMovement(currentMovement);
 
@@ -48,11 +49,11 @@ public abstract class FieldObject extends PhysicsObject implements Observer<Tupl
         if(movements.size() == 0) return;
 //        Check here, make sure there is even any movements to check from
         Movement current = movements.get(0);
-        int movementLocation = 1;
+        int movementLocation = 0;
         int currentTimeCount = 0;
         double distanceMoved = 0;
 
-        while(movementLocation < (movements.size()-1) && currentTimeCount < FRAME_LIMIT){
+        while(movementLocation < movements.size() && currentTimeCount < FRAME_LIMIT){
             final Movement previous = movements.get(movementLocation);
             distanceMoved += Location.GetDistance(current.getEndingLocation(), previous.getEndingLocation());
             currentTimeCount += previous.getTimeStamp() - current.getTimeStamp();
@@ -60,10 +61,9 @@ public abstract class FieldObject extends PhysicsObject implements Observer<Tupl
             current = previous;
         }
 
-//            Collisions are fucking this up immensely, causing the acceleration to be drastically cut. We need a time
-//            management system in place that states that collisions take essentially no time to resolve.
         int convertedTime = currentTimeCount/MILL_TO_SECOND;
-        double accel = distanceMoved / convertedTime;
+        Double accel = distanceMoved / convertedTime;
+        if(accel.isNaN()) accel = 0.0;
         setAcceleration(accel);
     }
 

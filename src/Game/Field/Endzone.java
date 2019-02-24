@@ -3,12 +3,20 @@ package Game.Field;
 import Tuple.Tuple2;
 
 public enum Endzone {
-    NORTH, SOUTH;
+    NORTH(CardinalDirection.NORTH), SOUTH(CardinalDirection.SOUTH);
+
+    private final CardinalDirection direction;
+
+    Endzone(final CardinalDirection direction){
+        this.direction = direction;
+    }
 
     public final Endzone getOpposite(){
         return this == NORTH ? SOUTH : NORTH;
     }
-
+    public final CardinalDirection getCardinalDirection(){
+        return direction;
+    }
     public final boolean isNorth(){ return this.equals(NORTH); }
     public final boolean isSouth(){ return this.equals(SOUTH); }
 

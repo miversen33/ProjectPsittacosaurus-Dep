@@ -59,8 +59,10 @@ public final class GameManager {
 
         mHomeTeam = homeTeam;
         mHomeTeam.signTeam(mGameSignature);
+        mHomeTeam.setGameManager(this);
         mAwayTeam = awayTeam;
         mAwayTeam.signTeam(mGameSignature);
+        mAwayTeam.setGameManager(this);
 
         mGameClock = generateGameClock(gameClock, playClock);
         mField = generateGameField();
@@ -81,22 +83,16 @@ public final class GameManager {
 //        Lots of assumptions are made here. Obviously we cant actually do most of this
 
 //        These should not be done here, but rather by a coach object or the player themselves
-        final Tuple2<Double, Double> ballCarrierLocation = new Tuple2<>(30.0, Field.ENDZONE_HEIGHT);
-        final Tuple2<Double, Double> defender1Location = new Tuple2<>(100.0, Field.FIELD_HEIGHT);
-
-        final Tuple2<Double, Double> blockerLocation = new Tuple2<>(21.0, 45.0);
-        final Tuple2<Double, Double> defender2Location = new Tuple2<>(10.0, 75.0);
-        final Tuple2<Double, Double> defender3Location = new Tuple2<>(35.0, Field.FIELD_HEIGHT - Field.ENDZONE_HEIGHT);
+        final Tuple2<Double, Double> defender1Location = new Tuple2<>(50.0, 50.0);
+        final Tuple2<Double, Double> offensive1Location = new Tuple2<>(45.0, 44.0);
 
         offense = mHomeTeam;
         defense = mAwayTeam;
 
-        final GamePlayer ballCarrier = offense.getPlayers().get(0);
-        final GamePlayer blocker = offense.getPlayers().get(1);
-        ballCarrier.DEBUG_setBallCarrier(true);
+        final GamePlayer offensive1 = offense.getPlayers().get(0);
+        offensive1.DEBUG_setBallCarrier(true);
 
-        mField.addPlayer(ballCarrier, new Location(ballCarrierLocation));
-        mField.addPlayer(blocker, new Location(blockerLocation));
+        mField.addPlayer(offensive1, new Location(offensive1Location));
 
         final GamePlayer defender = defense.getPlayers().get(0);
 

@@ -5,6 +5,7 @@ import Game.Field.Field;
 import Game.GamePlay.GameField;
 import Game.GamePlay.PlayerInfluence;
 import Game.GamePlay.PlayerStrategy.BasePlayerStrategy;
+import Game.Routes.Route;
 import PhysicsEngine.PhysicsObjects.Vector;
 import Game.GamePlay.GamePlayer;
 import Game.IGamePlayerOwner;
@@ -33,7 +34,8 @@ public final class BallCarrierStrategy extends BasePlayerStrategy{
 
     private final boolean DEBUG_RAILS = false;
 
-    public BallCarrierStrategy() {
+    public BallCarrierStrategy(final Route route) {
+        super(route);
 //        Consider having the defaults be provided so that every player has a "custom" strategy as they progress
     }
 
@@ -125,9 +127,9 @@ public final class BallCarrierStrategy extends BasePlayerStrategy{
         List<GamePlayer> sameTeam;
         List<GamePlayer> otherTeam;
         if(hostPlayer.getTeamGoal().isNorth()){
-            playersBetweenGoal = filterByDirection(hostPlayer, playersBetweenGoal, CardinalDirection.NORTH);
+            playersBetweenGoal = FilterByDirection(hostPlayer, playersBetweenGoal, CardinalDirection.NORTH);
         } else{
-            playersBetweenGoal = filterByDirection(hostPlayer, playersBetweenGoal, CardinalDirection.SOUTH);
+            playersBetweenGoal = FilterByDirection(hostPlayer, playersBetweenGoal, CardinalDirection.SOUTH);
         }
         sameTeam = FilterBySameTeam(hostPlayer, playersBetweenGoal);
         otherTeam = FilterByOppositeTeam(hostPlayer, playersBetweenGoal);
@@ -169,7 +171,7 @@ public final class BallCarrierStrategy extends BasePlayerStrategy{
     private final PlayerInfluence getLeftSideLineInfluence(final GamePlayer hostPlayer){
         final double baseInfluence = .65;
 
-        if(hostPlayer.getLocation().getFirst() > SIDELINE_LEFT_MAX_DISTANCE) return getNullInfluence(SIDELINE_TAG_LEFT);
+        if(hostPlayer.getLocation().getFirst() > SIDELINE_LEFT_MAX_DISTANCE) return GetNullInfluence(SIDELINE_TAG_LEFT);
         Vector v = new Vector(new Tuple2<>(Field.FIELD_WIDTH - hostPlayer.getLocation().getFirst(), hostPlayer.getLocation().getSecond()));
 
         v = v.scale(baseInfluence);
@@ -180,7 +182,7 @@ public final class BallCarrierStrategy extends BasePlayerStrategy{
     private final PlayerInfluence getRightSideLineInfluence(final GamePlayer hostPlayer){
         final double baseInfluence = .65;
 
-        if(hostPlayer.getLocation().getFirst() < SIDELINE_RIGHT_MAX_DISTANCE) return getNullInfluence(SIDELINE_TAG_RIGHT);
+        if(hostPlayer.getLocation().getFirst() < SIDELINE_RIGHT_MAX_DISTANCE) return GetNullInfluence(SIDELINE_TAG_RIGHT);
         Vector v = new Vector(new Tuple2<>(hostPlayer.getLocation().getFirst(), hostPlayer.getLocation().getSecond()));
 
         v = v.scale(baseInfluence);
@@ -219,8 +221,8 @@ public final class BallCarrierStrategy extends BasePlayerStrategy{
 //    Default Defender Influence appears to be functional.
     private final PlayerInfluence getDefenderInfluence(final GamePlayer hostPlayer, final GamePlayer defender, final GameField field){
 //        If the defender is to far away, we dont care
-        if(Math.abs(hostPlayer.getLocation().getSecond() - defender.getLocation().getSecond()) > MAX_DISTANCE_Y) return getNullInfluence(defender.getName());
-        if(Math.abs(hostPlayer.getLocation().getFirst() - defender.getLocation().getFirst()) > MAX_DISTANCE_X) return getNullInfluence(defender.getName());
+        if(Math.abs(hostPlayer.getLocation().getSecond() - defender.getLocation().getSecond()) > MAX_DISTANCE_Y) return GetNullInfluence(defender.getName());
+        if(Math.abs(hostPlayer.getLocation().getFirst() - defender.getLocation().getFirst()) > MAX_DISTANCE_X) return GetNullInfluence(defender.getName());
 
         final Vector baseVector = new Vector(defender.getLocation(), hostPlayer.getLocation());
 
@@ -230,11 +232,11 @@ public final class BallCarrierStrategy extends BasePlayerStrategy{
         if(hostPlayer.getLocation().getFirst().equals(defender.getLocation().getFirst())){
             final List<GamePlayer> playersOnField = field.checkLocation(hostPlayer, Field.FIELD_HEIGHT);
 
-            int sideLeft = -1 * filterByDirection(hostPlayer, FilterByOppositeTeam(hostPlayer, playersOnField), CardinalDirection.WEST).size();
-            sideLeft += filterByDirection(hostPlayer, FilterBySameTeam(hostPlayer, playersOnField), CardinalDirection.WEST).size();
+            int sideLeft = -1 * FilterByDirection(hostPlayer, FilterByOppositeTeam(hostPlayer, playersOnField), CardinalDirection.WEST).size();
+            sideLeft += FilterByDirection(hostPlayer, FilterBySameTeam(hostPlayer, playersOnField), CardinalDirection.WEST).size();
 
-            int sideRight = filterByDirection(hostPlayer, FilterByOppositeTeam(hostPlayer, playersOnField), CardinalDirection.EAST).size();
-            sideLeft -= filterByDirection(hostPlayer, FilterBySameTeam(hostPlayer, playersOnField), CardinalDirection.EAST).size();
+            int sideRight = FilterByDirection(hostPlayer, FilterByOppositeTeam(hostPlayer, playersOnField), CardinalDirection.EAST).size();
+            sideLeft -= FilterByDirection(hostPlayer, FilterBySameTeam(hostPlayer, playersOnField), CardinalDirection.EAST).size();
 
             int sideTotal = sideRight + sideLeft;
             if(sideTotal == 0){

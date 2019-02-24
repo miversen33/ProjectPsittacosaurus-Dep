@@ -6,6 +6,8 @@ import Game.Field.FieldObject;
 import Game.GamePlay.PlayerStrategy.IPlayerStrategy;
 import Game.IPlayerObject;
 import Game.PlayerState;
+import Game.Routes.Route;
+import Game.Routes.RouteInterpreter.IRouteInterpreter;
 import PhysicsEngine.Movements.MovementEngine;
 import PhysicsEngine.Movements.MovementInstruction;
 import PhysicsEngine.PhysicsObjects.Vector;
@@ -25,6 +27,7 @@ public final class GamePlayer extends FieldObject implements IPlayerObject {
 //    to only have access to what they need access to. Plus the GamePlayer will need access to
 //    the clock anyway, which will only be available in the GameManager
 //    private GameField mOwner;
+    private GameManager mManager;
     private MovementInstruction mCurrentInstructions;
 
 //    private final Player player = null;
@@ -37,9 +40,8 @@ public final class GamePlayer extends FieldObject implements IPlayerObject {
     public GamePlayer(double mass, final String name, final IPlayerStrategy playerLogic) {
         super(mass);
         mName = name;
-        changePlayerStrategy(playerLogic);
+        setPlayerStrategy(playerLogic);
     }
-
 //    // Eventually
 //    public GamePlayer(final GameTeam mTeam, final Player player, final IPlayerStrategy strategy) {
 //        super(player.getMass());
@@ -47,6 +49,15 @@ public final class GamePlayer extends FieldObject implements IPlayerObject {
 
     public final void assignTeam(final GameTeam team){
         mTeam = team;
+    }
+
+    final void assignManager(final GameManager manager){
+        if(mManager != null){
+//            Log invalid attempt to overwrite game manager
+            System.out.println("Cannot overwite existing game manager in game player");
+            return;
+        }
+        mManager= manager;
     }
 
     public final List<PlayerInfluence> getPlayerInfluenceBiases(){
@@ -69,8 +80,8 @@ public final class GamePlayer extends FieldObject implements IPlayerObject {
         return getOwner().getBallCarrier(this);
     }
 
-//    public final void changePlayerStrategy(final Player owningPlayer, final IPlayerStrategy newStrat){
-    public final void changePlayerStrategy(final IPlayerStrategy newStrat){
+//    public final void setPlayerStrategy(final Player owningPlayer, final IPlayerStrategy newStrat){
+    public final void setPlayerStrategy(final IPlayerStrategy newStrat){
         mPlayerStrat = newStrat;
     }
 
@@ -138,13 +149,20 @@ public final class GamePlayer extends FieldObject implements IPlayerObject {
         return comparePlayer.mTeam.equals(mTeam);
     }
 
-//    public final Tuple2<Double, Double> getGoal(){
-//        return mPlayerStrat.calculateGoal(this, mOwner, mTeam);
-//    }
+    public final boolean useRoute(final IRouteInterpreter routeInterpreter){
+//        Check the grade the route viability is given, then decide if we want to use it or not
+//        For now, we will always return true
+        if(routeInterpreter == null){
+            System.out.println("Ya the route interpreter shouldn't be null");
+            return false;
+        }
+        return true;
+    }
 
     final void clearMovementInstruction(final GameField field){
         if(!(getOwner().equals(field))){
 //            Handle logging due to invalid field
+//            TODO
         }
         setMovementInstruction(new MovementInstruction(this, new Vector(0,0)));
     }
@@ -154,9 +172,9 @@ public final class GamePlayer extends FieldObject implements IPlayerObject {
     }
 
     public final void setMovementInstruction(final MovementEngine engine, final MovementInstruction instruction){
-//        Pass Validity Check
         if(!Signature.ValidateSignatures(mTeam.getSignature(), engine.getSignature())){
 //            Log invalid engine.
+//            TODO
             return;
         }
         setMovementInstruction(instruction);
@@ -184,28 +202,19 @@ public final class GamePlayer extends FieldObject implements IPlayerObject {
         requestMovement(mPlayerStrat.getMove());
     }
 
-//    @Override
-//    public final void takeField(final GameField field) {
-//        if(mOwner != null){
-////            Handle logging due to attempted overwrite of field
-//            return;
-//        }
-//        mOwner = field;
-//        clearMovementInstruction(field);
-//    }
-
     @Override
     public final void updateObserver(Object key, Tuple2<Double, Double> itemChanged) {
+        provideTimeStamp(mManager.getTimeStamp());
         super.updateObserver(key, itemChanged);
 //        If we reach here, we can assume that the movement instruction has been executed
-        if(mCurrentInstructions != null && mCurrentInstructions.hasBeenExecuted()) timeStampMovement();
+//        if(mCurrentInstructions != null && mCurrentInstructions.hasBeenExecuted()) timeStampMovement();
     }
 
     private final void timeStampMovement(){
-        if(mCurrentInstructions.getAction().getActionState().isColliding()){
-            mCurrentInstructions.setUsedTime(MovementInstruction.COLLISION_USED_TIME);
-        } else {
-            mCurrentInstructions.setUsedTime(MovementInstruction.DEFAULT_USED_TIME);
-        }
+//        if(mCurrentInstructions.getAction().getActionState().isColliding()){
+//            mCurrentInstructions.setUsedTime(MovementInstruction.COLLISION_USED_TIME);
+//        } else {
+//            mCurrentInstructions.setUsedTime(MovementInstruction.DEFAULT_USED_TIME);
+//        }
     }
 }

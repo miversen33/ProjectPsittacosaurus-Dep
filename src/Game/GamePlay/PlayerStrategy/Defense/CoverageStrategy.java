@@ -5,12 +5,17 @@ import Game.GamePlay.GamePlayer;
 import Game.GamePlay.PlayerInfluence;
 import Game.GamePlay.PlayerStrategy.BasePlayerStrategy;
 import Game.IGamePlayerOwner;
+import Game.Routes.Route;
 import PhysicsEngine.Movements.MovementInstruction;
 import Tuple.Tuple2;
 
 import java.util.List;
 
 public class CoverageStrategy extends BasePlayerStrategy {
+
+    public CoverageStrategy(final Route route) {
+        super(route);
+    }
 
     @Override
     public void calculateMove(final GamePlayer hostPlayer, final GameField field) {

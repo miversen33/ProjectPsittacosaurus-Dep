@@ -6,6 +6,7 @@ import Game.GamePlay.GameField;
 import Game.GamePlay.GamePlayer;
 import Game.GamePlay.PlayerInfluence;
 import Game.GamePlay.PlayerStrategy.BasePlayerStrategy;
+import Game.Routes.Route;
 import PhysicsEngine.Movements.Movement;
 import PhysicsEngine.Movements.MovementAction;
 import PhysicsEngine.PhysicsObjects.Vector;
@@ -30,6 +31,10 @@ public class DefaultDefensiveStrategy extends BasePlayerStrategy {
     private final static String BALLCARRIER_PREDICTION_TAG = "Ball Carrier Prediction";
 
     private final boolean DEBUG_RAILS = false;
+
+    public DefaultDefensiveStrategy(final Route route) {
+        super(route);
+    }
 
     @Override
     public void calculateMove(final GamePlayer hostPlayer, final GameField field) {
@@ -110,13 +115,13 @@ public class DefaultDefensiveStrategy extends BasePlayerStrategy {
         CardinalDirection horizontalDirection = hostPlayer.getBallCarrier().getLocation().getFirst() > hostPlayer.getLocation().getFirst() ? CardinalDirection.EAST  : CardinalDirection.WEST;
         final List<PlayerInfluence> influences = new ArrayList<>();
         List<GamePlayer> playersBetweenUs = field.checkLocation(hostPlayer, distanceToBallCarrier);
-        playersBetweenUs = filterByDirection(hostPlayer, playersBetweenUs, verticalDirection, horizontalDirection);
+        playersBetweenUs = FilterByDirection(hostPlayer, playersBetweenUs, verticalDirection, horizontalDirection);
 
         final List<GamePlayer> sameTeam = FilterBySameTeam(hostPlayer, playersBetweenUs);
         final List<GamePlayer> oppositeTeam = FilterByOppositeTeam(hostPlayer, playersBetweenUs);
 
         for(final GamePlayer player : sameTeam){
-            influences.add(getSameTeamPlayerInfluence(hostPlayer, player));
+            influences.add(GetSameTeamPlayerInfluence(hostPlayer, player));
         }
         for(final GamePlayer player : oppositeTeam){
             influences.add(getOtherTeamPlayerInfluence(hostPlayer, player));
@@ -126,7 +131,7 @@ public class DefaultDefensiveStrategy extends BasePlayerStrategy {
     }
 
     private final PlayerInfluence getOtherTeamPlayerInfluence(final GamePlayer hostPlayer, final GamePlayer otherPlayer){
-        if(hostPlayer.getBallCarrier().equals(otherPlayer)) return getNullInfluence(otherPlayer.getName());
+        if(hostPlayer.getBallCarrier().equals(otherPlayer)) return GetNullInfluence(otherPlayer.getName());
 
         final double magnitude = 1.01;
         Vector v = new Vector(otherPlayer.getLocation(), hostPlayer.getLocation());
@@ -155,7 +160,7 @@ public class DefaultDefensiveStrategy extends BasePlayerStrategy {
     private final PlayerInfluence getPredictedBallCarrierInfluence(final GamePlayer hostPlayer){
         final Vector ballCarrierMovement = getPreviousBallCarrierMovement(hostPlayer);
         final Vector scaledMovement = ballCarrierMovement.scale(targetPredictionDistance / ballCarrierMovement.getMagnitude());
-        if(scaledMovement.getMagnitude().isNaN() || scaledMovement.getDirection().isNaN())  return getNullInfluence(BALLCARRIER_PREDICTION_TAG);
+        if(scaledMovement.getMagnitude().isNaN() || scaledMovement.getDirection().isNaN())  return GetNullInfluence(BALLCARRIER_PREDICTION_TAG);
         final Tuple2<Double, Double> targetLocation = new Tuple2<>(hostPlayer.getBallCarrier().getLocation().getFirst() + scaledMovement.getChangeX(), hostPlayer.getBallCarrier().getLocation().getSecond() + scaledMovement.getChangeY());
 
         final Vector influence = new Vector(hostPlayer.getLocation(), targetLocation);

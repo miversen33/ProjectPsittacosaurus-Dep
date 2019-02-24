@@ -23,7 +23,7 @@ public final class MovementInstruction implements Comparable<MovementInstruction
     public MovementInstruction(final GamePlayer player, final Vector vector){
         mPlayer = player;
         mVector = vector;
-        mAction = new MovementAction();
+        mAction = new MovementAction(player);
     }
 
     public MovementInstruction(final MovementAction action, final Vector vector){
@@ -40,6 +40,7 @@ public final class MovementInstruction implements Comparable<MovementInstruction
         return mVector;
     }
 
+    @Deprecated
     public final Location getEndingLocation(){
         return new Location(new Tuple2<>(
                 mPlayer.getLocation().getFirst() + mVector.getChangeX(),
