@@ -18,9 +18,6 @@ import java.util.List;
 
 public final class OffensiveRouteInterpreter extends RouteInterpreter{
 
-//    ALL MOVEMENTS NEED TO BE POSITIVE OR NEGATIVE RELATIVE TO
-//    HOST PLAYERS GOAL!
-
     private IRouteAction cacheRouteAction;
     private Tuple2<Double, Double> cacheRouteStartPoint;
     private Tuple2<Double, Double> cacheRouteEndPoint;
