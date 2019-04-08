@@ -2,6 +2,7 @@ package PhysicsEngine.PhysicsObjects;
 
 import Utils.Observable.Observable;
 import Tuple.Tuple2;
+import Utils.Shapes.Line;
 
 public class Vector extends Observable {
 
