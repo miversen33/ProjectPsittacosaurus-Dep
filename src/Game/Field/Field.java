@@ -15,10 +15,10 @@ public class Field{
     private static final Tuple2<Double, Double> NORTH_ENDZONE_LOCATION = new Tuple2<>(FIELD_WIDTH/2,ENDZONE_HEIGHT-1);
     private static final Tuple2<Double, Double> SOUTH_ENDZONE_LOCATION = new Tuple2<>(FIELD_WIDTH/2,FIELD_HEIGHT-ENDZONE_HEIGHT+1);
 
-    private final static double LeftBoundary = 0.0;
-    private final static double TopBoundary = 0.0;
-    private final static double RightBoundary = LeftBoundary + FIELD_WIDTH;
-    private final static double BottomBoundary = TopBoundary + FIELD_HEIGHT;
+    private final static double LEFT_BOUNDARY = 0.0;
+    private final static double TOP_BOUNDARY = 0.0;
+    private final static double RIGHT_BOUNDARY = LEFT_BOUNDARY + FIELD_WIDTH;
+    private final static double BOTTOM_BOUNDARY = TOP_BOUNDARY + FIELD_HEIGHT;
 
     public enum Side{
         LEFT,
@@ -36,16 +36,16 @@ public class Field{
     }
 
     public final static boolean IsInBounds(final Location location){
-        return location.getX() > LeftBoundary && location.getX() < RightBoundary &&
-               location.getY() > TopBoundary && location.getY() < BottomBoundary;
+        return location.getX() > LEFT_BOUNDARY && location.getX() < RIGHT_BOUNDARY &&
+               location.getY() > TOP_BOUNDARY && location.getY() < BOTTOM_BOUNDARY;
     }
 
     public final static boolean IsInNorthEndzone(final Location location){
-        return location.getY() >= TopBoundary && location.getY() <= TopBoundary + ENDZONE_HEIGHT;
+        return location.getY() >= TOP_BOUNDARY && location.getY() <= TOP_BOUNDARY + ENDZONE_HEIGHT;
     }
 
     public final static boolean IsInSouthEndzone(final Location location){
-        return location.getY() >= BottomBoundary - ENDZONE_HEIGHT && location.getY() <= BottomBoundary;
+        return location.getY() >= BOTTOM_BOUNDARY - ENDZONE_HEIGHT && location.getY() <= BOTTOM_BOUNDARY;
     }
 
     public final static boolean IsInEndzone(final Location location){
@@ -53,16 +53,16 @@ public class Field{
     }
 
     public final static boolean IsInBounds(final Tuple2<Double, Double> location){
-        return location.getFirst() > LeftBoundary && location.getFirst() < RightBoundary &&
-               location.getSecond() > TopBoundary && location.getSecond() < BottomBoundary;
+        return location.getFirst() > LEFT_BOUNDARY && location.getFirst() < RIGHT_BOUNDARY &&
+               location.getSecond() > TOP_BOUNDARY && location.getSecond() < BOTTOM_BOUNDARY;
     }
 
     public final static boolean IsInNorthEndzone(final Tuple2<Double, Double> location){
-        return location.getSecond() >= TopBoundary && location.getSecond() <= TopBoundary + ENDZONE_HEIGHT;
+        return location.getSecond() >= TOP_BOUNDARY && location.getSecond() <= TOP_BOUNDARY + ENDZONE_HEIGHT;
     }
 
     public final static boolean IsInSouthEndzone(final Tuple2<Double, Double> location){
-        return location.getSecond() >= BottomBoundary - ENDZONE_HEIGHT && location.getSecond() <= BottomBoundary;
+        return location.getSecond() >= BOTTOM_BOUNDARY - ENDZONE_HEIGHT && location.getSecond() <= BOTTOM_BOUNDARY;
     }
 
     public final static boolean IsInEndzone(final Tuple2<Double, Double> location){

@@ -1,10 +1,9 @@
 package Game.Field;
 
-import Game.GamePlay.GameClock;
 import Game.GamePlay.GameField;
 import PhysicsEngine.Movements.Movement;
-import PhysicsEngine.PhysicsObjects.PhysicsObject;
-import PhysicsEngine.PhysicsObjects.Vector;
+import Utils.PhysicsObjects.PhysicsObject;
+import Utils.PhysicsObjects.Vector;
 import Tuple.Tuple2;
 import Utils.Location;
 import Utils.Observable.Observer;
@@ -36,34 +35,39 @@ public abstract class FieldObject extends PhysicsObject implements Observer<Tupl
         currentTimeStamp = timeStamp;
     }
 
-    private final void handleLocationChange(final Tuple2<Double, Double> newLocation){
+    private final void handleLocationChange(final Tuple2<Double, Double> newLocation) {
+        if (movements.isEmpty() && (currentLocation.getLocation().getFirst().isInfinite() && currentLocation.getLocation().getSecond().isInfinite())) {
+            currentLocation = new Location(newLocation);
+        }
+        final Movement newMove = new Movement(currentLocation.getLocation(), newLocation, currentTimeStamp);
+        movements.add(0, newMove);
+        currentMovement = newMove.getMovement();
         currentLocation = new Location(newLocation);
-        movements.add(0, new Movement(currentLocation.getLocation(), currentMovement, currentTimeStamp));
-        currentMovement = new Vector(currentLocation.getLocation(), newLocation);
-//        currentLocation = new Location(newLocation);
 
         setCurrentMovement(currentMovement);
 
         locationState = Field.GetLocationState(new Location(getLocation()));
 
-        if(movements.size() == 0) return;
-//        Check here, make sure there is even any movements to check from
+        if(!movements.isEmpty()) handleAccelerationCalculation();
+    }
+
+    private final void handleAccelerationCalculation () {
         Movement current = movements.get(0);
         int movementLocation = 0;
         int currentTimeCount = 0;
         double distanceMoved = 0;
 
-        while(movementLocation < movements.size() && currentTimeCount < FRAME_LIMIT){
+        while (movementLocation < movements.size() && currentTimeCount < FRAME_LIMIT) {
             final Movement previous = movements.get(movementLocation);
             distanceMoved += Location.GetDistance(current.getEndingLocation(), previous.getEndingLocation());
             currentTimeCount += previous.getTimeStamp() - current.getTimeStamp();
-            movementLocation ++;
+            movementLocation++;
             current = previous;
         }
 
-        int convertedTime = currentTimeCount/MILL_TO_SECOND;
-        Double accel = distanceMoved / convertedTime;
-        if(accel.isNaN()) accel = 0.0;
+        int convertedTime = currentTimeCount / MILL_TO_SECOND;
+        double accel = distanceMoved / convertedTime;
+        if (Double.isNaN(accel)) accel = 0.0;
         setAcceleration(accel);
     }
 
@@ -124,6 +128,7 @@ public abstract class FieldObject extends PhysicsObject implements Observer<Tupl
     }
 
     public final Movement getPreviousMovement(int numberOfMovesBack){
+//        Movements are not linking correctly
         if(movements.size() <= numberOfMovesBack){
 //            If they want a movement that is further back than we have available, just return the furthest movement available
             return movements.get(movements.size()-1);
