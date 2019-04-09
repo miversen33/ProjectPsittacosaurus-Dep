@@ -1,4 +1,4 @@
-package PhysicsEngine.PhysicsObjects;
+package Utils.PhysicsObjects;
 
 public final class Scalar implements CommonScalarTypes{
     private final String name;
