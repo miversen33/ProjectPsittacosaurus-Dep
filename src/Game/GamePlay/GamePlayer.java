@@ -6,11 +6,10 @@ import Game.Field.FieldObject;
 import Game.GamePlay.PlayerStrategy.IPlayerStrategy;
 import Game.IPlayerObject;
 import Game.PlayerState;
-import Game.Routes.Route;
-import Game.Routes.RouteInterpreter.IRouteInterpreter;
+import PhysicsEngine.Movements.MovementAction;
 import PhysicsEngine.Movements.MovementEngine;
 import PhysicsEngine.Movements.MovementInstruction;
-import PhysicsEngine.PhysicsObjects.Vector;
+import Utils.PhysicsObjects.Vector;
 import Tuple.Tuple2;
 import Utils.Signature;
 
@@ -129,6 +128,12 @@ public final class GamePlayer extends FieldObject implements IPlayerObject {
     }
 
     @Override
+    public final PlayerState getMovementState(){
+        if(getMovementInstruction() == null) return PlayerState.NULL;
+        return getMovementInstruction().getAction().getActionState();
+    }
+
+    @Override
     public String toString() {
         return getName()+" | "+getLocation();
     }
@@ -149,15 +154,17 @@ public final class GamePlayer extends FieldObject implements IPlayerObject {
         return comparePlayer.mTeam.equals(mTeam);
     }
 
-    public final boolean useRoute(final IRouteInterpreter routeInterpreter){
-//        Check the grade the route viability is given, then decide if we want to use it or not
-//        For now, we will always return true
-        if(routeInterpreter == null){
-            System.out.println("Ya the route interpreter shouldn't be null");
-            return false;
-        }
-        return true;
-    }
+////    TODO
+//    We will need to come back to this
+//    public final boolean useRoute(final IRouteInterpreter routeInterpreter){
+////        Check the grade the route viability is given, then decide if we want to use it or not
+////        For now, we will always return true
+//        if(routeInterpreter == null){
+//            System.out.println("Ya the route interpreter shouldn't be null");
+//            return false;
+//        }
+//        return true;
+//    }
 
     final void clearMovementInstruction(final GameField field){
         if(!(getOwner().equals(field))){
@@ -181,7 +188,10 @@ public final class GamePlayer extends FieldObject implements IPlayerObject {
     }
 
     private final void setMovementInstruction(final MovementInstruction instruction){
-        mCurrentInstructions = instruction;
+        final double direction = instruction.getVector().getDirection();
+        final double magnitude = instruction.getVector().getMagnitude() > getMaxMovement(direction) ? getMaxMovement(direction) : instruction.getVector().getMagnitude();
+
+        mCurrentInstructions = new MovementInstruction(instruction.getAction(), new Vector(direction, magnitude));
     }
 
     public final MovementInstruction getMovementInstruction(){

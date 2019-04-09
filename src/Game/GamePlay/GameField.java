@@ -3,7 +3,8 @@ package Game.GamePlay;
 import Game.GamePlay.Events.PlayerOutOfBoundsEvent;
 import Game.GamePlay.Events.PlayerInEndzoneEvent;
 import PhysicsEngine.Movements.MovementEngine;
-import PhysicsEngine.PhysicsObjects.Vector;
+import Utils.PhysicsObjects.Vector;
+import Tuple.Tuple2;
 import Utils.Exceptions.FieldLockException;
 import Utils.Location;
 import Utils.Location.LocationKey;
@@ -37,6 +38,21 @@ public final class GameField {
             playersInLocation.add(mLocationMap.get(l));
         }
         playersInLocation.remove(player);
+        return playersInLocation;
+    }
+
+    public final List<GamePlayer> checkLocation(final Tuple2<Double, Double> location, final double radius){
+        final List<GamePlayer> playersInLocation = new ArrayList<>();
+        final List<Location> offendingLocations = new ArrayList<>();
+//        final Location playerLocation = mPlayers.get(player);
+        for(final Location l : mLocationMap.keySet()){
+            if(Location.GetDistance(new Location(location), l) <= radius && !l.getLocation().equals(location)) offendingLocations.add(l);
+        }
+        offendingLocations.sort((Comparator.comparingDouble(firstLocation -> Location.GetDistance(new Location(location), (Location) firstLocation))).reversed());
+
+        for(final Location l : offendingLocations){
+            playersInLocation.add(mLocationMap.get(l));
+        }
         return playersInLocation;
     }
 

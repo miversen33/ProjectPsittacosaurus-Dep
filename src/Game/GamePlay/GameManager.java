@@ -80,11 +80,13 @@ public final class GameManager {
     }
 
     private final void DEBUG_INIT(){
+        //TODO
 //        Lots of assumptions are made here. Obviously we cant actually do most of this
 
 //        These should not be done here, but rather by a coach object or the player themselves
-        final Tuple2<Double, Double> defender1Location = new Tuple2<>(50.0, 50.0);
-        final Tuple2<Double, Double> offensive1Location = new Tuple2<>(45.0, 44.0);
+        final Tuple2<Double, Double> offensive1Location = new Tuple2<>(Field.FIELD_WIDTH - 20, Field.FIELD_HEIGHT - 30);
+        final Tuple2<Double, Double> defender1Location = new Tuple2<>(offensive1Location.getFirst() - 30, offensive1Location.getSecond() - 25);
+        final Tuple2<Double, Double> defender2Location = new Tuple2<>(offensive1Location.getFirst() - 75, offensive1Location.getSecond() - 25);
 
         offense = mHomeTeam;
         defense = mAwayTeam;
@@ -95,8 +97,10 @@ public final class GameManager {
         mField.addPlayer(offensive1, new Location(offensive1Location));
 
         final GamePlayer defender = defense.getPlayers().get(0);
+        final GamePlayer defender2 = defense.getPlayers().get(1);
 
         mField.addPlayer(defender, new Location(defender1Location));
+        mField.addPlayer(defender2, new Location(defender2Location));
 
         fieldLock = mField.lock();
     }

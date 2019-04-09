@@ -2,6 +2,7 @@ package Game.GamePlay;
 
 import Game.Field.Endzone;
 import Game.IGamePlayerOwner;
+import Game.SideOfBall;
 import Utils.Signature;
 
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ public class GameTeam implements IGamePlayerOwner {
     private Endzone mGoal;
     private Signature mSig;
     private GameManager mManager;
+    private SideOfBall mSideOfBall;
 
     public GameTeam(final List<GamePlayer> players, final Endzone currentGoal){
         mPlayers = new ArrayList<>(players);
