@@ -6,7 +6,7 @@ import Game.GamePlay.GameField;
 import Game.GamePlay.PlayerInfluence;
 import Game.GamePlay.PlayerStrategy.BasePlayerStrategy;
 import Game.Routes.Route;
-import PhysicsEngine.PhysicsObjects.Vector;
+import Utils.PhysicsObjects.Vector;
 import Game.GamePlay.GamePlayer;
 import Game.IGamePlayerOwner;
 import PhysicsEngine.Movements.MovementInstruction;
@@ -145,17 +145,17 @@ public final class BallCarrierStrategy extends BasePlayerStrategy{
     }
     
     private final double getDefenderIsBlockedModifier(final GamePlayer defender){
-        if(defender.getMovementInstruction().getAction().getActionState().isNull()) return 1;
+        if(defender.getMovementState().isNull()) return 1;
 //        If the defender is attempting a isTackling, their influence should be much larger
-        if(defender.getMovementInstruction().getAction().getActionState().isTackling()) return 2;
+        if(defender.getMovementState().isTackling()) return 2;
 //        Basically, if the defender is in the middle of a collision, its not impossible for them
 //        to affect us, but the chances of them doing so are so slim we might as well call it impossible.
-        if(defender.getMovementInstruction().getAction().getActionState().isColliding()) return .01;
+        if(defender.getMovementState().isColliding()) return .01;
 
 //        Blocking is not the same as colliding, therefore we have to do math in order to figure out
 //        how much influence we are able to radiate.
 //        For now, since we still dont have attributes, we will just return 25% value
-        if(defender.getMovementInstruction().getAction().getActionState().isBlocked()) return .25;
+        if(defender.getMovementState().isBlocked()) return .25;
 
         return 1;
     }
@@ -261,7 +261,7 @@ public final class BallCarrierStrategy extends BasePlayerStrategy{
 //        final double effectiveBlockDistanceInfluence = 1;
 ////        final int correctionInfluence = -1;
 ////        If the lead blocker is currently blocking someone, we should want to get near them.
-//        final double blockingInfluence = potentialBlocker.getMovementInstruction().getAction().getActionState().isBlocked() ? 2 : 1;
+//        final double blockingInfluence = potentialBlocker.getMovementState().isBlocked() ? 2 : 1;
 //
 //        if(!hostPlayer.sameTeamCheck(potentialBlocker)) return nullInfluence;
 ////        Check if the blocker is between us and the goal. If they aren't they have no influence on us

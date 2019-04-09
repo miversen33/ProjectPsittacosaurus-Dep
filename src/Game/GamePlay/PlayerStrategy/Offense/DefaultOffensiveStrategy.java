@@ -9,11 +9,10 @@ import Game.GamePlay.PlayerStrategy.BasePlayerStrategy;
 import Game.IGamePlayerOwner;
 import Game.PlayerState;
 import Game.Routes.Route;
-import Game.Routes.RouteInterpreter.RouteInterpreter;
 import PhysicsEngine.Movements.Movement;
 import PhysicsEngine.Movements.MovementAction;
 import PhysicsEngine.Movements.MovementInstruction;
-import PhysicsEngine.PhysicsObjects.Vector;
+import Utils.PhysicsObjects.Vector;
 import Tuple.Tuple2;
 
 import java.util.ArrayList;
@@ -32,9 +31,8 @@ public class DefaultOffensiveStrategy extends BasePlayerStrategy {
     private final static String BALLCARRIER_PREDICATED_MOVEMENT_TAG = "Ball Carrier Predicated Movement";
     private final static String ROUTE_TAG = "Route";
     private MovementInstruction move;
-    private MovementInstruction routeMove;
 
-    private RouteInterpreter routeInterpreter;
+//    private RouteInterpreter routeInterpreter;
 
     private final boolean DEBUG_RAILS = true;
 
@@ -55,12 +53,14 @@ public class DefaultOffensiveStrategy extends BasePlayerStrategy {
          * DO NOT DO MORE THAN 1
          */
 
-        if(getRoute() != null && routeInterpreter == null) routeInterpreter = new OffensiveRouteInterpreter(getRoute());
+//        if(getRoute() != null && routeInterpreter == null) routeInterpreter = new OffensiveRouteInterpreter(getRoute());
 
 //        1.
-        if(shouldUseRoute(hostPlayer, field)) routeMove = routeInterpreter.getMovement();
-        if(routeMove != null && !routeMove.getAction().getActionState().isOverridable()){
-            setMove(routeMove);
+        double MOVE_BREAK_THRESHOLD = 0;
+
+        Tuple2<Double, MovementInstruction> moveCheck = shouldUseRoute(hostPlayer, field);
+        if(moveCheck.getSecond() != null && moveCheck.getFirst() >= MOVE_BREAK_THRESHOLD){
+            setMove(moveCheck.getSecond());
             return;
         }
 
@@ -80,15 +80,15 @@ public class DefaultOffensiveStrategy extends BasePlayerStrategy {
 
         movement = new Vector(movement.getDirection(), hostPlayer.getMaxMovement(movement.getDirection()));
         if(DEBUG_RAILS){
-            setMove(routeMove);
+            setMove(moveCheck.getSecond());
             return;
         }
 
-        if(routeMove != null){
-            if(routeMove.getAction().getActionState().isOverridable()) setMove(new MovementInstruction(routeMove.getAction(), movement));
-        } else {
-            setMove(new MovementInstruction(hostPlayer, movement));
-        }
+//        if(routeMove != null){
+//            if(routeMove.getAction().getActionState().isOverridable()) setMove(new MovementInstruction(routeMove.getAction(), movement));
+//        } else {
+        setMove(new MovementInstruction(hostPlayer, movement));
+//        }
     }
 
     private final boolean isBlockablePlayerNear(final GamePlayer hostPlayer, final GameField field){
@@ -162,9 +162,14 @@ public class DefaultOffensiveStrategy extends BasePlayerStrategy {
          *          By default, giving every defender some influence on the blocker should
          *          help cause this, but we will still want to move towards the largest group
          *          of them possible.
+         *
+         * We need a way to handle routes better. Default blocking is fine,
+         * But a wide receiver who is running a route to possibly
+         * catch the ball shouldn't care about blocking or staying
+         * in front of the ballcarrier. We need to redo the influences
          */
-        if(routeMove != null && routeMove.getAction().getActionState().isOverridable())
-                playerInfluences.add(new PlayerInfluence(routeMove.getVector(), (routeMove.getVector().getDirection() / Math.PI) * 100, ROUTE_TAG));
+//        if(routeMove != null && routeMove.getAction().getActionState().isOverridable())
+//                playerInfluences.add(new PlayerInfluence(routeMove.getVector(), (routeMove.getVector().getDirection() / Math.PI) * 100, ROUTE_TAG));
         playerInfluences.add(getBallCarrierInfluence(hostPlayer));
         playerInfluences.addAll(scanPlayers(hostPlayer, field));
         playerInfluences.add(getSideOfFieldInfluence(hostPlayer, FilterByOppositeTeam(hostPlayer, field.checkLocation(hostPlayer, Field.FIELD_HEIGHT))));
@@ -172,18 +177,11 @@ public class DefaultOffensiveStrategy extends BasePlayerStrategy {
         return playerInfluences;
     }
 
-    private final boolean shouldUseRoute(final GamePlayer hostPlayer, final GameField field){
-        if(routeInterpreter == null){
-            System.out.println("prepRoute was never called");
-            return false;
-        }
-        if(routeInterpreter.getIsIgnored()) return false;
-        routeInterpreter.calculateMovement(hostPlayer, field);
-        if(!hostPlayer.useRoute(routeInterpreter)){
-            routeInterpreter.ignoreInterpreter();
-            return false;
-        }
-        return true;
+    private final Tuple2<Double, MovementInstruction> shouldUseRoute(final GamePlayer hostPlayer, final GameField field){
+        final double GRADE = 100;
+        MovementInstruction move = null;
+        if(!isRouteIgnored() && getRoute() != null) move = getMove(hostPlayer, field);
+        return new Tuple2<>(GRADE, move);
     }
 
     private final List<PlayerInfluence> scanPlayers(final GamePlayer hostPlayer, final GameField field){

@@ -9,7 +9,7 @@ import Game.GamePlay.PlayerStrategy.BasePlayerStrategy;
 import Game.Routes.Route;
 import PhysicsEngine.Movements.Movement;
 import PhysicsEngine.Movements.MovementAction;
-import PhysicsEngine.PhysicsObjects.Vector;
+import Utils.PhysicsObjects.Vector;
 import PhysicsEngine.Movements.MovementInstruction;
 import Tuple.Tuple2;
 import Utils.Location;
@@ -32,6 +32,8 @@ public class DefaultDefensiveStrategy extends BasePlayerStrategy {
 
     private final boolean DEBUG_RAILS = false;
 
+//    private RouteInterpreter routeInterpreter;
+
     public DefaultDefensiveStrategy(final Route route) {
         super(route);
     }
@@ -42,6 +44,24 @@ public class DefaultDefensiveStrategy extends BasePlayerStrategy {
 //        being blocked. If we are, we should engage in isBlocking shedding,
 //        as opposed to isTackling targeting
 
+//        if(getRoute() != null && routeInterpreter == null) routeInterpreter = new DefensiveRouteInterpreter(getRoute());
+
+//        THIS SHOULD BE PULLED FROM ATTRIBUTES
+        double MOVE_BREAK_THRESHOLD = 0;
+
+        Tuple2<Double, MovementInstruction> moveCheck = shouldUseRoute(hostPlayer, field);
+
+//        if(routeMove != null && !routeMove.getAction().getActionState().isOverridable()){
+//            setMove(routeMove);
+//            return;
+//        }
+//        TODO
+//        This does not account for blockers on blitz routes
+        if(moveCheck.getSecond() != null && moveCheck.getFirst() >= MOVE_BREAK_THRESHOLD /*&& !routeMove.getAction().getActionState().isOverridable()*/){
+            setMove(moveCheck.getSecond());
+            return;
+        }
+
         final List<PlayerInfluence> influences = getInfluences(hostPlayer, field);
         Vector movement = new Vector(0,0);
         for(final PlayerInfluence influence : influences){
@@ -51,7 +71,15 @@ public class DefaultDefensiveStrategy extends BasePlayerStrategy {
         movement = new Vector(movement.getDirection(), hostPlayer.getMaxMovement(movement.getDirection()));
 
         final MovementAction action = new MovementAction(generateMovementState(hostPlayer), hostPlayer, hostPlayer.getBallCarrier());
-        move = new MovementInstruction(action, movement);
+        setMove(new MovementInstruction(action, movement));
+    }
+
+    private final Tuple2<Double, MovementInstruction> shouldUseRoute(final GamePlayer hostPlayer, final GameField field){
+//        Where we grade the move
+        final double GRADE = 100;
+        MovementInstruction move = null;
+        if(!isRouteIgnored() && getRoute() != null) move = getMove(hostPlayer, field);
+        return new Tuple2<>(GRADE, move);
     }
 
     private final PlayerState generateMovementState(final GamePlayer host){
@@ -59,6 +87,10 @@ public class DefaultDefensiveStrategy extends BasePlayerStrategy {
         if(host.getPlayerState().isBlocked()) return PlayerState.BREAK_BLOCK;
         if(Location.GetDistance(host.getLocation(), host.getBallCarrier().getLocation()) <= tackleTargetDistance) return PlayerState.TACKLING;
         return PlayerState.NULL;
+    }
+
+    private final void setMove(final MovementInstruction movementInstruction){
+        move = movementInstruction;
     }
 
     @Override

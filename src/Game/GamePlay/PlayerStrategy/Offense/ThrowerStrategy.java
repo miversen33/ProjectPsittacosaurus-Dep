@@ -1,20 +1,19 @@
-package Game.GamePlay.PlayerStrategy.Defense;
+package Game.GamePlay.PlayerStrategy.Offense;
 
 import Game.GamePlay.GameField;
 import Game.GamePlay.GamePlayer;
 import Game.GamePlay.PlayerInfluence;
-import Game.GamePlay.PlayerStrategy.BasePlayerStrategy;
+import Game.GamePlay.PlayerStrategy.IPlayerStrategy;
 import Game.IGamePlayerOwner;
-import Game.Routes.Route;
 import PhysicsEngine.Movements.MovementInstruction;
 import Tuple.Tuple2;
 
 import java.util.List;
 
-public class CoverageStrategy extends BasePlayerStrategy {
+public class ThrowerStrategy implements IPlayerStrategy {
 
-    public CoverageStrategy(final Route route) {
-        super(route);
+    public ThrowerStrategy() {
+
     }
 
     @Override
