@@ -1,6 +1,6 @@
 package Game.GamePlay;
 
-import PhysicsEngine.PhysicsObjects.Vector;
+import Utils.PhysicsObjects.Vector;
 
 public final class PlayerInfluence {
 
