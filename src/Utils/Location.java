@@ -1,7 +1,7 @@
 package Utils;
 
 import Game.Field.FieldObject;
-import PhysicsEngine.PhysicsObjects.Vector;
+import Utils.PhysicsObjects.Vector;
 import Utils.Observable.Observable;
 import Tuple.Tuple2;
 
@@ -59,7 +59,12 @@ public final class Location extends Observable<Tuple2<Double, Double>> {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public final String toString(){
+        return getLocation().toString();
+    }
+
+    @Override
+    public final boolean equals(Object obj) {
         if(obj instanceof Location){
             return ((Location) obj).getX() == getX() && ((Location) obj).getY() == getY();
         }
