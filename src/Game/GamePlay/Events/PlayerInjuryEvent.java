@@ -4,7 +4,8 @@ import Game.GamePlay.GamePlayer;
 import Utils.Event.Event;
 import Utils.Signature;
 
-public final class PlayerInjuryEvent extends Event {
+public final class
+PlayerInjuryEvent extends Event {
 
     private final GamePlayer injuredPlayer;
 //    Should also have a thing here to tell what kind of injury they suffered
