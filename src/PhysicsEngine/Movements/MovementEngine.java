@@ -8,7 +8,7 @@ import Game.PlayerState;
 import PhysicsEngine.Movements.Events.BreakTackleEvent;
 import PhysicsEngine.Movements.Events.CollisionEvent;
 import PhysicsEngine.Movements.Events.TackleEvent;
-import PhysicsEngine.PhysicsObjects.Vector;
+import Utils.PhysicsObjects.Vector;
 import Tuple.Tuple2;
 import Utils.Location;
 import Utils.Signature;
@@ -59,7 +59,7 @@ public final class MovementEngine {
         boolean tickClock = false;
 //        First we need to handle existing collisions
         for (final GamePlayer player : playerQueue) {
-            if(!player.getMovementInstruction().hasBeenExecuted() && player.getMovementInstruction().getAction().getActionState().isColliding()) {
+            if(!player.getMovementInstruction().hasBeenExecuted() && player.getMovementState().isColliding()) {
                 if (!tickClock){
                     tickClock = true;
                     gameManager.microTickGameClock(getSignature());
@@ -75,11 +75,11 @@ public final class MovementEngine {
 //        Checking if any new movements will result in a collision
         for (int i = 0; i < playerQueue.size() - 1; i++) {
             final GamePlayer p1 = playerQueue.get(i);
-            if(p1.getMovementInstruction().getAction().getActionState().isColliding()) continue;
+            if(p1.getMovementState().isColliding()) continue;
 
             for (int j = i + 1; j < playerQueue.size(); j++) {
                 final GamePlayer p2 = playerQueue.get(j);
-                if(p2.getMovementInstruction().getAction().getActionState().isColliding()) continue;
+                if(p2.getMovementState().isColliding()) continue;
 
                 final Tuple2<Double, Double> collision = checkMovementVectorsForCollision(p1, p2);
 
@@ -95,11 +95,11 @@ public final class MovementEngine {
                 PlayerState p2CollisionState = PlayerState.COLLIDING;
 
 //                Quick check to see if we are blocking instead of "colliding"
-                if(p1.getMovementInstruction().getAction().getActionState().isBlocking() || p1.getMovementInstruction().getAction().getActionState().isBlocked()){
-                    p1CollisionState = p1.getMovementInstruction().getAction().getActionState();
+                if(p1.getMovementState().isBlocking() || p1.getMovementState().isBlocked()){
+                    p1CollisionState = p1.getMovementState();
                 }
-                if(p2.getMovementInstruction().getAction().getActionState().isBlocking() || p2.getMovementInstruction().getAction().getActionState().isBlocked()){
-                    p2CollisionState = p2.getMovementInstruction().getAction().getActionState();
+                if(p2.getMovementState().isBlocking() || p2.getMovementState().isBlocked()){
+                    p2CollisionState = p2.getMovementState();
                 }
 
                 if(!tickClock){
@@ -127,7 +127,7 @@ public final class MovementEngine {
         tickClock = false;
 
         for (final GamePlayer player : playerQueue) {
-            if (!player.getMovementInstruction().getAction().getActionState().isColliding()) {
+            if (!player.getMovementState().isColliding()) {
                 if (!tickClock) {
                     tickClock = true;
                     gameManager.tickGameClock(getSignature());
@@ -218,13 +218,6 @@ public final class MovementEngine {
             movement = movement.scale(instruction.getPlayer().getMaxMovement(movement.getDirection()) / movement.getMagnitude());
         }
         instruction.execute(timeStamp);
-//
-//        if(!instruction.getAction().getActionState().getResultState().isNull()){
-////            This allows us to "freeze" anyone on the field by saying we are blocking them.
-////            Thats not ok.
-////            TODO
-//            instruction.getAction().getAffectedPlayer().setPlayerState(this, instruction.getAction().getActionState().getResultState());
-//        }
 
         List<GamePlayer> collidingPlayers = field.movePlayer(this, instruction.getPlayer(), movement);
 
@@ -341,9 +334,22 @@ public final class MovementEngine {
     }
 
     /**
-     * Returns true if collision is found. False if not
+     * Returns collision point if found, otherwise it returns null
      */
     private final Tuple2<Double, Double> checkMovementVectorsForCollision(final GamePlayer p1, final GamePlayer p2) {
-        return Vector.GetVectorIntersectionPoint(p1.getLocation(), p2.getLocation(), p1.getMovementInstruction().getVector(), p2.getMovementInstruction().getVector());
+        final Tuple2<Double, Double> collisionPoint = Vector.GetVectorIntersectionPoint(p1.getLocation(), p2.getLocation(), p1.getMovementInstruction().getVector(), p2.getMovementInstruction().getVector());
+
+        if(collisionPoint == null) return null;
+
+        double p1Max = p1.getMaxMovement(p1.getMovementInstruction().getVector().getDirection());
+        double p2Max = p2.getMaxMovement(p2.getMovementInstruction().getVector().getDirection());
+
+        final double p1DistanceFromCollision = Location.GetDistance(p1.getLocation(), collisionPoint);
+        final double p2DistanceFromCollision = Location.GetDistance(p2.getLocation(), collisionPoint);
+
+        boolean collisionFound = (p1DistanceFromCollision > p1.getMaxMovement(p1.getMovementInstruction().getVector().getDirection()) ||
+                p2DistanceFromCollision > p2.getMaxMovement(p2.getMovementInstruction().getVector().getDirection()));
+
+        return collisionFound ? collisionPoint : null;
     }
 }

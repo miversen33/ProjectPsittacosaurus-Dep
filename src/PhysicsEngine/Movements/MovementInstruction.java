@@ -2,7 +2,7 @@ package PhysicsEngine.Movements;
 
 import Game.GamePlay.GamePlayer;
 import Game.PlayerState;
-import PhysicsEngine.PhysicsObjects.Vector;
+import Utils.PhysicsObjects.Vector;
 import Tuple.Tuple2;
 import Utils.Location;
 

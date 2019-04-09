@@ -1,6 +1,6 @@
 package PhysicsEngine.Movements;
 
-import PhysicsEngine.PhysicsObjects.Vector;
+import Utils.PhysicsObjects.Vector;
 import Tuple.Tuple2;
 
 public final class Movement {
