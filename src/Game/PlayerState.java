@@ -7,7 +7,6 @@ public enum PlayerState {
     /**
      * Jamming a receiver is technically blocking, so it receives the same state
      */
-//    BLOCKING (0),
     PASS_BLOCKING(0),
     RUN_BLOCKING (0),
     IS_BLOCKED (85),
@@ -16,7 +15,12 @@ public enum PlayerState {
     BREAK_BLOCK (55),
     BREAK_TACKLE (80),
     COLLIDING (0),
+    @Deprecated
     LOOK_FOR_BALL(0),
+    BACKPEDALING(0),
+    COVERING(0),
+//    Consider if this needs a value
+    IS_COVERED(0),
     NULL(0);
 
     private final static Map<PlayerState, PlayerState> COUNTER_STATES;
@@ -33,6 +37,7 @@ public enum PlayerState {
         map.put(PASS_BLOCKING, IS_BLOCKED);
         map.put(RUN_BLOCKING, IS_BLOCKED);
         map.put(TACKLING, IS_TACKLED);
+        map.put(COVERING, IS_COVERED);
         RESULT_STATES = Collections.unmodifiableMap(map);
     }
 
@@ -57,7 +62,6 @@ public enum PlayerState {
 
     public final PlayerState getResultState(){
         if(!RESULT_STATES.containsKey(this)) return NULL;
-        PlayerState debug = RESULT_STATES.get(this);
         return RESULT_STATES.get(this);
     }
 
@@ -68,6 +72,9 @@ public enum PlayerState {
     public final boolean isColliding(){ return this.equals(COLLIDING); }
     public final boolean breakBlock(){ return this.equals(BREAK_BLOCK); }
     public final boolean breakTackle(){ return this.equals(BREAK_TACKLE); }
+    public final boolean isBackPedaling(){ return this.equals(BACKPEDALING); }
+    public final boolean isCovering(){ return this.equals(COVERING); }
+    public final boolean isCovered(){ return this.equals(IS_COVERED); }
     public final boolean isNull() { return this.equals(NULL); }
 
     public final boolean isOverridable(){ return OVERRIDABLE.contains(this); }
