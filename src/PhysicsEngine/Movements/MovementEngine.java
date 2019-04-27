@@ -11,6 +11,7 @@ import PhysicsEngine.Movements.Events.TackleEvent;
 import Utils.PhysicsObjects.Vector;
 import Tuple.Tuple2;
 import Utils.Location;
+import Utils.RNG;
 import Utils.Signature;
 
 import java.util.ArrayList;
@@ -275,7 +276,7 @@ public final class MovementEngine {
             return handleMissingCounterMovementAction(instruction);
         }
 
-        double rng = Utils.RNGGenerator.Generate(minValue, maxValue);
+        double rng = RNG.Generate(minValue, maxValue);
         return !(rng < breakPoint);
     }
 
@@ -292,7 +293,7 @@ public final class MovementEngine {
             return handleCounterMovementAction(instruction);
         }
 
-        double rng = Utils.RNGGenerator.Generate(minValue, maxValue);
+        double rng = RNG.Generate(minValue, maxValue);
         return !(rng < breakPoint);
     }
 
@@ -312,7 +313,7 @@ public final class MovementEngine {
         final double maxValue = 100;
         final double breakPoint = tackled.getPlayerState().getDefaultCounterValue();
 
-        double rng = Utils.RNGGenerator.Generate(minValue, maxValue);
+        double rng = RNG.Generate(minValue, maxValue);
         if(rng < breakPoint){
 //            Handle break tackle event
             new BreakTackleEvent(mSig, tackled, tackler).fire();

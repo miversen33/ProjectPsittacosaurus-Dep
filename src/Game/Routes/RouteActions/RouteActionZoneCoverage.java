@@ -8,7 +8,7 @@ import Game.GamePlay.PlayerStrategy.ZoneState;
 import PhysicsEngine.Movements.MovementInstruction;
 import Tuple.Tuple2;
 import Utils.PhysicsObjects.Vector;
-import Utils.RNGGenerator;
+import Utils.RNG;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,8 +85,8 @@ public class RouteActionZoneCoverage extends BaseRouteAction{
 
         boolean passesMultiplePlayerPerceptCheck =
                 hostPlayer.getMovementInstruction().getAction().getAffectedPlayer() != null ||
-                RNGGenerator.Generate(0,1) <= hostIntelligenceCheck;
-        boolean passesMovementPerceptCheck       = RNGGenerator.Generate(0,1) <= hostIntelligenceCheck;
+                RNG.Generate(0,1) <= hostIntelligenceCheck;
+        boolean passesMovementPerceptCheck       = RNG.Generate(0,1) <= hostIntelligenceCheck;
 
         Tuple2<Double, Double> coverLocation;
         Tuple2<Double, Double> leftLocation;

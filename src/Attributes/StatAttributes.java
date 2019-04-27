@@ -1,6 +1,5 @@
 package Attributes;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -68,7 +67,7 @@ public enum StatAttributes{
         return attr.getValue();
     }
 
-    public final static List<Attribute<Integer>> GetBaseAttributes(){
-        return new ArrayList<>(DEFAULTS);
+    public final static Attributes<Integer> GetBaseAttributes(){
+        return new Attributes<Integer>(DEFAULTS);
     }
 }

@@ -1,16 +1,25 @@
 import Game.Field.CardinalDirection;
 import Game.Field.Endzone;
 import Game.Field.Field;
-import Game.GamePlay.*;
-import Game.GamePlay.TimeManagement.Clock;
+import Game.GamePlay.GameManager;
+import Game.GamePlay.GamePlayer;
+import Game.GamePlay.GameTeam;
 import Game.GamePlay.PlayerStrategy.Defense.DefaultDefensiveStrategy;
 import Game.GamePlay.PlayerStrategy.IPlayerStrategy;
 import Game.GamePlay.PlayerStrategy.Offense.DefaultOffensiveStrategy;
+import Game.GamePlay.TimeManagement.Clock;
 import Game.Routes.Route;
-import Game.Routes.RouteActions.*;
+import Game.Routes.RouteActions.IRouteAction;
+import Game.Routes.RouteActions.RouteActionMove;
+import Game.Routes.RouteActions.RouteActionZoneCoverage;
 import Game.Routes.RouteFactory;
-import Utils.PhysicsObjects.Vector;
+import Position.Defense.*;
+import Position.Offense.*;
+import Position.Position;
+import Position.SpecialTeams.Kicker;
+import Position.SpecialTeams.Punter;
 import Tuple.Tuple2;
+import Utils.PhysicsObjects.Vector;
 
 import java.util.Arrays;
 import java.util.List;
@@ -23,7 +32,8 @@ public class Main {
      */
     public static void main(String[] args) {
 
-        testRoutes();
+        testPositionGeneration();
+//        testRoutes();
 //        This is a pseudo gameManager class. Eventually this will be cleaned up
 //        And placed in its own class.
 
@@ -73,6 +83,81 @@ public class Main {
 //        while(true){
 //            gameManager.cycle();
 //        }
+    }
+
+    private final static void testPositionGeneration(){
+        double time = System.currentTimeMillis();
+//         Position position = Quarterback.GenerateRunningQuarterback(80);
+//         Position position = Quarterback.GeneratePassingQuarterback(80);
+//         Position position = Quarterback.GenerateNeutralQuarterback(80);
+
+//         Position position = Tailback.GenerateSpeedTailBack(80);
+//         Position position = Tailback.GeneratePowerTailback(80);
+//         Position position = Tailback.GenerateNeutralTailback(80);
+
+//         Position position = Fullback.GenerateRushingFullback(80);
+//         Position position = Fullback.GenerateBlockingFullBack(80);
+//         Position position = Fullback.GenerateNeutralFullback(80);
+
+//         Position position = Guard.GenerateRunBlockingGuard(80);
+//         Position position = Guard.GeneratePassBlockingGuard(80);
+//         Position position = Guard.GenerateNeutralGuard(80);
+
+//         Position position = Center.GenerateRunBlockingCenter(80);
+//         Position position = Center.GeneratePassBlockingCenter(80);
+//         Position position = Center.GenerateNeutralCenter(80);
+
+//        Position position = OffensiveTackle.GenerateRunBlockingOffensiveTackle(80);
+//        Position position = OffensiveTackle.GeneratePassBlockingOffensiveTackle(80);
+//        Position position = OffensiveTackle.GenerateNeutralOffensiveTackle(80);
+
+//        Position position = TightEnd.GenerateBlockingTightEnd(80);
+//        Position position = TightEnd.GenerateReceivingTightEnd(80);
+//        Position position = TightEnd.GenerateNeutralTightEnd(80);
+
+//        Position position = WideReceiver.GeneratePossessionWideReceiver(80);
+//        Position position = WideReceiver.GenerateSpeedWideReceiver(80);
+//        Position position = WideReceiver.GenerateNeutralWideReceiver(80);
+
+//        Position position = Cornerback.GenerateCoverageCornerback(80);
+//        Position position = Cornerback.GenerateBallhawkCornerback(80);
+//        Position position = Cornerback.GenerateNeutralCornerback(80);
+
+//        Position position = DefensiveEnd.GeneratePassDefensiveEnd(80);
+//        Position position = DefensiveEnd.GenerateRunDefensiveEnd(80);
+//        Position position = DefensiveEnd.GenerateNeutralDefensiveEnd(80);
+
+//        Position position = DefensiveTackle.GenerateRunDefensiveTackle(80);
+//        Position position = DefensiveTackle.GeneratePassDefensiveTackle(80);
+//        Position position = DefensiveTackle.GenerateNeutralDefensiveTackle(80);
+
+//        Position position = MiddleLinebacker.GenerateCoverageMiddleLinebacker(80);
+//        Position position = MiddleLinebacker.GenerateBlitzMiddleLinebacker(80);
+//        Position position = MiddleLinebacker.GenerateNeutralMiddleLinebacker(80);
+
+//        Position position = OutsideLinebacker.GenerateCoverageOutsideLinebacker(80);
+//        Position position = OutsideLinebacker.GenerateBlitzOutsideLinebacker(80);
+//        Position position = OutsideLinebacker.GenerateNeutralOutsideLinebacker(80);
+
+//        Position position = FreeSafety.GenerateNeutralFreeSafety(80);
+//        Position position = FreeSafety.GenerateCoverageFreeSafety(80);
+//        Position position = FreeSafety.GenerateHardhitterFreeSafety(80);
+
+//        Position position = StrongSafety.GenerateCoverageStrongSafety(80);
+//        Position position = StrongSafety.GenerateHardHitterStrongSafety(80);
+//        Position position = StrongSafety.GenerateNeutralStrongSafety(80);
+
+//        Position position = Kicker.GenerateAccurateKicker(80);
+//        Position position = Kicker.GeneratePowerKicker(80);
+//        Position position = Kicker.GenerateNeutralKicker(80);
+
+//        Position position = Punter.GenerateAccuratePunter(80);
+//        Position position = Punter.GeneratePowerPunter(80);
+        Position position = Punter.GenerateNeutralPunter(80);
+
+        System.out.println("Player Generation Took Approx: "+(System.currentTimeMillis() - time)+" ms");
+        System.out.println("Position Overall Rating is "+position.getOverallRating());
+        int i = 0;
     }
 
     private final static void testRoutes(){

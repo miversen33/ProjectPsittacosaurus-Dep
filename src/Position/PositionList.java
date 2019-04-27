@@ -16,7 +16,7 @@ public enum PositionList {
     DEFENSIVE_END("Defensive End","DE",SideOfBall.DEFENSE),
     MIDDLE_LINEBACKER("Middle Linebacker","MLB",SideOfBall.DEFENSE),
     OUTSIDE_LINEBACKER("Outside Linebacker","OLB",SideOfBall.DEFENSE),
-    CORNERBACK("Corner Back","CB",SideOfBall.DEFENSE),
+    CORNERBACK("Cornerback","CB",SideOfBall.DEFENSE),
     FREE_SAFETY("Free Safety","FS",SideOfBall.DEFENSE),
     STRONG_SAFETY("Strong Safety","SS",SideOfBall.DEFENSE),
     PUNTER("Punter","P",SideOfBall.OFFENSE),
