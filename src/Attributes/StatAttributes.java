@@ -11,23 +11,23 @@ public enum StatAttributes{
     AGILITY           ("Agility",           50.0),
     ACCELERATION      ("Acceleration",      50.0),
     AWARENESS         ("Awareness",         50.0),
-    BREAK_TACKLE("Break Tackle",      40.0),
+    BREAK_TACKLE      ("Break Tackle",      40.0),
     ELUSIVENESS       ("Elusiveness",       40.0),
     CARRYING          ("Carrying",          40.0),
     CATCHING          ("Catching",          40.0),
-    ROUTE_RUNNING("Route Running",     40.0),
-    THROW_POWER("Throw Power",       40.0),
-    THROW_ACCURACY("Throw Accuracy",    40.0),
+    ROUTE_RUNNING     ("Route Running",     40.0),
+    THROW_POWER       ("Throw Power",       40.0),
+    THROW_ACCURACY    ("Throw Accuracy",    40.0),
     TACKLE            ("Tackle",            50.0),
-    BREAK_BLOCK("Break Block",       40.0),
-    MAN_COVERAGE("Man Coverage",      40.0),
-    ZONE_COVERAGE("Zone Coverage",     40.0),
-    PASS_BLOCKING("Pass Blocking",     40.0),
-    RUN_BLOCKING("Run Blocking",      40.0),
-    KICK_POWER("Kick Power",        40.0),
-    KICK_ACCURACY("Kick Accuracy",     40.0),
+    BREAK_BLOCK       ("Break Block",       40.0),
+    MAN_COVERAGE      ("Man Coverage",      40.0),
+    ZONE_COVERAGE     ("Zone Coverage",     40.0),
+    PASS_BLOCKING     ("Pass Blocking",     40.0),
+    RUN_BLOCKING      ("Run Blocking",      40.0),
+    KICK_POWER        ("Kick Power",        40.0),
+    KICK_ACCURACY     ("Kick Accuracy",     40.0),
     STAMINA           ("Stamina",           80.0),
-    INJURY("Injury Prevention", 80.0);
+    INJURY            ("Injury Prevention", 80.0);
 
     private final static List<Attribute<Double>> DEFAULTS_ATTRS = Arrays.asList(
         SPEED.attr,
@@ -64,6 +64,7 @@ public enum StatAttributes{
         return attr.getName();
     }
 
+    @Deprecated
     public final Double getValue(){
         return attr.getValue();
     }
