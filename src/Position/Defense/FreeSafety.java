@@ -1,239 +1,533 @@
 package Position.Defense;
 
 import Attributes.Attribute;
-import Attributes.ModifierAttribute;
 import Attributes.StatAttributes;
 import Position.Position;
+import Position.PositionList;
+import Position.BaseAttribute;
+import Position.BaseAttributes;
 
+import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
 
-import static Position.PositionList.CORNERBACK;
+public final class FreeSafety extends Position{
 
-public final class FreeSafety extends Position {
-
-    public final static String NEUTRAL_SUBPOSITION_NAME = "Neutral";
-    public final static String HARDHITTER_SUBPOSITION_NAME= "Hard Hitter";
     public final static String COVERAGE_SUBPOSITION_NAME = "Coverage";
+    public final static String HARDHITTING_SUBPOSITION_NAME = "Hardhitting";
+    public final static String NEUTRAL_SUBPOSITION_NAME = "Neutral";
 
-    private final static double BASE_RATING = .795;
+    private final static double POSITION_MEAN_OVERALL = 0.74;
 
-    private final static int COVERAGE_SPEED_VAR = 2;
-    private final static int COVERAGE_STRENGTH_VAR = 3;
-    private final static int COVERAGE_ACCELERATION_VAR = 2;
-    private final static int COVERAGE_MAN_COVERAGE_VAR = 4;
-    private final static int COVERAGE_ZONE_COVERAGE_VAR = 4;
-    private final static int COVERAGE_STAMINA_VAR = 2;
-    private final static int COVERAGE_INJURY_VAR = 5;
-    private final static double COVERAGE_SPEED_IMPORTANCE = .995;
-    private final static double COVERAGE_ACCELERATION_IMPORTANCE = .995;
-    private final static double COVERAGE_AGILITY_IMPORTANCE = .90;
-    private final static double COVERAGE_BREAK_BLOCK_IMPORTANCE = .30;
-    private final static double COVERAGE_CARRYING_IMPORTANCE = .625;
-    private final static double COVERAGE_CATCHING_IMPORTANCE = .675;
-    private final static double COVERAGE_TACKLE_IMPORTANCE = .55;
-    private final static double COVERAGE_STRENGTH_IMPORTANCE = .45;
-    private final static double COVERAGE_AWARENESS_IMPORTANCE = .80;
-    private final static double COVERAGE_MAN_COVERAGE_IMPORTANCE = .725;
-    private final static double COVERAGE_ZONE_COVERAGE_IMPORTANCE = .725;
+    private final static BaseAttribute COVERAGE_AWARENESS = new BaseAttribute(
+        BaseAttributes.FS_AWARENESS.getMean()+.05, BaseAttributes.FS_AWARENESS.getDeviation());
+    private final static BaseAttribute COVERAGE_STRENGTH = new BaseAttribute(
+        BaseAttributes.FS_STRENGTH.getMean()-.10, BaseAttributes.FS_STRENGTH.getDeviation());
+    private final static BaseAttribute COVERAGE_SPEED = new BaseAttribute(
+        BaseAttributes.FS_SPEED.getMean(), BaseAttributes.FS_SPEED.getDeviation());
+    private final static BaseAttribute COVERAGE_BREAK_BLOCK = new BaseAttribute(
+        BaseAttributes.FS_BREAK_BLOCK.getMean()-.10, BaseAttributes.FS_BREAK_BLOCK.getDeviation());
+    private final static BaseAttribute COVERAGE_TACKLE = new BaseAttribute(
+        BaseAttributes.FS_TACKLE.getMean(), BaseAttributes.FS_TACKLE.getDeviation());
+    private final static BaseAttribute COVERAGE_RUN_BLOCKING = new BaseAttribute(
+        BaseAttributes.FS_RUN_BLOCKING.getMean(), BaseAttributes.FS_RUN_BLOCKING.getDeviation());
+    private final static BaseAttribute COVERAGE_PASS_BLOCKING = new BaseAttribute(
+        BaseAttributes.FS_PASS_BLOCKING.getMean(), BaseAttributes.FS_PASS_BLOCKING.getDeviation());
+    private final static BaseAttribute COVERAGE_CATCHING = new BaseAttribute(
+        BaseAttributes.FS_CATCHING.getMean()+.10, BaseAttributes.FS_CATCHING.getDeviation());
+    private final static BaseAttribute COVERAGE_CARRYING = new BaseAttribute(
+        BaseAttributes.FS_CARRYING.getMean()+.025, BaseAttributes.FS_CARRYING.getDeviation());
+    private final static BaseAttribute COVERAGE_ACCELERATION = new BaseAttribute(
+        BaseAttributes.FS_ACCELERATION.getMean()+.025, BaseAttributes.FS_ACCELERATION.getDeviation());
+    private final static BaseAttribute COVERAGE_BREAK_TACKLE = new BaseAttribute(
+        BaseAttributes.FS_BREAK_TACKLE.getMean()+.025, BaseAttributes.FS_BREAK_TACKLE.getDeviation());
+    private final static BaseAttribute COVERAGE_ELUSIVENESS = new BaseAttribute(
+        BaseAttributes.FS_ELUSIVENESS.getMean(), BaseAttributes.FS_ELUSIVENESS.getDeviation());
+    private final static BaseAttribute COVERAGE_AGILITY = new BaseAttribute(
+        BaseAttributes.FS_AGILITY.getMean(), BaseAttributes.FS_AGILITY.getDeviation());
+    private final static BaseAttribute COVERAGE_INJURY = new BaseAttribute(
+        BaseAttributes.FS_INJURY.getMean(), BaseAttributes.FS_INJURY.getDeviation());
+    private final static BaseAttribute COVERAGE_STAMINA = new BaseAttribute(
+        BaseAttributes.FS_STAMINA.getMean(), BaseAttributes.FS_STAMINA.getDeviation());
+    private final static BaseAttribute COVERAGE_THROW_POWER = new BaseAttribute(
+        BaseAttributes.FS_THROW_POWER.getMean(), BaseAttributes.FS_THROW_POWER.getDeviation());
+    private final static BaseAttribute COVERAGE_MAN_COVERAGE = new BaseAttribute(
+        BaseAttributes.FS_MAN_COVERAGE.getMean()+.079, BaseAttributes.FS_MAN_COVERAGE.getDeviation());
+    private final static BaseAttribute COVERAGE_ZONE_COVERAGE = new BaseAttribute(
+        BaseAttributes.FS_ZONE_COVERAGE.getMean()+.0507, BaseAttributes.FS_ZONE_COVERAGE.getDeviation());
+    private final static BaseAttribute COVERAGE_KICK_POWER = new BaseAttribute(
+        BaseAttributes.FS_KICK_POWER.getMean(), BaseAttributes.FS_KICK_POWER.getDeviation());
+    private final static BaseAttribute COVERAGE_KICK_ACCURACY = new BaseAttribute(
+        BaseAttributes.FS_KICK_ACCURACY.getMean(), BaseAttributes.FS_KICK_ACCURACY.getDeviation());
+    private final static BaseAttribute COVERAGE_THROW_ACCURACY = new BaseAttribute(
+        BaseAttributes.FS_THROW_ACCURACY.getMean(), BaseAttributes.FS_THROW_ACCURACY.getDeviation());
+    private final static BaseAttribute COVERAGE_ROUTE_RUNNING = new BaseAttribute(
+        BaseAttributes.FS_ROUTE_RUNNING.getMean(), BaseAttributes.FS_ROUTE_RUNNING.getDeviation());
+    private final static Attribute<Double> COVERAGE_AWARENESS_IMPORTANCE = new Attribute<>(StatAttributes.AWARENESS.getName(), 2.25);
+    private final static Attribute<Double> COVERAGE_STRENGTH_IMPORTANCE = new Attribute<>(StatAttributes.STRENGTH.getName(), 1.30);
+    private final static Attribute<Double> COVERAGE_SPEED_IMPORTANCE = new Attribute<>(StatAttributes.SPEED.getName(), 1.65);
+    private final static Attribute<Double> COVERAGE_ZONE_COVERAGE_IMPORTANCE = new Attribute<>(StatAttributes.ZONE_COVERAGE.getName(), 2.25);
+    private final static Attribute<Double> COVERAGE_MAN_COVERAGE_IMPORTANCE = new Attribute<>(StatAttributes.MAN_COVERAGE.getName(), 2.25);
+    private final static Attribute<Double> COVERAGE_TACKLE_IMPORTANCE = new Attribute<>(StatAttributes.TACKLE.getName(), 1.50);
+    private final static Attribute<Double> COVERAGE_CATCHING_IMPORTANCE = new Attribute<>(StatAttributes.CATCHING.getName(), 1.15);
+    private final static Attribute<Double> COVERAGE_AGILITY_IMPORTANCE = new Attribute<>(StatAttributes.AGILITY.getName(), 1.15);
+    
+    private final static BaseAttribute HARDHITTING_AWARENESS = new BaseAttribute(
+        BaseAttributes.FS_AWARENESS.getMean()-.05, BaseAttributes.FS_AWARENESS.getDeviation());
+    private final static BaseAttribute HARDHITTING_STRENGTH = new BaseAttribute(
+        BaseAttributes.FS_STRENGTH.getMean()+.125, BaseAttributes.FS_STRENGTH.getDeviation());
+    private final static BaseAttribute HARDHITTING_SPEED = new BaseAttribute(
+        BaseAttributes.FS_SPEED.getMean()+.025, BaseAttributes.FS_SPEED.getDeviation());
+    private final static BaseAttribute HARDHITTING_BREAK_BLOCK = new BaseAttribute(
+        BaseAttributes.FS_BREAK_BLOCK.getMean()+.05, BaseAttributes.FS_BREAK_BLOCK.getDeviation());
+    private final static BaseAttribute HARDHITTING_TACKLE = new BaseAttribute(
+        BaseAttributes.FS_TACKLE.getMean()+.076, BaseAttributes.FS_TACKLE.getDeviation());
+    private final static BaseAttribute HARDHITTING_RUN_BLOCKING = new BaseAttribute(
+        BaseAttributes.FS_RUN_BLOCKING.getMean(), BaseAttributes.FS_RUN_BLOCKING.getDeviation());
+    private final static BaseAttribute HARDHITTING_PASS_BLOCKING = new BaseAttribute(
+        BaseAttributes.FS_PASS_BLOCKING.getMean(), BaseAttributes.FS_PASS_BLOCKING.getDeviation());
+    private final static BaseAttribute HARDHITTING_CATCHING = new BaseAttribute(
+        BaseAttributes.FS_CATCHING.getMean()-.05, BaseAttributes.FS_CATCHING.getDeviation());
+    private final static BaseAttribute HARDHITTING_CARRYING = new BaseAttribute(
+        BaseAttributes.FS_CARRYING.getMean()-.05, BaseAttributes.FS_CARRYING.getDeviation());
+    private final static BaseAttribute HARDHITTING_ACCELERATION = new BaseAttribute(
+        BaseAttributes.FS_ACCELERATION.getMean(), BaseAttributes.FS_ACCELERATION.getDeviation());
+    private final static BaseAttribute HARDHITTING_BREAK_TACKLE = new BaseAttribute(
+        BaseAttributes.FS_BREAK_TACKLE.getMean(), BaseAttributes.FS_BREAK_TACKLE.getDeviation());
+    private final static BaseAttribute HARDHITTING_ELUSIVENESS = new BaseAttribute(
+        BaseAttributes.FS_ELUSIVENESS.getMean(), BaseAttributes.FS_ELUSIVENESS.getDeviation());
+    private final static BaseAttribute HARDHITTING_AGILITY = new BaseAttribute(
+        BaseAttributes.FS_AGILITY.getMean(), BaseAttributes.FS_AGILITY.getDeviation());
+    private final static BaseAttribute HARDHITTING_INJURY = new BaseAttribute(
+        BaseAttributes.FS_INJURY.getMean(), BaseAttributes.FS_INJURY.getDeviation());
+    private final static BaseAttribute HARDHITTING_STAMINA = new BaseAttribute(
+        BaseAttributes.FS_STAMINA.getMean(), BaseAttributes.FS_STAMINA.getDeviation());
+    private final static BaseAttribute HARDHITTING_THROW_POWER = new BaseAttribute(
+        BaseAttributes.FS_THROW_POWER.getMean(), BaseAttributes.FS_THROW_POWER.getDeviation());
+    private final static BaseAttribute HARDHITTING_MAN_COVERAGE = new BaseAttribute(
+        BaseAttributes.FS_MAN_COVERAGE.getMean()+.01, BaseAttributes.FS_MAN_COVERAGE.getDeviation());
+    private final static BaseAttribute HARDHITTING_ZONE_COVERAGE = new BaseAttribute(
+        BaseAttributes.FS_ZONE_COVERAGE.getMean()+.01, BaseAttributes.FS_ZONE_COVERAGE.getDeviation());
+    private final static BaseAttribute HARDHITTING_KICK_POWER = new BaseAttribute(
+        BaseAttributes.FS_KICK_POWER.getMean(), BaseAttributes.FS_KICK_POWER.getDeviation());
+    private final static BaseAttribute HARDHITTING_KICK_ACCURACY = new BaseAttribute(
+        BaseAttributes.FS_KICK_ACCURACY.getMean(), BaseAttributes.FS_KICK_ACCURACY.getDeviation());
+    private final static BaseAttribute HARDHITTING_THROW_ACCURACY = new BaseAttribute(
+        BaseAttributes.FS_THROW_ACCURACY.getMean(), BaseAttributes.FS_THROW_ACCURACY.getDeviation());
+    private final static BaseAttribute HARDHITTING_ROUTE_RUNNING = new BaseAttribute(
+        BaseAttributes.FS_ROUTE_RUNNING.getMean(), BaseAttributes.FS_ROUTE_RUNNING.getDeviation());
+    private final static Attribute<Double> HARDHITTING_AWARENESS_IMPORTANCE = new Attribute<>(StatAttributes.AWARENESS.getName(), 1.35);
+    private final static Attribute<Double> HARDHITTING_STRENGTH_IMPORTANCE = new Attribute<>(StatAttributes.STRENGTH.getName(), 2.10);
+    private final static Attribute<Double> HARDHITTING_SPEED_IMPORTANCE = new Attribute<>(StatAttributes.SPEED.getName(), 1.35);
+    private final static Attribute<Double> HARDHITTING_ZONE_COVERAGE_IMPORTANCE = new Attribute<>(StatAttributes.ZONE_COVERAGE.getName(), 2.10);
+    private final static Attribute<Double> HARDHITTING_MAN_COVERAGE_IMPORTANCE = new Attribute<>(StatAttributes.MAN_COVERAGE.getName(), 2.10);
+    private final static Attribute<Double> HARDHITTING_TACKLE_IMPORTANCE = new Attribute<>(StatAttributes.TACKLE.getName(), 2.35);
+    private final static Attribute<Double> HARDHITTING_CATCHING_IMPORTANCE = new Attribute<>(StatAttributes.CATCHING.getName(), 1.35);
+    private final static Attribute<Double> HARDHITTING_AGILITY_IMPORTANCE = new Attribute<>(StatAttributes.AGILITY.getName(), 1.15);
+    
+    private final static BaseAttribute NEUTRAL_AWARENESS = new BaseAttribute(
+        BaseAttributes.FS_AWARENESS.getMean(), BaseAttributes.FS_AWARENESS.getDeviation());
+    private final static BaseAttribute NEUTRAL_STRENGTH = new BaseAttribute(
+        BaseAttributes.FS_STRENGTH.getMean(), BaseAttributes.FS_STRENGTH.getDeviation());
+    private final static BaseAttribute NEUTRAL_SPEED = new BaseAttribute(
+        BaseAttributes.FS_SPEED.getMean(), BaseAttributes.FS_SPEED.getDeviation());
+    private final static BaseAttribute NEUTRAL_BREAK_BLOCK = new BaseAttribute(
+        BaseAttributes.FS_BREAK_BLOCK.getMean(), BaseAttributes.FS_BREAK_BLOCK.getDeviation());
+    private final static BaseAttribute NEUTRAL_TACKLE = new BaseAttribute(
+        BaseAttributes.FS_TACKLE.getMean(), BaseAttributes.FS_TACKLE.getDeviation());
+    private final static BaseAttribute NEUTRAL_RUN_BLOCKING = new BaseAttribute(
+        BaseAttributes.FS_RUN_BLOCKING.getMean(), BaseAttributes.FS_RUN_BLOCKING.getDeviation());
+    private final static BaseAttribute NEUTRAL_PASS_BLOCKING = new BaseAttribute(
+        BaseAttributes.FS_PASS_BLOCKING.getMean(), BaseAttributes.FS_PASS_BLOCKING.getDeviation());
+    private final static BaseAttribute NEUTRAL_CATCHING = new BaseAttribute(
+        BaseAttributes.FS_CATCHING.getMean(), BaseAttributes.FS_CATCHING.getDeviation());
+    private final static BaseAttribute NEUTRAL_CARRYING = new BaseAttribute(
+        BaseAttributes.FS_CARRYING.getMean(), BaseAttributes.FS_CARRYING.getDeviation());
+    private final static BaseAttribute NEUTRAL_ACCELERATION = new BaseAttribute(
+        BaseAttributes.FS_ACCELERATION.getMean(), BaseAttributes.FS_ACCELERATION.getDeviation());
+    private final static BaseAttribute NEUTRAL_BREAK_TACKLE = new BaseAttribute(
+        BaseAttributes.FS_BREAK_TACKLE.getMean(), BaseAttributes.FS_BREAK_TACKLE.getDeviation());
+    private final static BaseAttribute NEUTRAL_ELUSIVENESS = new BaseAttribute(
+        BaseAttributes.FS_ELUSIVENESS.getMean(), BaseAttributes.FS_ELUSIVENESS.getDeviation());
+    private final static BaseAttribute NEUTRAL_AGILITY = new BaseAttribute(
+        BaseAttributes.FS_AGILITY.getMean(), BaseAttributes.FS_AGILITY.getDeviation());
+    private final static BaseAttribute NEUTRAL_INJURY = new BaseAttribute(
+        BaseAttributes.FS_INJURY.getMean(), BaseAttributes.FS_INJURY.getDeviation());
+    private final static BaseAttribute NEUTRAL_STAMINA = new BaseAttribute(
+        BaseAttributes.FS_STAMINA.getMean(), BaseAttributes.FS_STAMINA.getDeviation());
+    private final static BaseAttribute NEUTRAL_THROW_POWER = new BaseAttribute(
+        BaseAttributes.FS_THROW_POWER.getMean(), BaseAttributes.FS_THROW_POWER.getDeviation());
+    private final static BaseAttribute NEUTRAL_MAN_COVERAGE = new BaseAttribute(
+        BaseAttributes.FS_MAN_COVERAGE.getMean(), BaseAttributes.FS_MAN_COVERAGE.getDeviation());
+    private final static BaseAttribute NEUTRAL_ZONE_COVERAGE = new BaseAttribute(
+        BaseAttributes.FS_ZONE_COVERAGE.getMean(), BaseAttributes.FS_ZONE_COVERAGE.getDeviation());
+    private final static BaseAttribute NEUTRAL_KICK_POWER = new BaseAttribute(
+        BaseAttributes.FS_KICK_POWER.getMean(), BaseAttributes.FS_KICK_POWER.getDeviation());
+    private final static BaseAttribute NEUTRAL_KICK_ACCURACY = new BaseAttribute(
+        BaseAttributes.FS_KICK_ACCURACY.getMean(), BaseAttributes.FS_KICK_ACCURACY.getDeviation());
+    private final static BaseAttribute NEUTRAL_THROW_ACCURACY = new BaseAttribute(
+        BaseAttributes.FS_THROW_ACCURACY.getMean(), BaseAttributes.FS_THROW_ACCURACY.getDeviation());
+    private final static BaseAttribute NEUTRAL_ROUTE_RUNNING = new BaseAttribute(
+        BaseAttributes.FS_ROUTE_RUNNING.getMean(), BaseAttributes.FS_ROUTE_RUNNING.getDeviation());
+    private final static Attribute<Double> NEUTRAL_AWARENESS_IMPORTANCE = new Attribute<>(StatAttributes.AWARENESS.getName(), 1.90);
+    private final static Attribute<Double> NEUTRAL_STRENGTH_IMPORTANCE = new Attribute<>(StatAttributes.STRENGTH.getName(), 1.25);
+    private final static Attribute<Double> NEUTRAL_SPEED_IMPORTANCE = new Attribute<>(StatAttributes.SPEED.getName(), 1.60);
+    private final static Attribute<Double> NEUTRAL_ZONE_COVERAGE_IMPORTANCE = new Attribute<>(StatAttributes.ZONE_COVERAGE.getName(), 2.25);
+    private final static Attribute<Double> NEUTRAL_MAN_COVERAGE_IMPORTANCE = new Attribute<>(StatAttributes.MAN_COVERAGE.getName(), 2.25);
+    private final static Attribute<Double> NEUTRAL_TACKLE_IMPORTANCE = new Attribute<>(StatAttributes.TACKLE.getName(), 1.70);
+    private final static Attribute<Double> NEUTRAL_CATCHING_IMPORTANCE = new Attribute<>(StatAttributes.CATCHING.getName(), 1.25);
+    private final static Attribute<Double> NEUTRAL_AGILITY_IMPORTANCE = new Attribute<>(StatAttributes.AGILITY.getName(), 1.60);
 
-    private final static int HARDHITTER_SPEED_VAR = -2;
-    private final static int HARDHITTER_STRENGTH_VAR = 3;
-    private final static int HARDHITTER_ACCELERATION_VAR = -2;
-    private final static int HARDHITTER_MAN_COVERAGE_VAR = 2;
-    private final static int HARDHITTER_ZONE_COVERAGE_VAR = 5;
-    private final static int HARDHITTER_STAMINA_VAR = 2;
-    private final static int HARDHITTER_INJURY_VAR = 5;
-    private final static double HARDHITTER_SPEED_IMPORTANCE = .925;
-    private final static double HARDHITTER_AGILITY_IMPORTANCE = .825;
-    private final static double HARDHITTER_STRENGTH_IMPORTANCE = .75;
-    private final static double HARDHITTER_BREAK_BLOCK_IMPORTANCE = .60;
-    private final static double HARDHITTER_CARRYING_IMPORTANCE = .575;
-    private final static double HARDHITTER_CATCHING_IMPORTANCE = .575;
-    private final static double HARDHITTER_TACKLE_IMPORTANCE = .725;
-    private final static double HARDHITTER_ACCELERATION_IMPORTANCE = .925;
-    private final static double HARDHITTER_AWARENESS_IMPORTANCE = .60;
-    private final static double HARDHITTER_MAN_COVERAGE_IMPORTANCE = .65;
-    private final static double HARDHITTER_ZONE_COVERAGE_IMPORTANCE = .65;
-
-    private final static int NEUTRAL_SPEED_VAR = 0;
-    private final static int NEUTRAL_ACCELERATION_VAR = -1;
-    private final static int NEUTRAL_STRENGTH_VAR = 3;
-    private final static int NEUTRAL_MAN_COVERAGE_VAR = 1;
-    private final static int NEUTRAL_ZONE_COVERAGE_VAR = 4;
-    private final static int NEUTRAL_STAMINA_VAR = 3;
-    private final static int NEUTRAL_INJURY_VAR = 3;
-    private final static double NEUTRAL_SPEED_IMPORTANCE = .975;
-    private final static double NEUTRAL_AGILITY_IMPORTANCE = .85;
-    private final static double NEUTRAL_BREAK_BLOCK_IMPORTANCE = .50;
-    private final static double NEUTRAL_CARRYING_IMPORTANCE = .60;
-    private final static double NEUTRAL_CATCHING_IMPORTANCE = .65;
-    private final static double NEUTRAL_TACKLE_IMPORTANCE = .625;
-    private final static double NEUTRAL_STRENGTH_IMPORTANCE = .65;
-    private final static double NEUTRAL_ACCELERATION_IMPORTANCE = .975;
-    private final static double NEUTRAL_AWARENESS_IMPORTANCE = .65;
-    private final static double NEUTRAL_MAN_COVERAGE_IMPORTANCE = .69;
-    private final static double NEUTRAL_ZONE_COVERAGE_IMPORTANCE = .70;
-
-    private FreeSafety(final String subPositionName) {
-        super(CORNERBACK.getName(), subPositionName, BASE_RATING);
+    private FreeSafety(final String  subPositionName){
+        super(PositionList.FREE_SAFETY.getName(), subPositionName, BaseAttributes.FS_ATTRIBUTES, POSITION_MEAN_OVERALL);
     }
 
-    public final static FreeSafety GenerateCoverageFreeSafety(final int ovrSeed){
+    public final static FreeSafety GenerateCoverageFreeSafety(final int overallSeed){
+        final Attribute<Double> awarenessAttribute = new Attribute<>(StatAttributes.AWARENESS.getName(), COVERAGE_AWARENESS.getMean());
+        final Attribute<Double> strengthAttribute = new Attribute<>(StatAttributes.STRENGTH.getName(), COVERAGE_STRENGTH.getMean());
+        final Attribute<Double> speedAttribute = new Attribute<>(StatAttributes.SPEED.getName(), COVERAGE_SPEED.getMean());
+        final Attribute<Double> breakBlockAttribute = new Attribute<>(StatAttributes.BREAK_BLOCK.getName(), COVERAGE_BREAK_BLOCK.getMean());
+        final Attribute<Double> tackleAttribute = new Attribute<>(StatAttributes.TACKLE.getName(), COVERAGE_TACKLE.getMean());
+        final Attribute<Double> runBlockingAttribute = new Attribute<>(StatAttributes.RUN_BLOCKING.getName(), COVERAGE_RUN_BLOCKING.getMean());
+        final Attribute<Double> passBlockingAttribute = new Attribute<>(StatAttributes.PASS_BLOCKING.getName(), COVERAGE_PASS_BLOCKING.getMean());
+        final Attribute<Double> catchingAttribute = new Attribute<>(StatAttributes.CATCHING.getName(), COVERAGE_CATCHING.getMean());
+        final Attribute<Double> carryingAttribute = new Attribute<>(StatAttributes.CARRYING.getName(), COVERAGE_CARRYING.getMean());
+        final Attribute<Double> accelerationAttribute = new Attribute<>(StatAttributes.ACCELERATION.getName(), COVERAGE_ACCELERATION.getMean());
+        final Attribute<Double> breakTackleAttribute = new Attribute<>(StatAttributes.BREAK_TACKLE.getName(), COVERAGE_BREAK_TACKLE.getMean());
+        final Attribute<Double> elusivenessAttribute = new Attribute<>(StatAttributes.ELUSIVENESS.getName(), COVERAGE_ELUSIVENESS.getMean());
+        final Attribute<Double> agilityAttribute = new Attribute<>(StatAttributes.AGILITY.getName(), COVERAGE_AGILITY.getMean());
+        final Attribute<Double> injuryAttribute = new Attribute<>(StatAttributes.INJURY.getName(), COVERAGE_INJURY.getMean());
+        final Attribute<Double> staminaAttribute = new Attribute<>(StatAttributes.STAMINA.getName(), COVERAGE_STAMINA.getMean());
+        final Attribute<Double> throwPowerAttribute = new Attribute<>(StatAttributes.THROW_POWER.getName(), COVERAGE_THROW_POWER.getMean());
+        final Attribute<Double> manCoverageAttribute = new Attribute<>(StatAttributes.MAN_COVERAGE.getName(), COVERAGE_MAN_COVERAGE.getMean());
+        final Attribute<Double> zoneCoverageAttribute = new Attribute<>(StatAttributes.ZONE_COVERAGE.getName(), COVERAGE_ZONE_COVERAGE.getMean());
+        final Attribute<Double> kickPowerAttribute = new Attribute<>(StatAttributes.KICK_POWER.getName(), COVERAGE_KICK_POWER.getMean());
+        final Attribute<Double> kickAccuracyAttribute = new Attribute<>(StatAttributes.KICK_ACCURACY.getName(), COVERAGE_KICK_ACCURACY.getMean());
+        final Attribute<Double> throwAccuracyAttribute = new Attribute<>(StatAttributes.THROW_ACCURACY.getName(), COVERAGE_THROW_ACCURACY.getMean());
+        final Attribute<Double> routeRunningAttribute = new Attribute<>(StatAttributes.ROUTE_RUNNING.getName(), COVERAGE_ROUTE_RUNNING.getMean());
 
-        final Attribute<Integer> speedAdjust = new Attribute<>(StatAttributes.SPEED.getName(), COVERAGE_SPEED_VAR);
-        final Attribute<Integer> accelerationAdjust = new Attribute<>(StatAttributes.ACCELERATION.getName(), COVERAGE_ACCELERATION_VAR);
-        final Attribute<Integer> staminaAdjust = new Attribute<>(StatAttributes.STAMINA.getName(), COVERAGE_STAMINA_VAR);
-        final Attribute<Integer> strengthAdjust = new Attribute<>(StatAttributes.STRENGTH.getName(), COVERAGE_STRENGTH_VAR);
-        final Attribute<Integer> zoneCoverageAdjust = new Attribute<>(StatAttributes.ZONE_COVERAGE.getName(), COVERAGE_ZONE_COVERAGE_VAR);
-        final Attribute<Integer> manCoverageAdjust = new Attribute<>(StatAttributes.MAN_COVERAGE.getName(), COVERAGE_MAN_COVERAGE_VAR);
-        final Attribute<Integer> injuryAdjust = new Attribute<>(StatAttributes.INJURY_PREVENTION.getName(), COVERAGE_INJURY_VAR);
-
-        final ModifierAttribute speedImportance = new ModifierAttribute(StatAttributes.SPEED.getName(), COVERAGE_SPEED_IMPORTANCE);
-        final ModifierAttribute accelerationImportance = new ModifierAttribute(StatAttributes.ACCELERATION.getName(), COVERAGE_ACCELERATION_IMPORTANCE);
-        final ModifierAttribute strengthImportance = new ModifierAttribute(StatAttributes.STRENGTH.getName(), COVERAGE_STRENGTH_IMPORTANCE);
-        final ModifierAttribute zoneCoverageImportance = new ModifierAttribute(StatAttributes.ZONE_COVERAGE.getName(), COVERAGE_ZONE_COVERAGE_IMPORTANCE);
-        final ModifierAttribute manCoverageImportance = new ModifierAttribute(StatAttributes.MAN_COVERAGE.getName(), COVERAGE_MAN_COVERAGE_IMPORTANCE);
-        final ModifierAttribute awarenessImportance = new ModifierAttribute(StatAttributes.AWARENESS.getName(), COVERAGE_AWARENESS_IMPORTANCE);
-        final ModifierAttribute agilityImportance = new ModifierAttribute(StatAttributes.AGILITY.getName(), COVERAGE_AGILITY_IMPORTANCE);
-        final ModifierAttribute carryingImportance = new ModifierAttribute(StatAttributes.CARRYING.getName(), COVERAGE_CARRYING_IMPORTANCE);
-        final ModifierAttribute catchingImportance = new ModifierAttribute(StatAttributes.CATCHING.getName(), COVERAGE_CATCHING_IMPORTANCE);
-        final ModifierAttribute tackleImportance = new ModifierAttribute(StatAttributes.TACKLE.getName(), COVERAGE_TACKLE_IMPORTANCE);
-        final ModifierAttribute breakBlockImportance = new ModifierAttribute(StatAttributes.BREAK_BLOCK.getName(), COVERAGE_BREAK_BLOCK_IMPORTANCE);
-
-        final List<Attribute<Integer>> attrs = Arrays.asList(
-                staminaAdjust,
-                speedAdjust,
-                accelerationAdjust,
-                strengthAdjust,
-                zoneCoverageAdjust,
-                manCoverageAdjust,
-                injuryAdjust
+        final List<Attribute<Double>> attrs = Arrays.asList(
+            awarenessAttribute,
+            strengthAttribute,
+            speedAttribute,
+            breakBlockAttribute,
+            tackleAttribute,
+            runBlockingAttribute,
+            passBlockingAttribute,
+            catchingAttribute,
+            carryingAttribute,
+            accelerationAttribute,
+            breakTackleAttribute,
+            elusivenessAttribute,
+            agilityAttribute,
+            injuryAttribute,
+            staminaAttribute,
+            throwPowerAttribute,
+            manCoverageAttribute,
+            zoneCoverageAttribute,
+            kickPowerAttribute,
+            kickAccuracyAttribute,
+            throwAccuracyAttribute,
+            routeRunningAttribute
         );
 
-        final List<ModifierAttribute> mods = Arrays.asList(
-                speedImportance,
-                accelerationImportance,
-                strengthImportance,
-                zoneCoverageImportance,
-                manCoverageImportance,
-                awarenessImportance,
-                agilityImportance,
-                carryingImportance,
-                catchingImportance,
-                tackleImportance,
-                breakBlockImportance
+        final Attribute<Double> awarenessDeviation = new Attribute<>(StatAttributes.AWARENESS.getName(), COVERAGE_AWARENESS.getDeviation());
+        final Attribute<Double> strengthDeviation = new Attribute<>(StatAttributes.STRENGTH.getName(), COVERAGE_STRENGTH.getDeviation());
+        final Attribute<Double> speedDeviation = new Attribute<>(StatAttributes.SPEED.getName(), COVERAGE_SPEED.getDeviation());
+        final Attribute<Double> breakBlockDeviation = new Attribute<>(StatAttributes.BREAK_BLOCK.getName(), COVERAGE_BREAK_BLOCK.getDeviation());
+        final Attribute<Double> tackleDeviation = new Attribute<>(StatAttributes.TACKLE.getName(), COVERAGE_TACKLE.getDeviation());
+        final Attribute<Double> runBlockingDeviation = new Attribute<>(StatAttributes.RUN_BLOCKING.getName(), COVERAGE_RUN_BLOCKING.getDeviation());
+        final Attribute<Double> passBlockingDeviation = new Attribute<>(StatAttributes.PASS_BLOCKING.getName(), COVERAGE_PASS_BLOCKING.getDeviation());
+        final Attribute<Double> catchingDeviation = new Attribute<>(StatAttributes.CATCHING.getName(), COVERAGE_CATCHING.getDeviation());
+        final Attribute<Double> carryingDeviation = new Attribute<>(StatAttributes.CARRYING.getName(), COVERAGE_CARRYING.getDeviation());
+        final Attribute<Double> accelerationDeviation = new Attribute<>(StatAttributes.ACCELERATION.getName(), COVERAGE_ACCELERATION.getDeviation());
+        final Attribute<Double> breakTackleDeviation = new Attribute<>(StatAttributes.BREAK_TACKLE.getName(), COVERAGE_BREAK_TACKLE.getDeviation());
+        final Attribute<Double> elusivenessDeviation = new Attribute<>(StatAttributes.ELUSIVENESS.getName(), COVERAGE_ELUSIVENESS.getDeviation());
+        final Attribute<Double> agilityDeviation = new Attribute<>(StatAttributes.AGILITY.getName(), COVERAGE_AGILITY.getDeviation());
+        final Attribute<Double> injuryDeviation = new Attribute<>(StatAttributes.INJURY.getName(), COVERAGE_INJURY.getDeviation());
+        final Attribute<Double> staminaDeviation = new Attribute<>(StatAttributes.STAMINA.getName(), COVERAGE_STAMINA.getDeviation());
+        final Attribute<Double> throwPowerDeviation = new Attribute<>(StatAttributes.THROW_POWER.getName(), COVERAGE_THROW_POWER.getDeviation());
+        final Attribute<Double> manCoverageDeviation = new Attribute<>(StatAttributes.MAN_COVERAGE.getName(), COVERAGE_MAN_COVERAGE.getDeviation());
+        final Attribute<Double> zoneCoverageDeviation = new Attribute<>(StatAttributes.ZONE_COVERAGE.getName(), COVERAGE_ZONE_COVERAGE.getDeviation());
+        final Attribute<Double> kickPowerDeviation = new Attribute<>(StatAttributes.KICK_POWER.getName(), COVERAGE_KICK_POWER.getDeviation());
+        final Attribute<Double> kickAccuracyDeviation = new Attribute<>(StatAttributes.KICK_ACCURACY.getName(), COVERAGE_KICK_ACCURACY.getDeviation());
+        final Attribute<Double> throwAccuracyDeviation = new Attribute<>(StatAttributes.THROW_ACCURACY.getName(), COVERAGE_THROW_ACCURACY.getDeviation());
+        final Attribute<Double> routeRunningDeviation = new Attribute<>(StatAttributes.ROUTE_RUNNING.getName(), COVERAGE_ROUTE_RUNNING.getDeviation());
+
+        final List<Attribute<Double>> devs = Arrays.asList(
+            awarenessDeviation,
+            strengthDeviation,
+            speedDeviation,
+            breakBlockDeviation,
+            tackleDeviation,
+            runBlockingDeviation,
+            passBlockingDeviation,
+            catchingDeviation,
+            carryingDeviation,
+            accelerationDeviation,
+            breakTackleDeviation,
+            elusivenessDeviation,
+            agilityDeviation,
+            injuryDeviation,
+            staminaDeviation,
+            throwPowerDeviation,
+            manCoverageDeviation,
+            zoneCoverageDeviation,
+            kickPowerDeviation,
+            kickAccuracyDeviation,
+            throwAccuracyDeviation,
+            routeRunningDeviation
         );
 
-        final FreeSafety freeSafety = new FreeSafety(COVERAGE_SUBPOSITION_NAME);
-        freeSafety.updateAttributes(attrs);
-        freeSafety.updateModifiers(mods);
-        freeSafety.seedRating(ovrSeed);
-        return freeSafety;
+        final List<Attribute<Double>> buffs = Arrays.asList(
+                COVERAGE_AWARENESS_IMPORTANCE,
+                COVERAGE_AGILITY_IMPORTANCE,
+                COVERAGE_STRENGTH_IMPORTANCE,
+                COVERAGE_SPEED_IMPORTANCE,
+                COVERAGE_ZONE_COVERAGE_IMPORTANCE,
+                COVERAGE_MAN_COVERAGE_IMPORTANCE,
+                COVERAGE_TACKLE_IMPORTANCE,
+                COVERAGE_CATCHING_IMPORTANCE
+        );
+
+        final FreeSafety freesafety = new FreeSafety(COVERAGE_SUBPOSITION_NAME);
+        freesafety.setRatingsBuffs(buffs);
+        freesafety.overwriteAttributes(attrs);
+        freesafety.overwriteDeviations(devs);
+        freesafety.seedRating(overallSeed);
+        return freesafety;
     }
 
-    public final static FreeSafety GenerateHardhitterFreeSafety(final int ovrSeed){
-        final Attribute<Integer> speedAdjust = new Attribute<>(StatAttributes.SPEED.getName(), HARDHITTER_SPEED_VAR);
-        final Attribute<Integer> accelerationAdjust = new Attribute<>(StatAttributes.ACCELERATION.getName(), HARDHITTER_ACCELERATION_VAR);
-        final Attribute<Integer> staminaAdjust = new Attribute<>(StatAttributes.STAMINA.getName(), HARDHITTER_STAMINA_VAR);
-        final Attribute<Integer> strengthAdjust = new Attribute<>(StatAttributes.STRENGTH.getName(), HARDHITTER_STRENGTH_VAR);
-        final Attribute<Integer> zoneCoverageAdjust = new Attribute<>(StatAttributes.ZONE_COVERAGE.getName(), HARDHITTER_ZONE_COVERAGE_VAR);
-        final Attribute<Integer> manCoverageAdjust = new Attribute<>(StatAttributes.MAN_COVERAGE.getName(), HARDHITTER_MAN_COVERAGE_VAR);
-        final Attribute<Integer> injuryAdjust = new Attribute<>(StatAttributes.INJURY_PREVENTION.getName(), HARDHITTER_INJURY_VAR);
+    public final static FreeSafety GenerateHardhittingFreeSafety(final int overallSeed){
+        final Attribute<Double> awarenessAttribute = new Attribute<>(StatAttributes.AWARENESS.getName(), HARDHITTING_AWARENESS.getMean());
+        final Attribute<Double> strengthAttribute = new Attribute<>(StatAttributes.STRENGTH.getName(), HARDHITTING_STRENGTH.getMean());
+        final Attribute<Double> speedAttribute = new Attribute<>(StatAttributes.SPEED.getName(), HARDHITTING_SPEED.getMean());
+        final Attribute<Double> breakBlockAttribute = new Attribute<>(StatAttributes.BREAK_BLOCK.getName(), HARDHITTING_BREAK_BLOCK.getMean());
+        final Attribute<Double> tackleAttribute = new Attribute<>(StatAttributes.TACKLE.getName(), HARDHITTING_TACKLE.getMean());
+        final Attribute<Double> runBlockingAttribute = new Attribute<>(StatAttributes.RUN_BLOCKING.getName(), HARDHITTING_RUN_BLOCKING.getMean());
+        final Attribute<Double> passBlockingAttribute = new Attribute<>(StatAttributes.PASS_BLOCKING.getName(), HARDHITTING_PASS_BLOCKING.getMean());
+        final Attribute<Double> catchingAttribute = new Attribute<>(StatAttributes.CATCHING.getName(), HARDHITTING_CATCHING.getMean());
+        final Attribute<Double> carryingAttribute = new Attribute<>(StatAttributes.CARRYING.getName(), HARDHITTING_CARRYING.getMean());
+        final Attribute<Double> accelerationAttribute = new Attribute<>(StatAttributes.ACCELERATION.getName(), HARDHITTING_ACCELERATION.getMean());
+        final Attribute<Double> breakTackleAttribute = new Attribute<>(StatAttributes.BREAK_TACKLE.getName(), HARDHITTING_BREAK_TACKLE.getMean());
+        final Attribute<Double> elusivenessAttribute = new Attribute<>(StatAttributes.ELUSIVENESS.getName(), HARDHITTING_ELUSIVENESS.getMean());
+        final Attribute<Double> agilityAttribute = new Attribute<>(StatAttributes.AGILITY.getName(), HARDHITTING_AGILITY.getMean());
+        final Attribute<Double> injuryAttribute = new Attribute<>(StatAttributes.INJURY.getName(), HARDHITTING_INJURY.getMean());
+        final Attribute<Double> staminaAttribute = new Attribute<>(StatAttributes.STAMINA.getName(), HARDHITTING_STAMINA.getMean());
+        final Attribute<Double> throwPowerAttribute = new Attribute<>(StatAttributes.THROW_POWER.getName(), HARDHITTING_THROW_POWER.getMean());
+        final Attribute<Double> manCoverageAttribute = new Attribute<>(StatAttributes.MAN_COVERAGE.getName(), HARDHITTING_MAN_COVERAGE.getMean());
+        final Attribute<Double> zoneCoverageAttribute = new Attribute<>(StatAttributes.ZONE_COVERAGE.getName(), HARDHITTING_ZONE_COVERAGE.getMean());
+        final Attribute<Double> kickPowerAttribute = new Attribute<>(StatAttributes.KICK_POWER.getName(), HARDHITTING_KICK_POWER.getMean());
+        final Attribute<Double> kickAccuracyAttribute = new Attribute<>(StatAttributes.KICK_ACCURACY.getName(), HARDHITTING_KICK_ACCURACY.getMean());
+        final Attribute<Double> throwAccuracyAttribute = new Attribute<>(StatAttributes.THROW_ACCURACY.getName(), HARDHITTING_THROW_ACCURACY.getMean());
+        final Attribute<Double> routeRunningAttribute = new Attribute<>(StatAttributes.ROUTE_RUNNING.getName(), HARDHITTING_ROUTE_RUNNING.getMean());
 
-        final ModifierAttribute speedImportance = new ModifierAttribute(StatAttributes.SPEED.getName(), HARDHITTER_SPEED_IMPORTANCE);
-        final ModifierAttribute accelerationImportance = new ModifierAttribute(StatAttributes.ACCELERATION.getName(), HARDHITTER_ACCELERATION_IMPORTANCE);
-        final ModifierAttribute strengthImportance = new ModifierAttribute(StatAttributes.STRENGTH.getName(), HARDHITTER_STRENGTH_IMPORTANCE);
-        final ModifierAttribute zoneCoverageImportance = new ModifierAttribute(StatAttributes.ZONE_COVERAGE.getName(), HARDHITTER_ZONE_COVERAGE_IMPORTANCE);
-        final ModifierAttribute manCoverageImportance = new ModifierAttribute(StatAttributes.MAN_COVERAGE.getName(), HARDHITTER_MAN_COVERAGE_IMPORTANCE);
-        final ModifierAttribute awarenessImportance = new ModifierAttribute(StatAttributes.AWARENESS.getName(), HARDHITTER_AWARENESS_IMPORTANCE);
-        final ModifierAttribute agilityImportance = new ModifierAttribute(StatAttributes.AGILITY.getName(), HARDHITTER_AGILITY_IMPORTANCE);
-        final ModifierAttribute carryingImportance = new ModifierAttribute(StatAttributes.CARRYING.getName(), HARDHITTER_CARRYING_IMPORTANCE);
-        final ModifierAttribute catchingImportance = new ModifierAttribute(StatAttributes.CATCHING.getName(), HARDHITTER_CATCHING_IMPORTANCE);
-        final ModifierAttribute tackleImportance = new ModifierAttribute(StatAttributes.TACKLE.getName(), HARDHITTER_TACKLE_IMPORTANCE);
-        final ModifierAttribute breakBlockImportance = new ModifierAttribute(StatAttributes.BREAK_BLOCK.getName(), HARDHITTER_BREAK_BLOCK_IMPORTANCE);
-
-        final List<Attribute<Integer>> attrs = Arrays.asList(
-                staminaAdjust,
-                speedAdjust,
-                accelerationAdjust,
-                strengthAdjust,
-                zoneCoverageAdjust,
-                manCoverageAdjust,
-                injuryAdjust
+        final List<Attribute<Double>> attrs = Arrays.asList(
+            awarenessAttribute,
+            strengthAttribute,
+            speedAttribute,
+            breakBlockAttribute,
+            tackleAttribute,
+            runBlockingAttribute,
+            passBlockingAttribute,
+            catchingAttribute,
+            carryingAttribute,
+            accelerationAttribute,
+            breakTackleAttribute,
+            elusivenessAttribute,
+            agilityAttribute,
+            injuryAttribute,
+            staminaAttribute,
+            throwPowerAttribute,
+            manCoverageAttribute,
+            zoneCoverageAttribute,
+            kickPowerAttribute,
+            kickAccuracyAttribute,
+            throwAccuracyAttribute,
+            routeRunningAttribute
         );
 
-        final List<ModifierAttribute> mods = Arrays.asList(
-                speedImportance,
-                accelerationImportance,
-                strengthImportance,
-                zoneCoverageImportance,
-                manCoverageImportance,
-                awarenessImportance,
-                agilityImportance,
-                carryingImportance,
-                catchingImportance,
-                tackleImportance,
-                breakBlockImportance
+        final Attribute<Double> awarenessDeviation = new Attribute<>(StatAttributes.AWARENESS.getName(), HARDHITTING_AWARENESS.getDeviation());
+        final Attribute<Double> strengthDeviation = new Attribute<>(StatAttributes.STRENGTH.getName(), HARDHITTING_STRENGTH.getDeviation());
+        final Attribute<Double> speedDeviation = new Attribute<>(StatAttributes.SPEED.getName(), HARDHITTING_SPEED.getDeviation());
+        final Attribute<Double> breakBlockDeviation = new Attribute<>(StatAttributes.BREAK_BLOCK.getName(), HARDHITTING_BREAK_BLOCK.getDeviation());
+        final Attribute<Double> tackleDeviation = new Attribute<>(StatAttributes.TACKLE.getName(), HARDHITTING_TACKLE.getDeviation());
+        final Attribute<Double> runBlockingDeviation = new Attribute<>(StatAttributes.RUN_BLOCKING.getName(), HARDHITTING_RUN_BLOCKING.getDeviation());
+        final Attribute<Double> passBlockingDeviation = new Attribute<>(StatAttributes.PASS_BLOCKING.getName(), HARDHITTING_PASS_BLOCKING.getDeviation());
+        final Attribute<Double> catchingDeviation = new Attribute<>(StatAttributes.CATCHING.getName(), HARDHITTING_CATCHING.getDeviation());
+        final Attribute<Double> carryingDeviation = new Attribute<>(StatAttributes.CARRYING.getName(), HARDHITTING_CARRYING.getDeviation());
+        final Attribute<Double> accelerationDeviation = new Attribute<>(StatAttributes.ACCELERATION.getName(), HARDHITTING_ACCELERATION.getDeviation());
+        final Attribute<Double> breakTackleDeviation = new Attribute<>(StatAttributes.BREAK_TACKLE.getName(), HARDHITTING_BREAK_TACKLE.getDeviation());
+        final Attribute<Double> elusivenessDeviation = new Attribute<>(StatAttributes.ELUSIVENESS.getName(), HARDHITTING_ELUSIVENESS.getDeviation());
+        final Attribute<Double> agilityDeviation = new Attribute<>(StatAttributes.AGILITY.getName(), HARDHITTING_AGILITY.getDeviation());
+        final Attribute<Double> injuryDeviation = new Attribute<>(StatAttributes.INJURY.getName(), HARDHITTING_INJURY.getDeviation());
+        final Attribute<Double> staminaDeviation = new Attribute<>(StatAttributes.STAMINA.getName(), HARDHITTING_STAMINA.getDeviation());
+        final Attribute<Double> throwPowerDeviation = new Attribute<>(StatAttributes.THROW_POWER.getName(), HARDHITTING_THROW_POWER.getDeviation());
+        final Attribute<Double> manCoverageDeviation = new Attribute<>(StatAttributes.MAN_COVERAGE.getName(), HARDHITTING_MAN_COVERAGE.getDeviation());
+        final Attribute<Double> zoneCoverageDeviation = new Attribute<>(StatAttributes.ZONE_COVERAGE.getName(), HARDHITTING_ZONE_COVERAGE.getDeviation());
+        final Attribute<Double> kickPowerDeviation = new Attribute<>(StatAttributes.KICK_POWER.getName(), HARDHITTING_KICK_POWER.getDeviation());
+        final Attribute<Double> kickAccuracyDeviation = new Attribute<>(StatAttributes.KICK_ACCURACY.getName(), HARDHITTING_KICK_ACCURACY.getDeviation());
+        final Attribute<Double> throwAccuracyDeviation = new Attribute<>(StatAttributes.THROW_ACCURACY.getName(), HARDHITTING_THROW_ACCURACY.getDeviation());
+        final Attribute<Double> routeRunningDeviation = new Attribute<>(StatAttributes.ROUTE_RUNNING.getName(), HARDHITTING_ROUTE_RUNNING.getDeviation());
+
+        final List<Attribute<Double>> devs = Arrays.asList(
+            awarenessDeviation,
+            strengthDeviation,
+            speedDeviation,
+            breakBlockDeviation,
+            tackleDeviation,
+            runBlockingDeviation,
+            passBlockingDeviation,
+            catchingDeviation,
+            carryingDeviation,
+            accelerationDeviation,
+            breakTackleDeviation,
+            elusivenessDeviation,
+            agilityDeviation,
+            injuryDeviation,
+            staminaDeviation,
+            throwPowerDeviation,
+            manCoverageDeviation,
+            zoneCoverageDeviation,
+            kickPowerDeviation,
+            kickAccuracyDeviation,
+            throwAccuracyDeviation,
+            routeRunningDeviation
         );
 
-        final FreeSafety freeSafety = new FreeSafety(HARDHITTER_SUBPOSITION_NAME);
-        freeSafety.updateAttributes(attrs);
-        freeSafety.updateModifiers(mods);
-        freeSafety.seedRating(ovrSeed);
-
-        return freeSafety;
+        final List<Attribute<Double>> buffs = Arrays.asList(
+                HARDHITTING_AWARENESS_IMPORTANCE,
+                HARDHITTING_AGILITY_IMPORTANCE,
+                HARDHITTING_STRENGTH_IMPORTANCE,
+                HARDHITTING_SPEED_IMPORTANCE,
+                HARDHITTING_ZONE_COVERAGE_IMPORTANCE,
+                HARDHITTING_MAN_COVERAGE_IMPORTANCE,
+                HARDHITTING_TACKLE_IMPORTANCE,
+                HARDHITTING_CATCHING_IMPORTANCE
+        );
+        
+        final FreeSafety freesafety = new FreeSafety(HARDHITTING_SUBPOSITION_NAME);
+        freesafety.setRatingsBuffs(buffs);
+        freesafety.overwriteAttributes(attrs);
+        freesafety.overwriteDeviations(devs);
+        freesafety.seedRating(overallSeed);
+        return freesafety;
     }
 
-    public final static FreeSafety GenerateNeutralFreeSafety(final int ovrSeed){
-        final Attribute<Integer> speedAdjust = new Attribute<>(StatAttributes.SPEED.getName(), NEUTRAL_SPEED_VAR);
-        final Attribute<Integer> accelerationAdjust = new Attribute<>(StatAttributes.ACCELERATION.getName(), NEUTRAL_ACCELERATION_VAR);
-        final Attribute<Integer> staminaAdjust = new Attribute<>(StatAttributes.STAMINA.getName(), NEUTRAL_STAMINA_VAR);
-        final Attribute<Integer> strengthAdjust = new Attribute<>(StatAttributes.STRENGTH.getName(), NEUTRAL_STRENGTH_VAR);
-        final Attribute<Integer> zoneCoverageAdjust = new Attribute<>(StatAttributes.ZONE_COVERAGE.getName(), NEUTRAL_ZONE_COVERAGE_VAR);
-        final Attribute<Integer> manCoverageAdjust = new Attribute<>(StatAttributes.MAN_COVERAGE.getName(), NEUTRAL_MAN_COVERAGE_VAR);
-        final Attribute<Integer> injuryAdjust = new Attribute<>(StatAttributes.INJURY_PREVENTION.getName(), NEUTRAL_INJURY_VAR);
+    public final static FreeSafety GenerateNeutralFreeSafety(final int overallSeed){
+        final Attribute<Double> awarenessAttribute = new Attribute<>(StatAttributes.AWARENESS.getName(), NEUTRAL_AWARENESS.getMean());
+        final Attribute<Double> strengthAttribute = new Attribute<>(StatAttributes.STRENGTH.getName(), NEUTRAL_STRENGTH.getMean());
+        final Attribute<Double> speedAttribute = new Attribute<>(StatAttributes.SPEED.getName(), NEUTRAL_SPEED.getMean());
+        final Attribute<Double> breakBlockAttribute = new Attribute<>(StatAttributes.BREAK_BLOCK.getName(), NEUTRAL_BREAK_BLOCK.getMean());
+        final Attribute<Double> tackleAttribute = new Attribute<>(StatAttributes.TACKLE.getName(), NEUTRAL_TACKLE.getMean());
+        final Attribute<Double> runBlockingAttribute = new Attribute<>(StatAttributes.RUN_BLOCKING.getName(), NEUTRAL_RUN_BLOCKING.getMean());
+        final Attribute<Double> passBlockingAttribute = new Attribute<>(StatAttributes.PASS_BLOCKING.getName(), NEUTRAL_PASS_BLOCKING.getMean());
+        final Attribute<Double> catchingAttribute = new Attribute<>(StatAttributes.CATCHING.getName(), NEUTRAL_CATCHING.getMean());
+        final Attribute<Double> carryingAttribute = new Attribute<>(StatAttributes.CARRYING.getName(), NEUTRAL_CARRYING.getMean());
+        final Attribute<Double> accelerationAttribute = new Attribute<>(StatAttributes.ACCELERATION.getName(), NEUTRAL_ACCELERATION.getMean());
+        final Attribute<Double> breakTackleAttribute = new Attribute<>(StatAttributes.BREAK_TACKLE.getName(), NEUTRAL_BREAK_TACKLE.getMean());
+        final Attribute<Double> elusivenessAttribute = new Attribute<>(StatAttributes.ELUSIVENESS.getName(), NEUTRAL_ELUSIVENESS.getMean());
+        final Attribute<Double> agilityAttribute = new Attribute<>(StatAttributes.AGILITY.getName(), NEUTRAL_AGILITY.getMean());
+        final Attribute<Double> injuryAttribute = new Attribute<>(StatAttributes.INJURY.getName(), NEUTRAL_INJURY.getMean());
+        final Attribute<Double> staminaAttribute = new Attribute<>(StatAttributes.STAMINA.getName(), NEUTRAL_STAMINA.getMean());
+        final Attribute<Double> throwPowerAttribute = new Attribute<>(StatAttributes.THROW_POWER.getName(), NEUTRAL_THROW_POWER.getMean());
+        final Attribute<Double> manCoverageAttribute = new Attribute<>(StatAttributes.MAN_COVERAGE.getName(), NEUTRAL_MAN_COVERAGE.getMean());
+        final Attribute<Double> zoneCoverageAttribute = new Attribute<>(StatAttributes.ZONE_COVERAGE.getName(), NEUTRAL_ZONE_COVERAGE.getMean());
+        final Attribute<Double> kickPowerAttribute = new Attribute<>(StatAttributes.KICK_POWER.getName(), NEUTRAL_KICK_POWER.getMean());
+        final Attribute<Double> kickAccuracyAttribute = new Attribute<>(StatAttributes.KICK_ACCURACY.getName(), NEUTRAL_KICK_ACCURACY.getMean());
+        final Attribute<Double> throwAccuracyAttribute = new Attribute<>(StatAttributes.THROW_ACCURACY.getName(), NEUTRAL_THROW_ACCURACY.getMean());
+        final Attribute<Double> routeRunningAttribute = new Attribute<>(StatAttributes.ROUTE_RUNNING.getName(), NEUTRAL_ROUTE_RUNNING.getMean());
 
-        final ModifierAttribute speedImportance = new ModifierAttribute(StatAttributes.SPEED.getName(), NEUTRAL_SPEED_IMPORTANCE);
-        final ModifierAttribute accelerationImportance = new ModifierAttribute(StatAttributes.ACCELERATION.getName(), NEUTRAL_ACCELERATION_IMPORTANCE);
-        final ModifierAttribute strengthImportance = new ModifierAttribute(StatAttributes.STRENGTH.getName(), NEUTRAL_STRENGTH_IMPORTANCE);
-        final ModifierAttribute zoneCoverageImportance = new ModifierAttribute(StatAttributes.ZONE_COVERAGE.getName(), NEUTRAL_ZONE_COVERAGE_IMPORTANCE);
-        final ModifierAttribute manCoverageImportance = new ModifierAttribute(StatAttributes.MAN_COVERAGE.getName(), NEUTRAL_MAN_COVERAGE_IMPORTANCE);
-        final ModifierAttribute awarenessImportance = new ModifierAttribute(StatAttributes.AWARENESS.getName(), NEUTRAL_AWARENESS_IMPORTANCE);
-        final ModifierAttribute agilityImportance = new ModifierAttribute(StatAttributes.AGILITY.getName(), NEUTRAL_AGILITY_IMPORTANCE);
-        final ModifierAttribute carryingImportance = new ModifierAttribute(StatAttributes.CARRYING.getName(), NEUTRAL_CARRYING_IMPORTANCE);
-        final ModifierAttribute catchingImportance = new ModifierAttribute(StatAttributes.CATCHING.getName(), NEUTRAL_CATCHING_IMPORTANCE);
-        final ModifierAttribute tackleImportance = new ModifierAttribute(StatAttributes.TACKLE.getName(), NEUTRAL_TACKLE_IMPORTANCE);
-        final ModifierAttribute breakBlockImportance = new ModifierAttribute(StatAttributes.BREAK_BLOCK.getName(), NEUTRAL_BREAK_BLOCK_IMPORTANCE);
-
-        final List<Attribute<Integer>> attrs = Arrays.asList(
-                staminaAdjust,
-                speedAdjust,
-                accelerationAdjust,
-                strengthAdjust,
-                zoneCoverageAdjust,
-                manCoverageAdjust,
-                injuryAdjust
+        final List<Attribute<Double>> attrs = Arrays.asList(
+            awarenessAttribute,
+            strengthAttribute,
+            speedAttribute,
+            breakBlockAttribute,
+            tackleAttribute,
+            runBlockingAttribute,
+            passBlockingAttribute,
+            catchingAttribute,
+            carryingAttribute,
+            accelerationAttribute,
+            breakTackleAttribute,
+            elusivenessAttribute,
+            agilityAttribute,
+            injuryAttribute,
+            staminaAttribute,
+            throwPowerAttribute,
+            manCoverageAttribute,
+            zoneCoverageAttribute,
+            kickPowerAttribute,
+            kickAccuracyAttribute,
+            throwAccuracyAttribute,
+            routeRunningAttribute
         );
 
-        final List<ModifierAttribute> mods = Arrays.asList(
-                speedImportance,
-                accelerationImportance,
-                strengthImportance,
-                zoneCoverageImportance,
-                manCoverageImportance,
-                awarenessImportance,
-                agilityImportance,
-                carryingImportance,
-                catchingImportance,
-                tackleImportance,
-                breakBlockImportance
+        final Attribute<Double> awarenessDeviation = new Attribute<>(StatAttributes.AWARENESS.getName(), NEUTRAL_AWARENESS.getDeviation());
+        final Attribute<Double> strengthDeviation = new Attribute<>(StatAttributes.STRENGTH.getName(), NEUTRAL_STRENGTH.getDeviation());
+        final Attribute<Double> speedDeviation = new Attribute<>(StatAttributes.SPEED.getName(), NEUTRAL_SPEED.getDeviation());
+        final Attribute<Double> breakBlockDeviation = new Attribute<>(StatAttributes.BREAK_BLOCK.getName(), NEUTRAL_BREAK_BLOCK.getDeviation());
+        final Attribute<Double> tackleDeviation = new Attribute<>(StatAttributes.TACKLE.getName(), NEUTRAL_TACKLE.getDeviation());
+        final Attribute<Double> runBlockingDeviation = new Attribute<>(StatAttributes.RUN_BLOCKING.getName(), NEUTRAL_RUN_BLOCKING.getDeviation());
+        final Attribute<Double> passBlockingDeviation = new Attribute<>(StatAttributes.PASS_BLOCKING.getName(), NEUTRAL_PASS_BLOCKING.getDeviation());
+        final Attribute<Double> catchingDeviation = new Attribute<>(StatAttributes.CATCHING.getName(), NEUTRAL_CATCHING.getDeviation());
+        final Attribute<Double> carryingDeviation = new Attribute<>(StatAttributes.CARRYING.getName(), NEUTRAL_CARRYING.getDeviation());
+        final Attribute<Double> accelerationDeviation = new Attribute<>(StatAttributes.ACCELERATION.getName(), NEUTRAL_ACCELERATION.getDeviation());
+        final Attribute<Double> breakTackleDeviation = new Attribute<>(StatAttributes.BREAK_TACKLE.getName(), NEUTRAL_BREAK_TACKLE.getDeviation());
+        final Attribute<Double> elusivenessDeviation = new Attribute<>(StatAttributes.ELUSIVENESS.getName(), NEUTRAL_ELUSIVENESS.getDeviation());
+        final Attribute<Double> agilityDeviation = new Attribute<>(StatAttributes.AGILITY.getName(), NEUTRAL_AGILITY.getDeviation());
+        final Attribute<Double> injuryDeviation = new Attribute<>(StatAttributes.INJURY.getName(), NEUTRAL_INJURY.getDeviation());
+        final Attribute<Double> staminaDeviation = new Attribute<>(StatAttributes.STAMINA.getName(), NEUTRAL_STAMINA.getDeviation());
+        final Attribute<Double> throwPowerDeviation = new Attribute<>(StatAttributes.THROW_POWER.getName(), NEUTRAL_THROW_POWER.getDeviation());
+        final Attribute<Double> manCoverageDeviation = new Attribute<>(StatAttributes.MAN_COVERAGE.getName(), NEUTRAL_MAN_COVERAGE.getDeviation());
+        final Attribute<Double> zoneCoverageDeviation = new Attribute<>(StatAttributes.ZONE_COVERAGE.getName(), NEUTRAL_ZONE_COVERAGE.getDeviation());
+        final Attribute<Double> kickPowerDeviation = new Attribute<>(StatAttributes.KICK_POWER.getName(), NEUTRAL_KICK_POWER.getDeviation());
+        final Attribute<Double> kickAccuracyDeviation = new Attribute<>(StatAttributes.KICK_ACCURACY.getName(), NEUTRAL_KICK_ACCURACY.getDeviation());
+        final Attribute<Double> throwAccuracyDeviation = new Attribute<>(StatAttributes.THROW_ACCURACY.getName(), NEUTRAL_THROW_ACCURACY.getDeviation());
+        final Attribute<Double> routeRunningDeviation = new Attribute<>(StatAttributes.ROUTE_RUNNING.getName(), NEUTRAL_ROUTE_RUNNING.getDeviation());
+
+        final List<Attribute<Double>> devs = Arrays.asList(
+            awarenessDeviation,
+            strengthDeviation,
+            speedDeviation,
+            breakBlockDeviation,
+            tackleDeviation,
+            runBlockingDeviation,
+            passBlockingDeviation,
+            catchingDeviation,
+            carryingDeviation,
+            accelerationDeviation,
+            breakTackleDeviation,
+            elusivenessDeviation,
+            agilityDeviation,
+            injuryDeviation,
+            staminaDeviation,
+            throwPowerDeviation,
+            manCoverageDeviation,
+            zoneCoverageDeviation,
+            kickPowerDeviation,
+            kickAccuracyDeviation,
+            throwAccuracyDeviation,
+            routeRunningDeviation
         );
 
-        final FreeSafety freeSafety = new FreeSafety(NEUTRAL_SUBPOSITION_NAME);
-        freeSafety.updateAttributes(attrs);
-        freeSafety.updateModifiers(mods);
-        freeSafety.seedRating(ovrSeed);
-        return freeSafety;
+        final List<Attribute<Double>> buffs = Arrays.asList(
+            NEUTRAL_AWARENESS_IMPORTANCE,
+            NEUTRAL_AGILITY_IMPORTANCE,
+            NEUTRAL_STRENGTH_IMPORTANCE,
+            NEUTRAL_SPEED_IMPORTANCE,
+            NEUTRAL_ZONE_COVERAGE_IMPORTANCE,
+            NEUTRAL_MAN_COVERAGE_IMPORTANCE,
+            NEUTRAL_TACKLE_IMPORTANCE,
+            NEUTRAL_CATCHING_IMPORTANCE
+        );
+
+        final FreeSafety freesafety = new FreeSafety(NEUTRAL_SUBPOSITION_NAME);
+        freesafety.setRatingsBuffs(buffs);
+        freesafety.overwriteAttributes(attrs);
+        freesafety.overwriteDeviations(devs);
+        freesafety.seedRating(overallSeed);
+        return freesafety;
     }
+
 }
