@@ -5,6 +5,7 @@ A Football Simulation with no chosen name yet.
 
 # What I have learned so far
 
+* Using Statistical Distribution for Player Attribute Generation
 * Dynamic Path Creation (aStar)
 * Static Path Creation
 * Vector Math/Logic
