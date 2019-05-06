@@ -7,6 +7,29 @@ import java.util.List;
 
 public enum BaseAttributes {
 
+//    General mean configuration.
+    /**
+     * Take mean for overall, divide by 80, multiply by the positions MEAN_OVERALL, and that is your
+     * mean for the attribute.
+     * EG
+     *
+     * If we wanted the mean for QB_AWARENESS to be a 80, we would do as follows.
+     *
+     * (mean/80) * positionMeanOverall =
+     *
+     * (80/80) * .72 = .72
+     *
+     * As you see below, we get .72 for the mean rating (out of 1) of awareness for QB.
+     *
+     */
+
+    /**
+     * DO NOT ADJUST THESE FOR SUB POSITION RELATED THINGS.
+     * DO THOSE ADJUSTMENTS IN THE RELEVANT SUB POSITION FILE.
+     *
+     * ADJUSTING THESE WILL AFFECT ALL SUB POSITIONS OF THE RELEVANT POSITION
+     */
+
     QB_AWARENESS(StatAttributes.AWARENESS.getName(), 0.72, .045, 0.093),
     QB_STRENGTH(StatAttributes.STRENGTH.getName(), 0.625, .04, 0.08),
     QB_SPEED(StatAttributes.SPEED.getName(), .6, .05, 0.16),
