@@ -1,34 +1,35 @@
 package Attributes;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public enum StatAttributes{
 
-    SPEED             ("Speed",             50),
-    STRENGTH          ("Strength",          50),
-    AGILITY           ("Agility",           50),
-    ACCELERATION      ("Acceleration",      50),
-    AWARENESS         ("Awareness",         50),
-    BREAK_TACKLE      ("Break Tackle",      40),
-    ELUSIVENESS       ("Elusiveness",       40),
-    CARRYING          ("Carrying",          40),
-    CATCHING          ("Catching",          40),
-    ROUTE_RUNNING     ("Route Running",     40),
-    THROW_POWER       ("Throw Power",       40),
-    THROW_ACCURACY    ("Throw Accuracy",    40),
-    TACKLE            ("Tackle",            50),
-    BREAK_BLOCK       ("Break Block",       40),
-    MAN_COVERAGE      ("Man Coverage",      40),
-    ZONE_COVERAGE     ("Zone Coverage",     40),
-    PASS_BLOCKING     ("Pass Blocking",     40),
-    RUN_BLOCKING      ("Run Blocking",      40),
-    KICK_POWER        ("Kick Power",        40),
-    KICK_ACCURACY     ("Kick Accuracy",     40),
-    STAMINA           ("Stamina",           80),
-    INJURY_PREVENTION ("Injury Prevention", 80);
+    SPEED             ("Speed",             50.0),
+    STRENGTH          ("Strength",          50.0),
+    AGILITY           ("Agility",           50.0),
+    ACCELERATION      ("Acceleration",      50.0),
+    AWARENESS         ("Awareness",         50.0),
+    BREAK_TACKLE("Break Tackle",      40.0),
+    ELUSIVENESS       ("Elusiveness",       40.0),
+    CARRYING          ("Carrying",          40.0),
+    CATCHING          ("Catching",          40.0),
+    ROUTE_RUNNING("Route Running",     40.0),
+    THROW_POWER("Throw Power",       40.0),
+    THROW_ACCURACY("Throw Accuracy",    40.0),
+    TACKLE            ("Tackle",            50.0),
+    BREAK_BLOCK("Break Block",       40.0),
+    MAN_COVERAGE("Man Coverage",      40.0),
+    ZONE_COVERAGE("Zone Coverage",     40.0),
+    PASS_BLOCKING("Pass Blocking",     40.0),
+    RUN_BLOCKING("Run Blocking",      40.0),
+    KICK_POWER("Kick Power",        40.0),
+    KICK_ACCURACY("Kick Accuracy",     40.0),
+    STAMINA           ("Stamina",           80.0),
+    INJURY("Injury Prevention", 80.0);
 
-    private final static List<Attribute<Integer>> DEFAULTS = Arrays.asList(
+    private final static List<Attribute<Double>> DEFAULTS_ATTRS = Arrays.asList(
         SPEED.attr,
         STRENGTH.attr,
         AGILITY.attr,
@@ -50,12 +51,12 @@ public enum StatAttributes{
         KICK_POWER.attr,
         KICK_ACCURACY.attr,
         STAMINA.attr,
-        INJURY_PREVENTION.attr
+        INJURY.attr
     );
 
-    private final Attribute<Integer> attr;
+    private final Attribute<Double> attr;
 
-    StatAttributes(final String name, final Integer base){
+    StatAttributes(final String name, final Double base){
         attr = new Attribute<>(name, base);
     }
 
@@ -63,11 +64,16 @@ public enum StatAttributes{
         return attr.getName();
     }
 
-    public final Integer getValue(){
+    public final Double getValue(){
         return attr.getValue();
     }
 
-    public final static Attributes<Integer> GetBaseAttributes(){
-        return new Attributes<Integer>(DEFAULTS);
+    public final static Attributes<Double> GetBaseAttributes(){
+        final ArrayList<Attribute<Double>> attrs = new ArrayList<>(DEFAULTS_ATTRS.size());
+        for(Attribute<Double> attr : DEFAULTS_ATTRS){
+            attrs.add(attr.cloneAttribute());
+        }
+        return new Attributes<Double>(new ArrayList<>(DEFAULTS_ATTRS));
     }
+
 }

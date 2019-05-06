@@ -25,6 +25,10 @@ public class Attribute<ValueType> {
         return name.equalsIgnoreCase(attr.getName());
     }
 
+    public final Attribute<ValueType> cloneAttribute(){
+        return new Attribute<>(getName(), getValue());
+    }
+
     @Override
     public String toString() {
         return "Attribute "+name+" | Value "+value;
