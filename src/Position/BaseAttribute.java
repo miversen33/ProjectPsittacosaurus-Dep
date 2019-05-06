@@ -9,10 +9,12 @@ public final class BaseAttribute {
         this.deviation = deviation;
     }
 
+    @Deprecated
     protected final void updateMean(final double newMean){
         this.mean = newMean;
     }
 
+    @Deprecated
     protected final void updateDeviation(final double newDeviation){
         this.deviation = newDeviation;
     }
