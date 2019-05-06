@@ -20,6 +20,8 @@ import Position.SpecialTeams.Kicker;
 import Position.SpecialTeams.Punter;
 import Tuple.Tuple2;
 import Utils.PhysicsObjects.Vector;
+import Utils.Stats;
+import Position.BaseAttributes;
 
 import java.util.Arrays;
 import java.util.List;
@@ -32,7 +34,14 @@ public class Main {
      */
     public static void main(String[] args) {
 
-        testPositionGeneration();
+        testSeedGeneration(80);
+//        testSeedGeneration(40);
+//        testSeedGeneration(70);
+//        testSeedGeneration(99);
+//        testSeedGeneration(150);
+
+//        testNormalGeneration(495);
+
 //        testRoutes();
 //        This is a pseudo gameManager class. Eventually this will be cleaned up
 //        And placed in its own class.
@@ -85,30 +94,114 @@ public class Main {
 //        }
     }
 
-    private final static void testPositionGeneration(){
-        double time = System.currentTimeMillis();
+    private final static void testNormalGeneration(final int seed){
+        final BaseAttributes attribute = BaseAttributes.QB_AWARENESS;
+        for(int i = 0; i < 20; i++){
+            double stat = 1.01;
+            while(stat > 1){
+                stat = Stats.Normal(attribute.getMean(), attribute.getDeviation());
+            }
+            System.out.println("Stat Gen for "+attribute.getName()+" | "+ (stat*seed));
+        }
+    }
+
+    private final static void testSeedGeneration(final int seedValue){
+
+        Position coverageCornerback = Cornerback.GenerateCoverageCornerback(seedValue);
+        Position ballhawkCornerback = Cornerback.GenerateHardhittingCornerback(seedValue);
+        Position neutralCornerback = Cornerback.GenerateNeutralCornerback(seedValue);
+
+        Position passDefensiveEnd = DefensiveEnd.GeneratePassrushDefensiveEnd(seedValue);
+        Position runDefensiveEnd = DefensiveEnd.GenerateRunrushDefensiveEnd(seedValue);
+        Position neutralDefensiveEnd = DefensiveEnd.GenerateNeutralrushDefensiveEnd(seedValue);
+
+        Position runDefensiveTackle = DefensiveTackle.GenerateRunrushDefensiveTackle(seedValue);
+        Position passDefensiveTackle = DefensiveTackle.GeneratePassrushDefensiveTackle(seedValue);
+        Position neutralDefensiveTackle = DefensiveTackle.GenerateNeutralrushDefensiveTackle(seedValue);
+
+        Position coverageFreeSafety = FreeSafety.GenerateCoverageFreeSafety(seedValue);
+        Position hardhitterFreeSafety = FreeSafety.GenerateHardhittingFreeSafety(seedValue);
+        Position neutralFreeSafety = FreeSafety.GenerateNeutralFreeSafety(seedValue);
+
+        Position coverageMiddleLinebacker = MiddleLinebacker.GenerateCoverageMiddleLinebacker(seedValue);
+        Position blitzMiddleLinebacker = MiddleLinebacker.GenerateBlitzingMiddleLinebacker(seedValue);
+        Position neutralMiddleLinebacker = MiddleLinebacker.GenerateNeutralMiddleLinebacker(seedValue);
+
+        Position coverageOutsideLinebacker = OutsideLinebacker.GenerateCoverageOutsideLinebacker(seedValue);
+        Position blitzOutsideLinebacker = OutsideLinebacker.GenerateBlitzingOutsideLinebacker(seedValue);
+        Position neutralOutsideLinebacker = OutsideLinebacker.GenerateNeutralOutsideLinebacker(seedValue);
+
+        Position coverageStrongSafety = StrongSafety.GenerateCoverageStrongSafety(seedValue);
+        Position hardHitterStrongSafety = StrongSafety.GenerateHardhittingStrongSafety(seedValue);
+        Position neutralStrongSafety = StrongSafety.GenerateNeutralStrongSafety(seedValue);
+
+        Position runBlockingCenter = Center.GenerateRunblockCenter(seedValue);
+        Position passBlockingCenter = Center.GeneratePassblockCenter(seedValue);
+        Position neutralCenter = Center.GenerateNeutralCenter(seedValue);
+
+        Position runBlockingGuard = Guard.GenerateRunblockGuard(seedValue);
+        Position passBlockingGuard = Guard.GeneratePassblockGuard(seedValue);
+        Position neutralGuard = Guard.GenerateNeutralGuard(seedValue);
+
+        Position runBlockingOffensiveTackle = OffensiveTackle.GenerateRunblockOffensiveTackle(seedValue);
+        Position passBlockingOffensiveTackle = OffensiveTackle.GeneratePassblockOffensiveTackle(seedValue);
+        Position neutralOffensiveTackle = OffensiveTackle.GenerateNeutralOffensiveTackle(seedValue);
+
+        Position rushingFullback = Fullback.GenerateRushingFullback(seedValue);
+        Position blockingFullBack = Fullback.GenerateBlockingFullback(seedValue);
+        Position neutralFullback = Fullback.GenerateNeutralFullback(seedValue);
+
+        Position speedHalfBack = HalfBack.GenerateSpeedHalfBack(seedValue);
+        Position powerHalfBack = HalfBack.GeneratePowerHalfBack(seedValue);
+        Position neutralHalfBack = HalfBack.GenerateNeutralHalfBack(seedValue);
+
+        Position runningQuarterback = Quarterback.GenerateRushingQuarterback(seedValue);
+        Position passingQuarterback = Quarterback.GeneratePassingQuarterback(seedValue);
+        Position neutralQuarterback = Quarterback.GenerateNeutralQuarterback(seedValue);
+
+        Position blockingTightEnd = TightEnd.GenerateBlockingTightEnd(seedValue);
+        Position receivingTightEnd = TightEnd.GenerateReceivingTightEnd(seedValue);
+        Position neutralTightEnd = TightEnd.GenerateNeutralTightEnd(seedValue);
+
+        Position possessionWideReceiver = WideReceiver.GeneratePossessionWideReceiver(seedValue);
+        Position speedWideReceiver = WideReceiver.GenerateSpeedWideReceiver(seedValue);
+        Position neutralWideReceiver = WideReceiver.GenerateNeutralWideReceiver(seedValue);
+
+        Position accurateKicker = Kicker.GenerateAccurateKicker(seedValue);
+        Position powerKicker = Kicker.GeneratePowerKicker(seedValue);
+        Position neutralKicker = Kicker.GenerateNeutralKicker(seedValue);
+
+        Position accuratePunter = Punter.GenerateAccuratePunter(seedValue);
+        Position powerPunter = Punter.GeneratePowerPunter(seedValue);
+        Position neutralPunter = Punter.GenerateNeutralPunter(seedValue);
+
+        int i = 0;
+    }
+
+//    private final static void testPositionGeneration(){
+//        double time = System.currentTimeMillis();
 //         Position position = Quarterback.GenerateRunningQuarterback(80);
 //         Position position = Quarterback.GeneratePassingQuarterback(80);
 //         Position position = Quarterback.GenerateNeutralQuarterback(80);
 
-//         Position position = Tailback.GenerateSpeedTailBack(80);
-//         Position position = Tailback.GeneratePowerTailback(80);
-//         Position position = Tailback.GenerateNeutralTailback(80);
+//         Position position = HalfBack.GenerateSpeedTailBack(80);
+//         Position position = HalfBack.GeneratePowerHalfBack(80);
+//         Position position = HalfBack.GenerateNeutralHalfBack(80);
 
 //         Position position = Fullback.GenerateRushingFullback(80);
 //         Position position = Fullback.GenerateBlockingFullBack(80);
 //         Position position = Fullback.GenerateNeutralFullback(80);
 
-//         Position position = Guard.GenerateRunBlockingGuard(80);
-//         Position position = Guard.GeneratePassBlockingGuard(80);
+//         Position position = Guard.GenerateRunblockGuard(80);
+//         Position position = Guard.GeneratePassblockGuard(80);
 //         Position position = Guard.GenerateNeutralGuard(80);
 
-//         Position position = Center.GenerateRunBlockingCenter(80);
-//         Position position = Center.GeneratePassBlockingCenter(80);
+//         Position position = Center.GenerateRunblockCenter(80);
+//         Position position = Center.GeneratePassblockCenter(80);
 //         Position position = Center.GenerateNeutralCenter(80);
 
-//        Position position = OffensiveTackle.GenerateRunBlockingOffensiveTackle(80);
-//        Position position = OffensiveTackle.GeneratePassBlockingOffensiveTackle(80);
+//        Position position = OffensiveTackle.GenerateRunblockOffensiveTackle(80);
+//        Position position = OffensiveTackle.GeneratePassblockOffensiveTackle(80);
 //        Position position = OffensiveTackle.GenerateNeutralOffensiveTackle(80);
 
 //        Position position = TightEnd.GenerateBlockingTightEnd(80);
@@ -153,12 +246,12 @@ public class Main {
 
 //        Position position = Punter.GenerateAccuratePunter(80);
 //        Position position = Punter.GeneratePowerPunter(80);
-        Position position = Punter.GenerateNeutralPunter(80);
+//        Position position = Punter.GenerateNeutralPunter(80);
 
-        System.out.println("Player Generation Took Approx: "+(System.currentTimeMillis() - time)+" ms");
-        System.out.println("Position Overall Rating is "+position.getOverallRating());
-        int i = 0;
-    }
+//        System.out.println("Player Generation Took Approx: "+(System.currentTimeMillis() - time)+" ms");
+//        System.out.println("Position Overall Rating is "+position.getOverallRating());
+//        int i = 0;
+//    }
 
     private final static void testRoutes(){
         final Endzone offensiveGoal = Endzone.NORTH;
