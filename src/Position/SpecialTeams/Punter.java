@@ -175,7 +175,7 @@ public final class Punter extends Position{
     private final static Attribute<Double> NEUTRAL_ACCELERATION_IMPORTANCE = new Attribute<>(StatAttributes.ACCELERATION.getName(), 1.70);
 
     private Punter(final String  subPositionName){
-        super(PositionList.KICKER.getName(), subPositionName, BaseAttributes.P_ATTRIBUTES, POSITION_MEAN_OVERALL);
+        super(PositionList.PUNTER.getName(), subPositionName, BaseAttributes.P_ATTRIBUTES, POSITION_MEAN_OVERALL);
     }
 
     public final static Punter GeneratePowerPunter(final int overallSeed){
