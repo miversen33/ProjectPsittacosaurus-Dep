@@ -1,5 +1,3 @@
-# ProjectPsittacosuraus
-
 A Football Simulation with no chosen name yet.
 
 
