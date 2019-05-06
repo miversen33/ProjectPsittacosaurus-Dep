@@ -5,13 +5,13 @@ import Game.SideOfBall;
 public enum PositionList {
 
     QUARTERBACK("Quarterback","QB",SideOfBall.OFFENSE),
-    TAILBACK("Tailback","RB",SideOfBall.OFFENSE),
+    HALFBACK("Halfback","HB",SideOfBall.OFFENSE),
     FULLBACK("Fullback","FB",SideOfBall.OFFENSE),
     WIDE_RECEIVER("Wide Receiver","WR",SideOfBall.OFFENSE),
     TIGHT_END("Tight End","TE",SideOfBall.OFFENSE),
     OFFENSIVE_TACKLE("Offensive Tackle","OT",SideOfBall.OFFENSE),
-    OFFENSIVE_CENTER("Center", "C", SideOfBall.OFFENSE),
-    OFFENSIVE_GUARD("Offensive Guard","OG", SideOfBall.OFFENSE),
+    CENTER("Center", "C", SideOfBall.OFFENSE),
+    GUARD("Offensive Guard","OG", SideOfBall.OFFENSE),
     DEFENSIVE_TACKLE("Defensive Tackle","DT",SideOfBall.DEFENSE),
     DEFENSIVE_END("Defensive End","DE",SideOfBall.DEFENSE),
     MIDDLE_LINEBACKER("Middle Linebacker","MLB",SideOfBall.DEFENSE),
