@@ -2,9 +2,9 @@ package Position.Lists;
 
 public class SubPositionList{
 
+    public final static String NEUTRAL = "Neutral";
     private final static String COVERAGE = "Coverage";
     private final static String HARDHITTER = "Hard Hitter";
-    private final static String NEUTRAL = "Neutral";
     private final static String RUN_RUSH = "Run Rush";
     private final static String PASS_RUSH = "Pass Rush";
     private final static String BLITZING = "Blitzing";
