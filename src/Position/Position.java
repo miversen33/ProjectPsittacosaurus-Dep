@@ -2,6 +2,11 @@ package Position;
 
 import Attributes.Attribute;
 import Attributes.Attributes;
+import Position.Lists.SubPositionList;
+import Position.References.BaseAttributes;
+import Position.References.MeanOverallValues;
+import Position.References.PositionImportanceValues;
+import Position.References.SubPositionAttributes;
 import Utils.Stats;
 
 import java.util.List;
@@ -18,16 +23,28 @@ public abstract class Position {
     private final Attributes<Double> attrsImportance = new Attributes<Double>();
     private int overall;
 
+    @Deprecated
     public Position(final String name, final String subPosition, final List<BaseAttributes> baseAttrs, final double meanOverall){
         this.name = name;
         this.subPosition = subPosition;
         this.meanOverall = meanOverall;
         attrsImportance.addAttributes(PositionImportanceValues.GetPositionImportanceValues(name, subPosition));
-        handleBaseAttrs(baseAttrs);
+        handleBaseAttrs(BaseAttributes.GetPositionAttributes(name));
+//        TODO Clean this
+        overwriteAttributes(SubPositionAttributes.GetPositionAttributes(name, subPosition));
+        overwriteDeviations(SubPositionAttributes.GetPostitionDeviations(name, subPosition));
     }
 
-    public final int DEBUG_ATTR_COUNT(){
-        return attributes.size();
+    public Position(final String position, final String subPosition){
+        this.name = position;
+        this.subPosition = subPosition;
+        this.meanOverall = MeanOverallValues.GetPositionMeanOverall(position);
+        attrsImportance.addAttributes(PositionImportanceValues.GetPositionImportanceValues(name, subPosition));
+        handleBaseAttrs(BaseAttributes.GetPositionAttributes(name));
+        if(!subPosition.equalsIgnoreCase(SubPositionList.NEUTRAL)){
+            overwriteAttributes(SubPositionAttributes.GetPositionAttributes(name, subPosition));
+            overwriteDeviations(SubPositionAttributes.GetPostitionDeviations(name, subPosition));
+        }
     }
 
     private final void handleBaseAttrs(final List<BaseAttributes> baseAttrs){
