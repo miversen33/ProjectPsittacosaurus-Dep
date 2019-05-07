@@ -1,4 +1,4 @@
-package Position;
+package Position.References;
 
 public final class BaseAttribute {
     private final String name;

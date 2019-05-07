@@ -1,4 +1,4 @@
-package Position;
+package Position.References;
 
 import Attributes.StatAttributes;
 import Position.Lists.PositionList;
