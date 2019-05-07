@@ -18,10 +18,9 @@ import Position.Offense.*;
 import Position.Position;
 import Position.SpecialTeams.Kicker;
 import Position.SpecialTeams.Punter;
+import Position.Lists.SubPositionList;
 import Tuple.Tuple2;
 import Utils.PhysicsObjects.Vector;
-import Utils.Stats;
-import Position.BaseAttributes;
 
 import java.util.Arrays;
 import java.util.List;
@@ -34,6 +33,7 @@ public class Main {
      */
     public static void main(String[] args) {
 
+//        test();
         testSeedGeneration(80);
 //        testSeedGeneration(40);
 //        testSeedGeneration(70);
@@ -94,15 +94,12 @@ public class Main {
 //        }
     }
 
-    private final static void testNormalGeneration(final int seed){
-        final BaseAttributes attribute = BaseAttributes.QB_AWARENESS;
-        for(int i = 0; i < 20; i++){
-            double stat = 1.01;
-            while(stat > 1){
-                stat = Stats.Normal(attribute.getMean(), attribute.getDeviation());
-            }
-            System.out.println("Stat Gen for "+attribute.getName()+" | "+ (stat*seed));
-        }
+    private final static void test(){
+        Position cornerback = Cornerback.GenerateNeutralCornerback(80);
+
+        String name = SubPositionList.CORNERBACK.COVERAGE;
+
+        int i = 0;
     }
 
     private final static void testSeedGeneration(final int seedValue){
