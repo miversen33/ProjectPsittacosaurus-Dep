@@ -23,17 +23,17 @@ public abstract class Position {
     private final Attributes<Double> attrsImportance = new Attributes<Double>();
     private int overall;
 
-    @Deprecated
-    public Position(final String name, final String subPosition, final List<BaseAttributes> baseAttrs, final double meanOverall){
-        this.name = name;
-        this.subPosition = subPosition;
-        this.meanOverall = meanOverall;
-        attrsImportance.addAttributes(PositionImportanceValues.GetPositionImportanceValues(name, subPosition));
-        handleBaseAttrs(BaseAttributes.GetPositionAttributes(name));
-//        TODO Clean this
-        overwriteAttributes(SubPositionAttributes.GetPositionAttributes(name, subPosition));
-        overwriteDeviations(SubPositionAttributes.GetPostitionDeviations(name, subPosition));
-    }
+//    @Deprecated
+//    public Position(final String name, final String subPosition, final List<BaseAttributes> baseAttrs, final double meanOverall){
+//        this.name = name;
+//        this.subPosition = subPosition;
+//        this.meanOverall = meanOverall;
+//        attrsImportance.addAttributes(PositionImportanceValues.GetPositionImportanceValues(name, subPosition));
+//        handleBaseAttrs(BaseAttributes.GetPositionAttributes(name));
+////        TODO Clean this
+//        overwriteAttributes(SubPositionAttributes.GetPositionAttributes(name, subPosition));
+//        overwriteDeviations(SubPositionAttributes.GetPostitionDeviations(name, subPosition));
+//    }
 
     public Position(final String position, final String subPosition){
         this.name = position;
