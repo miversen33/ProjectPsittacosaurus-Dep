@@ -1,5 +1,7 @@
 package Attributes;
 
+import org.w3c.dom.Attr;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -9,6 +11,11 @@ public final class Attributes<ValueType> implements Iterable<Attribute<ValueType
     private final List<Attribute<ValueType>> attributes = new ArrayList<>();
 
     public Attributes() {
+
+    }
+
+    public Attributes(final Attributes<ValueType> attrs){
+        this(attrs.asList());
     }
 
     public Attributes(final List<Attribute<ValueType>> attrs) {
@@ -17,6 +24,14 @@ public final class Attributes<ValueType> implements Iterable<Attribute<ValueType
 
     public Attributes(final Attribute<ValueType>... attrs) {
         addAttributes(attrs);
+    }
+
+    public final List<Attribute<ValueType>> asList(){
+        final List<Attribute<ValueType>> attrs = new ArrayList<>(attributes.size());
+        for(final Attribute<ValueType> attr : attributes){
+            attrs.add(attr.cloneAttribute());
+        }
+        return attrs;
     }
 
     public final void addAttribute(final Attribute<ValueType> attr) {
@@ -45,6 +60,12 @@ public final class Attributes<ValueType> implements Iterable<Attribute<ValueType
             if (attribute.getName().equalsIgnoreCase(attr.getName())) return true;
         }
         return false;
+    }
+
+    public final boolean containsAttribute(final String attrTitle){
+        for (final Attribute attr : attributes){
+            if(attr.getName().equalsIgnoreCase(attrTitle)) return true;
+        } return false;
     }
 
     public final Attribute<ValueType> getAttribute(final String attributeName) {
