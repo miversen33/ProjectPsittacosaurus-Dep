@@ -2,8 +2,9 @@ package Position.Offense;
 
 import Attributes.Attribute;
 import Attributes.StatAttributes;
+import Position.Lists.SubPositionList;
 import Position.Position;
-import Position.PositionList;
+import Position.Lists.PositionList;
 import Position.BaseAttribute;
 import Position.BaseAttributes;
 
@@ -11,10 +12,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public final class Quarterback extends Position{
-
-    public final static String RUSHING_SUBPOSITION_NAME = "Rushing";
-    public final static String PASSING_SUBPOSITION_NAME = "Passing";
-    public final static String NEUTRAL_SUBPOSITION_NAME = "Neutral";
 
     private final static double POSITION_MEAN_OVERALL = 0.72;
 
@@ -62,13 +59,6 @@ public final class Quarterback extends Position{
         BaseAttributes.QB_THROW_ACCURACY.getMean()-.04, BaseAttributes.QB_THROW_ACCURACY.getDeviation()+.015);
     private final static BaseAttribute RUSHING_ROUTE_RUNNING = new BaseAttribute(
         BaseAttributes.QB_ROUTE_RUNNING.getMean(), BaseAttributes.QB_ROUTE_RUNNING.getDeviation());
-    private final static Attribute<Double> RUSHING_SPEED_IMPORTANCE = new Attribute<>(StatAttributes.SPEED.getName(), 1.95);
-    private final static Attribute<Double> RUSHING_STRENGTH_IMPORTANCE = new Attribute<>(StatAttributes.STRENGTH.getName(), 1.50);
-    private final static Attribute<Double> RUSHING_ACCELERATION_IMPORTANCE = new Attribute<>(StatAttributes.ACCELERATION.getName(), 1.75);
-    private final static Attribute<Double> RUSHING_CARRYING_IMPORTANCE = new Attribute<>(StatAttributes.CARRYING.getName(), 1.55);
-    private final static Attribute<Double> RUSHING_THROW_POWER_IMPORTANCE = new Attribute<>(StatAttributes.THROW_POWER.getName(), 1.75);
-    private final static Attribute<Double> RUSHING_THROW_ACCURACY_IMPORTANCE = new Attribute<>(StatAttributes.THROW_ACCURACY.getName(), 2.75);
-    private final static Attribute<Double> RUSHING_AWARENESS_IMPORTANCE = new Attribute<>(StatAttributes.AWARENESS.getName(), 2.55);
     
     private final static BaseAttribute PASSING_AWARENESS = new BaseAttribute(
         BaseAttributes.QB_AWARENESS.getMean()+.08, BaseAttributes.QB_AWARENESS.getDeviation()-.015);
@@ -114,13 +104,6 @@ public final class Quarterback extends Position{
         BaseAttributes.QB_THROW_ACCURACY.getMean()+.089, BaseAttributes.QB_THROW_ACCURACY.getDeviation());
     private final static BaseAttribute PASSING_ROUTE_RUNNING = new BaseAttribute(
         BaseAttributes.QB_ROUTE_RUNNING.getMean(), BaseAttributes.QB_ROUTE_RUNNING.getDeviation());
-    private final static Attribute<Double> PASSING_SPEED_IMPORTANCE = new Attribute<>(StatAttributes.SPEED.getName(), 1.01);
-    private final static Attribute<Double> PASSING_STRENGTH_IMPORTANCE = new Attribute<>(StatAttributes.STRENGTH.getName(), 1.55);
-    private final static Attribute<Double> PASSING_ACCELERATION_IMPORTANCE = new Attribute<>(StatAttributes.ACCELERATION.getName(), 1.50);
-    private final static Attribute<Double> PASSING_CARRYING_IMPORTANCE = new Attribute<>(StatAttributes.CARRYING.getName(), 1.01);
-    private final static Attribute<Double> PASSING_THROW_POWER_IMPORTANCE = new Attribute<>(StatAttributes.THROW_POWER.getName(), 2.50);
-    private final static Attribute<Double> PASSING_THROW_ACCURACY_IMPORTANCE = new Attribute<>(StatAttributes.THROW_ACCURACY.getName(), 3.00);
-    private final static Attribute<Double> PASSING_AWARENESS_IMPORTANCE = new Attribute<>(StatAttributes.AWARENESS.getName(), 2.50);
 
     private final static BaseAttribute NEUTRAL_AWARENESS = new BaseAttribute(
         BaseAttributes.QB_AWARENESS.getMean(), BaseAttributes.QB_AWARENESS.getDeviation());
@@ -166,13 +149,6 @@ public final class Quarterback extends Position{
         BaseAttributes.QB_THROW_ACCURACY.getMean(), BaseAttributes.QB_THROW_ACCURACY.getDeviation());
     private final static BaseAttribute NEUTRAL_ROUTE_RUNNING = new BaseAttribute(
         BaseAttributes.QB_ROUTE_RUNNING.getMean(), BaseAttributes.QB_ROUTE_RUNNING.getDeviation());
-    private final static Attribute<Double> NEUTRAL_SPEED_IMPORTANCE = new Attribute<>(StatAttributes.SPEED.getName(), 1.55);
-    private final static Attribute<Double> NEUTRAL_STRENGTH_IMPORTANCE = new Attribute<>(StatAttributes.STRENGTH.getName(), 1.35);
-    private final static Attribute<Double> NEUTRAL_ACCELERATION_IMPORTANCE = new Attribute<>(StatAttributes.ACCELERATION.getName(), 1.30);
-    private final static Attribute<Double> NEUTRAL_CARRYING_IMPORTANCE = new Attribute<>(StatAttributes.CARRYING.getName(), 1.05);
-    private final static Attribute<Double> NEUTRAL_THROW_POWER_IMPORTANCE = new Attribute<>(StatAttributes.THROW_POWER.getName(), 2.5);
-    private final static Attribute<Double> NEUTRAL_THROW_ACCURACY_IMPORTANCE = new Attribute<>(StatAttributes.THROW_ACCURACY.getName(), 3.25);
-    private final static Attribute<Double> NEUTRAL_AWARENESS_IMPORTANCE = new Attribute<>(StatAttributes.AWARENESS.getName(), 2.75);
 
     private Quarterback(final String  subPositionName){
         super(PositionList.QUARTERBACK.getName(), subPositionName, BaseAttributes.QB_ATTRIBUTES, POSITION_MEAN_OVERALL);
@@ -275,18 +251,7 @@ public final class Quarterback extends Position{
             routeRunningDeviation
         );
 
-        final List<Attribute<Double>> buffs = Arrays.asList(
-                RUSHING_SPEED_IMPORTANCE,
-                RUSHING_STRENGTH_IMPORTANCE,
-                RUSHING_ACCELERATION_IMPORTANCE,
-                RUSHING_CARRYING_IMPORTANCE,
-                RUSHING_THROW_POWER_IMPORTANCE,
-                RUSHING_THROW_ACCURACY_IMPORTANCE,
-                RUSHING_AWARENESS_IMPORTANCE
-        );
-
-        final Quarterback quarterback = new Quarterback(RUSHING_SUBPOSITION_NAME);
-        quarterback.setRatingsBuffs(buffs);
+        final Quarterback quarterback = new Quarterback(SubPositionList.QUARTERBACK.RUSHING);
         quarterback.overwriteAttributes(attrs);
         quarterback.overwriteDeviations(devs);
         quarterback.seedRating(overallSeed);
@@ -390,18 +355,7 @@ public final class Quarterback extends Position{
             routeRunningDeviation
         );
 
-        final List<Attribute<Double>> buffs = Arrays.asList(
-                PASSING_SPEED_IMPORTANCE,
-                PASSING_STRENGTH_IMPORTANCE,
-                PASSING_ACCELERATION_IMPORTANCE,
-                PASSING_CARRYING_IMPORTANCE,
-                PASSING_THROW_POWER_IMPORTANCE,
-                PASSING_THROW_ACCURACY_IMPORTANCE,
-                PASSING_AWARENESS_IMPORTANCE
-        );
-
-        final Quarterback quarterback = new Quarterback(PASSING_SUBPOSITION_NAME);
-        quarterback.setRatingsBuffs(buffs);
+        final Quarterback quarterback = new Quarterback(SubPositionList.QUARTERBACK.PASSING);
         quarterback.overwriteAttributes(attrs);
         quarterback.overwriteDeviations(devs);
         quarterback.seedRating(overallSeed);
@@ -505,18 +459,7 @@ public final class Quarterback extends Position{
             routeRunningDeviation
         );
 
-        final List<Attribute<Double>> buffs = Arrays.asList(
-            NEUTRAL_SPEED_IMPORTANCE,
-            NEUTRAL_STRENGTH_IMPORTANCE,
-            NEUTRAL_ACCELERATION_IMPORTANCE,
-            NEUTRAL_CARRYING_IMPORTANCE,
-            NEUTRAL_THROW_POWER_IMPORTANCE,
-            NEUTRAL_THROW_ACCURACY_IMPORTANCE,
-            NEUTRAL_AWARENESS_IMPORTANCE
-        );
-
-        final Quarterback quarterback = new Quarterback(NEUTRAL_SUBPOSITION_NAME);
-        quarterback.setRatingsBuffs(buffs);
+        final Quarterback quarterback = new Quarterback(SubPositionList.QUARTERBACK.NEUTRAL);
         quarterback.overwriteAttributes(attrs);
         quarterback.overwriteDeviations(devs);
         quarterback.seedRating(overallSeed);

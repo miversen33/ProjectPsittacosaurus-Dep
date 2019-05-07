@@ -2,8 +2,9 @@ package Position.Defense;
 
 import Attributes.Attribute;
 import Attributes.StatAttributes;
+import Position.Lists.SubPositionList;
 import Position.Position;
-import Position.PositionList;
+import Position.Lists.PositionList;
 import Position.BaseAttribute;
 import Position.BaseAttributes;
 
@@ -11,10 +12,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public final class DefensiveEnd extends Position{
-
-    public final static String RUNRUSH_SUBPOSITION_NAME = "Run Rush";
-    public final static String PASSRUSH_SUBPOSITION_NAME = "Pass Rush";
-    public final static String NEUTRAL_SUBPOSITION_NAME = "Neutral Rush";
 
     private final static double POSITION_MEAN_OVERALL = 0.75;
 
@@ -62,12 +59,7 @@ public final class DefensiveEnd extends Position{
         BaseAttributes.DE_THROW_ACCURACY.getMean(), BaseAttributes.DE_THROW_ACCURACY.getDeviation());
     private final static BaseAttribute RUNRUSH_ROUTE_RUNNING = new BaseAttribute(
         BaseAttributes.DE_ROUTE_RUNNING.getMean(), BaseAttributes.DE_ROUTE_RUNNING.getDeviation());
-    private final static Attribute<Double> RUNRUSH_AWARENESS_IMPORTANCE = new Attribute<>(StatAttributes.AWARENESS.getName(), 2.65);
-    private final static Attribute<Double> RUNRUSH_STRENGTH_IMPORTANCE = new Attribute<>(StatAttributes.STRENGTH.getName(), 2.65);
-    private final static Attribute<Double> RUNRUSH_SPEED_IMPORTANCE = new Attribute<>(StatAttributes.SPEED.getName(), 1.75);
-    private final static Attribute<Double> RUNRUSH_BREAK_BLOCK_IMPORTANCE = new Attribute<>(StatAttributes.BREAK_BLOCK.getName(), 1.75);
-    private final static Attribute<Double> RUNRUSH_TACKLE_IMPORTANCE = new Attribute<>(StatAttributes.TACKLE.getName(), 3.0);
-    
+
     private final static BaseAttribute PASSRUSH_AWARENESS = new BaseAttribute(
         BaseAttributes.DE_AWARENESS.getMean()-.05, BaseAttributes.DE_AWARENESS.getDeviation());
     private final static BaseAttribute PASSRUSH_STRENGTH = new BaseAttribute(
@@ -112,12 +104,7 @@ public final class DefensiveEnd extends Position{
         BaseAttributes.DE_THROW_ACCURACY.getMean(), BaseAttributes.DE_THROW_ACCURACY.getDeviation());
     private final static BaseAttribute PASSRUSH_ROUTE_RUNNING = new BaseAttribute(
         BaseAttributes.DE_ROUTE_RUNNING.getMean(), BaseAttributes.DE_ROUTE_RUNNING.getDeviation());
-    private final static Attribute<Double> PASSRUSH_AWARENESS_IMPORTANCE = new Attribute<>(StatAttributes.AWARENESS.getName(), 2.25);
-    private final static Attribute<Double> PASSRUSH_STRENGTH_IMPORTANCE = new Attribute<>(StatAttributes.STRENGTH.getName(), 1.75);
-    private final static Attribute<Double> PASSRUSH_SPEED_IMPORTANCE = new Attribute<>(StatAttributes.SPEED.getName(), 2.75);
-    private final static Attribute<Double> PASSRUSH_BREAK_BLOCK_IMPORTANCE = new Attribute<>(StatAttributes.BREAK_BLOCK.getName(), 2.50);
-    private final static Attribute<Double> PASSRUSH_TACKLE_IMPORTANCE = new Attribute<>(StatAttributes.TACKLE.getName(), 3.0);
-    
+
     private final static BaseAttribute NEUTRAL_AWARENESS = new BaseAttribute(
         BaseAttributes.DE_AWARENESS.getMean(), BaseAttributes.DE_AWARENESS.getDeviation());
     private final static BaseAttribute NEUTRAL_STRENGTH = new BaseAttribute(
@@ -162,11 +149,6 @@ public final class DefensiveEnd extends Position{
         BaseAttributes.DE_THROW_ACCURACY.getMean(), BaseAttributes.DE_THROW_ACCURACY.getDeviation());
     private final static BaseAttribute NEUTRAL_ROUTE_RUNNING = new BaseAttribute(
         BaseAttributes.DE_ROUTE_RUNNING.getMean(), BaseAttributes.DE_ROUTE_RUNNING.getDeviation());
-    private final static Attribute<Double> NEUTRAL_AWARENESS_IMPORTANCE = new Attribute<>(StatAttributes.AWARENESS.getName(), 2.30);
-    private final static Attribute<Double> NEUTRAL_STRENGTH_IMPORTANCE = new Attribute<>(StatAttributes.STRENGTH.getName(), 3.15);
-    private final static Attribute<Double> NEUTRAL_SPEED_IMPORTANCE = new Attribute<>(StatAttributes.SPEED.getName(), 1.70);
-    private final static Attribute<Double> NEUTRAL_BREAK_BLOCK_IMPORTANCE = new Attribute<>(StatAttributes.BREAK_BLOCK.getName(), 1.75);
-    private final static Attribute<Double> NEUTRAL_TACKLE_IMPORTANCE = new Attribute<>(StatAttributes.TACKLE.getName(), 3.50);
 
     private DefensiveEnd(final String  subPositionName){
         super(PositionList.DEFENSIVE_END.getName(), subPositionName, BaseAttributes.DE_ATTRIBUTES, POSITION_MEAN_OVERALL);
@@ -269,16 +251,7 @@ public final class DefensiveEnd extends Position{
             routeRunningDeviation
         );
 
-        final List<Attribute<Double>> buffs = Arrays.asList(
-            RUNRUSH_AWARENESS_IMPORTANCE,
-            RUNRUSH_BREAK_BLOCK_IMPORTANCE,
-            RUNRUSH_SPEED_IMPORTANCE,
-            RUNRUSH_STRENGTH_IMPORTANCE,
-            RUNRUSH_TACKLE_IMPORTANCE
-        );
-        
-        final DefensiveEnd defensiveEnd = new DefensiveEnd(RUNRUSH_SUBPOSITION_NAME);
-        defensiveEnd.setRatingsBuffs(buffs);
+        final DefensiveEnd defensiveEnd = new DefensiveEnd(SubPositionList.DEFENSIVE_END.RUN_RUSH);
         defensiveEnd.overwriteAttributes(attrs);
         defensiveEnd.overwriteDeviations(devs);
         defensiveEnd.seedRating(overallSeed);
@@ -382,16 +355,7 @@ public final class DefensiveEnd extends Position{
             routeRunningDeviation
         );
 
-        final List<Attribute<Double>> buffs = Arrays.asList(
-                PASSRUSH_AWARENESS_IMPORTANCE,
-                PASSRUSH_BREAK_BLOCK_IMPORTANCE,
-                PASSRUSH_SPEED_IMPORTANCE,
-                PASSRUSH_STRENGTH_IMPORTANCE,
-                PASSRUSH_TACKLE_IMPORTANCE
-        );
-
-        final DefensiveEnd defensiveEnd = new DefensiveEnd(PASSRUSH_SUBPOSITION_NAME);
-        defensiveEnd.setRatingsBuffs(buffs);
+        final DefensiveEnd defensiveEnd = new DefensiveEnd(SubPositionList.DEFENSIVE_END.PASS_RUSH);
         defensiveEnd.overwriteAttributes(attrs);
         defensiveEnd.overwriteDeviations(devs);
         defensiveEnd.seedRating(overallSeed);
@@ -495,16 +459,7 @@ public final class DefensiveEnd extends Position{
             routeRunningDeviation
         );
 
-        final List<Attribute<Double>> buffs = Arrays.asList(
-                NEUTRAL_AWARENESS_IMPORTANCE,
-                NEUTRAL_BREAK_BLOCK_IMPORTANCE,
-                NEUTRAL_SPEED_IMPORTANCE,
-                NEUTRAL_STRENGTH_IMPORTANCE,
-                NEUTRAL_TACKLE_IMPORTANCE
-        );
-
-        final DefensiveEnd defensiveEnd = new DefensiveEnd(NEUTRAL_SUBPOSITION_NAME);
-        defensiveEnd.setRatingsBuffs(buffs);
+        final DefensiveEnd defensiveEnd = new DefensiveEnd(SubPositionList.DEFENSIVE_END.NEUTRAL);
         defensiveEnd.overwriteAttributes(attrs);
         defensiveEnd.overwriteDeviations(devs);
         defensiveEnd.seedRating(overallSeed);

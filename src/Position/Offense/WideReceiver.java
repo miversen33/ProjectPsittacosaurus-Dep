@@ -2,8 +2,9 @@ package Position.Offense;
 
 import Attributes.Attribute;
 import Attributes.StatAttributes;
+import Position.Lists.SubPositionList;
 import Position.Position;
-import Position.PositionList;
+import Position.Lists.PositionList;
 import Position.BaseAttribute;
 import Position.BaseAttributes;
 
@@ -11,10 +12,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public final class WideReceiver extends Position{
-
-    public final static String POSSESSION_SUBPOSITION_NAME = "Possession";
-    public final static String SPEED_SUBPOSITION_NAME = "Speed";
-    public final static String NEUTRAL_SUBPOSITION_NAME = "Neutral";
 
     private final static double POSITION_MEAN_OVERALL = 0.73;
 
@@ -62,15 +59,6 @@ public final class WideReceiver extends Position{
         BaseAttributes.WR_THROW_ACCURACY.getMean(), BaseAttributes.WR_THROW_ACCURACY.getDeviation());
     private final static BaseAttribute POSSESSION_ROUTE_RUNNING = new BaseAttribute(
         BaseAttributes.WR_ROUTE_RUNNING.getMean(), BaseAttributes.WR_ROUTE_RUNNING.getDeviation());
-    private final static Attribute<Double> POSSESSION_AWARENESS_IMPORTANCE = new Attribute<>(StatAttributes.AWARENESS.getName(), 2.15);
-    private final static Attribute<Double> POSSESSION_CATCHING_IMPORTANCE = new Attribute<>(StatAttributes.CATCHING.getName(), 2.10);
-    private final static Attribute<Double> POSSESSION_ROUTE_RUNNING_IMPORTANCE = new Attribute<>(StatAttributes.ROUTE_RUNNING.getName(), 1.75);
-    private final static Attribute<Double> POSSESSION_STRENGTH_IMPORTANCE = new Attribute<>(StatAttributes.STRENGTH.getName(), 1.50);
-    private final static Attribute<Double> POSSESSION_CARRYING_IMPORTANCE = new Attribute<>(StatAttributes.CARRYING.getName(), 1.50);
-    private final static Attribute<Double> POSSESSION_BREAK_TACKLE_IMPORTANCE = new Attribute<>(StatAttributes.BREAK_TACKLE.getName(), 1.45);
-    private final static Attribute<Double> POSSESSION_SPEED_IMPORTANCE = new Attribute<>(StatAttributes.SPEED.getName(), 1.50);
-    private final static Attribute<Double> POSSESSION_ACCELERATION_IMPORTANCE = new Attribute<>(StatAttributes.ACCELERATION.getName(), 1.35);
-    private final static Attribute<Double> POSSESSION_ELUSIVENESS_IMPORTANCE = new Attribute<>(StatAttributes.ELUSIVENESS.getName(), 1.01);
 
     private final static BaseAttribute SPEED_AWARENESS = new BaseAttribute(
         BaseAttributes.WR_AWARENESS.getMean()-.05, BaseAttributes.WR_AWARENESS.getDeviation());
@@ -116,15 +104,6 @@ public final class WideReceiver extends Position{
         BaseAttributes.WR_THROW_ACCURACY.getMean(), BaseAttributes.WR_THROW_ACCURACY.getDeviation());
     private final static BaseAttribute SPEED_ROUTE_RUNNING = new BaseAttribute(
         BaseAttributes.WR_ROUTE_RUNNING.getMean(), BaseAttributes.WR_ROUTE_RUNNING.getDeviation());
-    private final static Attribute<Double> SPEED_AWARENESS_IMPORTANCE = new Attribute<>(StatAttributes.AWARENESS.getName(), 2.15);
-    private final static Attribute<Double> SPEED_SPEED_IMPORTANCE = new Attribute<>(StatAttributes.SPEED.getName(), 2.00);
-    private final static Attribute<Double> SPEED_CATCHING_IMPORTANCE = new Attribute<>(StatAttributes.CATCHING.getName(), 1.95);
-    private final static Attribute<Double> SPEED_ROUTE_RUNNING_IMPORTANCE = new Attribute<>(StatAttributes.ROUTE_RUNNING.getName(), 1.85);
-    private final static Attribute<Double> SPEED_ACCELERATION_IMPORTANCE = new Attribute<>(StatAttributes.ACCELERATION.getName(), 1.80);
-    private final static Attribute<Double> SPEED_ELUSIVENESS_IMPORTANCE = new Attribute<>(StatAttributes.ELUSIVENESS.getName(), 1.45);
-    private final static Attribute<Double> SPEED_STRENGTH_IMPORTANCE = new Attribute<>(StatAttributes.STRENGTH.getName(), 1.15);
-    private final static Attribute<Double> SPEED_CARRYING_IMPORTANCE = new Attribute<>(StatAttributes.CARRYING.getName(), 1.15);
-    private final static Attribute<Double> SPEED_BREAK_TACKLE_IMPORTANCE = new Attribute<>(StatAttributes.BREAK_TACKLE.getName(), 1.10);
 
     private final static BaseAttribute NEUTRAL_AWARENESS = new BaseAttribute(
         BaseAttributes.WR_AWARENESS.getMean(), BaseAttributes.WR_AWARENESS.getDeviation());
@@ -170,15 +149,6 @@ public final class WideReceiver extends Position{
         BaseAttributes.WR_THROW_ACCURACY.getMean(), BaseAttributes.WR_THROW_ACCURACY.getDeviation());
     private final static BaseAttribute NEUTRAL_ROUTE_RUNNING = new BaseAttribute(
         BaseAttributes.WR_ROUTE_RUNNING.getMean(), BaseAttributes.WR_ROUTE_RUNNING.getDeviation());
-    private final static Attribute<Double> NEUTRAL_AWARENESS_IMPORTANCE = new Attribute<>(StatAttributes.AWARENESS.getName(), 2.15);
-    private final static Attribute<Double> NEUTRAL_CATCHING_IMPORTANCE = new Attribute<>(StatAttributes.CATCHING.getName(), 2.00);
-    private final static Attribute<Double> NEUTRAL_ROUTE_RUNNING_IMPORTANCE = new Attribute<>(StatAttributes.ROUTE_RUNNING.getName(), 1.75);
-    private final static Attribute<Double> NEUTRAL_SPEED_IMPORTANCE = new Attribute<>(StatAttributes.SPEED.getName(), 1.75);
-    private final static Attribute<Double> NEUTRAL_ACCELERATION_IMPORTANCE = new Attribute<>(StatAttributes.ACCELERATION.getName(), 1.60);
-    private final static Attribute<Double> NEUTRAL_STRENGTH_IMPORTANCE = new Attribute<>(StatAttributes.STRENGTH.getName(), 1.25);
-    private final static Attribute<Double> NEUTRAL_CARRYING_IMPORTANCE = new Attribute<>(StatAttributes.CARRYING.getName(), 1.25);
-    private final static Attribute<Double> NEUTRAL_ELUSIVENESS_IMPORTANCE = new Attribute<>(StatAttributes.ELUSIVENESS.getName(), 1.25);
-    private final static Attribute<Double> NEUTRAL_BREAK_TACKLE_IMPORTANCE = new Attribute<>(StatAttributes.BREAK_TACKLE.getName(), 1.15);
 
     private WideReceiver(final String  subPositionName){
         super(PositionList.WIDE_RECEIVER.getName(), subPositionName, BaseAttributes.WR_ATTRIBUTES, POSITION_MEAN_OVERALL);
@@ -281,20 +251,7 @@ public final class WideReceiver extends Position{
             routeRunningDeviation
         );
 
-        final List<Attribute<Double>> buffs = Arrays.asList(
-                POSSESSION_AWARENESS_IMPORTANCE,
-                POSSESSION_SPEED_IMPORTANCE,
-                POSSESSION_STRENGTH_IMPORTANCE,
-                POSSESSION_CATCHING_IMPORTANCE,
-                POSSESSION_CARRYING_IMPORTANCE,
-                POSSESSION_ELUSIVENESS_IMPORTANCE,
-                POSSESSION_ACCELERATION_IMPORTANCE,
-                POSSESSION_BREAK_TACKLE_IMPORTANCE,
-                POSSESSION_ROUTE_RUNNING_IMPORTANCE
-        );
-
-        final WideReceiver widereceiver = new WideReceiver(POSSESSION_SUBPOSITION_NAME);
-        widereceiver.setRatingsBuffs(buffs);
+        final WideReceiver widereceiver = new WideReceiver(SubPositionList.WIDE_RECEIVER.POSSESSION);
         widereceiver.overwriteAttributes(attrs);
         widereceiver.overwriteDeviations(devs);
         widereceiver.seedRating(overallSeed);
@@ -398,20 +355,7 @@ public final class WideReceiver extends Position{
             routeRunningDeviation
         );
 
-        final List<Attribute<Double>> buffs = Arrays.asList(
-                SPEED_AWARENESS_IMPORTANCE,
-                SPEED_SPEED_IMPORTANCE,
-                SPEED_STRENGTH_IMPORTANCE,
-                SPEED_CATCHING_IMPORTANCE,
-                SPEED_CARRYING_IMPORTANCE,
-                SPEED_ELUSIVENESS_IMPORTANCE,
-                SPEED_ACCELERATION_IMPORTANCE,
-                SPEED_BREAK_TACKLE_IMPORTANCE,
-                SPEED_ROUTE_RUNNING_IMPORTANCE
-        );
-
-        final WideReceiver widereceiver = new WideReceiver(SPEED_SUBPOSITION_NAME);
-        widereceiver.setRatingsBuffs(buffs);
+        final WideReceiver widereceiver = new WideReceiver(SubPositionList.WIDE_RECEIVER.SPEED);
         widereceiver.overwriteAttributes(attrs);
         widereceiver.overwriteDeviations(devs);
         widereceiver.seedRating(overallSeed);
@@ -514,21 +458,8 @@ public final class WideReceiver extends Position{
             throwAccuracyDeviation,
             routeRunningDeviation
         );
-        
-        final List<Attribute<Double>> buffs = Arrays.asList(
-            NEUTRAL_AWARENESS_IMPORTANCE,
-            NEUTRAL_SPEED_IMPORTANCE,
-            NEUTRAL_STRENGTH_IMPORTANCE,
-            NEUTRAL_CATCHING_IMPORTANCE,
-            NEUTRAL_CARRYING_IMPORTANCE,
-            NEUTRAL_ELUSIVENESS_IMPORTANCE,
-            NEUTRAL_ACCELERATION_IMPORTANCE,
-            NEUTRAL_BREAK_TACKLE_IMPORTANCE,
-            NEUTRAL_ROUTE_RUNNING_IMPORTANCE
-        );
 
-        final WideReceiver widereceiver = new WideReceiver(NEUTRAL_SUBPOSITION_NAME);
-        widereceiver.setRatingsBuffs(buffs);
+        final WideReceiver widereceiver = new WideReceiver(SubPositionList.WIDE_RECEIVER.NEUTRAL);
         widereceiver.overwriteAttributes(attrs);
         widereceiver.overwriteDeviations(devs);
         widereceiver.seedRating(overallSeed);

@@ -2,8 +2,9 @@ package Position.Offense;
 
 import Attributes.Attribute;
 import Attributes.StatAttributes;
+import Position.Lists.SubPositionList;
 import Position.Position;
-import Position.PositionList;
+import Position.Lists.PositionList;
 import Position.BaseAttribute;
 import Position.BaseAttributes;
 
@@ -11,10 +12,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public final class TightEnd extends Position{
-
-    public final static String BLOCKING_SUBPOSITION_NAME = "Blocking";
-    public final static String RECEIVING_SUBPOSITION_NAME = "Receiving";
-    public final static String NEUTRAL_SUBPOSITION_NAME = "Neutral";
 
     private final static double POSITION_MEAN_OVERALL = 0.69;
 
@@ -62,15 +59,6 @@ public final class TightEnd extends Position{
         BaseAttributes.TE_THROW_ACCURACY.getMean(), BaseAttributes.TE_THROW_ACCURACY.getDeviation());
     private final static BaseAttribute BLOCKING_ROUTE_RUNNING = new BaseAttribute(
         BaseAttributes.TE_ROUTE_RUNNING.getMean(), BaseAttributes.TE_ROUTE_RUNNING.getDeviation());
-    private final static Attribute<Double> BLOCKING_AWARENESS_IMPORTANCE = new Attribute<>(StatAttributes.AWARENESS.getName(), 2.50);
-    private final static Attribute<Double> BLOCKING_STRENGTH_IMPORTANCE = new Attribute<>(StatAttributes.STRENGTH.getName(), 2.10);
-    private final static Attribute<Double> BLOCKING_SPEED_IMPORTANCE = new Attribute<>(StatAttributes.SPEED.getName(), 1.25);
-    private final static Attribute<Double> BLOCKING_RUN_BLOCKING_IMPORTANCE = new Attribute<>(StatAttributes.RUN_BLOCKING.getName(), 2.0);
-    private final static Attribute<Double> BLOCKING_PASS_BLOCKING_IMPORTANCE = new Attribute<>(StatAttributes.PASS_BLOCKING.getName(), 2.0);
-    private final static Attribute<Double> BLOCKING_CATCHING_IMPORTANCE = new Attribute<>(StatAttributes.CATCHING.getName(), 1.25);
-    private final static Attribute<Double> BLOCKING_CARRYING_IMPORTANCE = new Attribute<>(StatAttributes.CARRYING.getName(), 1.20);
-    private final static Attribute<Double> BLOCKING_ACCELERATION_IMPORTANCE = new Attribute<>(StatAttributes.ACCELERATION.getName(), 1.35);
-    private final static Attribute<Double> BLOCKING_BREAK_TACKLE_IMPORTANCE = new Attribute<>(StatAttributes.BREAK_TACKLE.getName(), 1.35);
 
     private final static BaseAttribute RECEIVING_AWARENESS = new BaseAttribute(
         BaseAttributes.TE_AWARENESS.getMean()+.05, BaseAttributes.TE_AWARENESS.getDeviation());
@@ -116,15 +104,6 @@ public final class TightEnd extends Position{
         BaseAttributes.TE_THROW_ACCURACY.getMean(), BaseAttributes.TE_THROW_ACCURACY.getDeviation());
     private final static BaseAttribute RECEIVING_ROUTE_RUNNING = new BaseAttribute(
         BaseAttributes.TE_ROUTE_RUNNING.getMean(), BaseAttributes.TE_ROUTE_RUNNING.getDeviation());
-    private final static Attribute<Double> RECEIVING_AWARENESS_IMPORTANCE = new Attribute<>(StatAttributes.AWARENESS.getName(), 2.20);
-    private final static Attribute<Double> RECEIVING_STRENGTH_IMPORTANCE = new Attribute<>(StatAttributes.STRENGTH.getName(), 1.70);
-    private final static Attribute<Double> RECEIVING_SPEED_IMPORTANCE = new Attribute<>(StatAttributes.SPEED.getName(), 1.50);
-    private final static Attribute<Double> RECEIVING_RUN_BLOCKING_IMPORTANCE = new Attribute<>(StatAttributes.RUN_BLOCKING.getName(), 1.55);
-    private final static Attribute<Double> RECEIVING_PASS_BLOCKING_IMPORTANCE = new Attribute<>(StatAttributes.PASS_BLOCKING.getName(), 1.55);
-    private final static Attribute<Double> RECEIVING_CATCHING_IMPORTANCE = new Attribute<>(StatAttributes.CATCHING.getName(), 2.00);
-    private final static Attribute<Double> RECEIVING_CARRYING_IMPORTANCE = new Attribute<>(StatAttributes.CARRYING.getName(), 1.40);
-    private final static Attribute<Double> RECEIVING_ACCELERATION_IMPORTANCE = new Attribute<>(StatAttributes.ACCELERATION.getName(), 1.15);
-    private final static Attribute<Double> RECEIVING_BREAK_TACKLE_IMPORTANCE = new Attribute<>(StatAttributes.BREAK_TACKLE.getName(), 1.55);
 
     private final static BaseAttribute NEUTRAL_AWARENESS = new BaseAttribute(
         BaseAttributes.TE_AWARENESS.getMean(), BaseAttributes.TE_AWARENESS.getDeviation());
@@ -170,15 +149,6 @@ public final class TightEnd extends Position{
         BaseAttributes.TE_THROW_ACCURACY.getMean(), BaseAttributes.TE_THROW_ACCURACY.getDeviation());
     private final static BaseAttribute NEUTRAL_ROUTE_RUNNING = new BaseAttribute(
         BaseAttributes.TE_ROUTE_RUNNING.getMean(), BaseAttributes.TE_ROUTE_RUNNING.getDeviation());
-    private final static Attribute<Double> NEUTRAL_AWARENESS_IMPORTANCE = new Attribute<>(StatAttributes.AWARENESS.getName(), 2.20);
-    private final static Attribute<Double> NEUTRAL_STRENGTH_IMPORTANCE = new Attribute<>(StatAttributes.STRENGTH.getName(), 2.00);
-    private final static Attribute<Double> NEUTRAL_SPEED_IMPORTANCE = new Attribute<>(StatAttributes.SPEED.getName(), 1.40);
-    private final static Attribute<Double> NEUTRAL_RUN_BLOCKING_IMPORTANCE = new Attribute<>(StatAttributes.RUN_BLOCKING.getName(), 1.75);
-    private final static Attribute<Double> NEUTRAL_PASS_BLOCKING_IMPORTANCE = new Attribute<>(StatAttributes.PASS_BLOCKING.getName(), 1.75);
-    private final static Attribute<Double> NEUTRAL_CATCHING_IMPORTANCE = new Attribute<>(StatAttributes.CATCHING.getName(), 1.75);
-    private final static Attribute<Double> NEUTRAL_CARRYING_IMPORTANCE = new Attribute<>(StatAttributes.CARRYING.getName(), 1.40);
-    private final static Attribute<Double> NEUTRAL_ACCELERATION_IMPORTANCE = new Attribute<>(StatAttributes.ACCELERATION.getName(), 1.15);
-    private final static Attribute<Double> NEUTRAL_BREAK_TACKLE_IMPORTANCE = new Attribute<>(StatAttributes.BREAK_TACKLE.getName(), 1.35);
 
     private TightEnd(final String  subPositionName){
         super(PositionList.TIGHT_END.getName(), subPositionName, BaseAttributes.TE_ATTRIBUTES, POSITION_MEAN_OVERALL);
@@ -281,20 +251,7 @@ public final class TightEnd extends Position{
             routeRunningDeviation
         );
 
-        final List<Attribute<Double>> buffs = Arrays.asList(
-            BLOCKING_ACCELERATION_IMPORTANCE,
-            BLOCKING_AWARENESS_IMPORTANCE,
-            BLOCKING_CARRYING_IMPORTANCE,
-            BLOCKING_CATCHING_IMPORTANCE,
-            BLOCKING_SPEED_IMPORTANCE,
-            BLOCKING_STRENGTH_IMPORTANCE,
-            BLOCKING_BREAK_TACKLE_IMPORTANCE,
-            BLOCKING_PASS_BLOCKING_IMPORTANCE,
-            BLOCKING_RUN_BLOCKING_IMPORTANCE
-        );
-
-        final TightEnd tightend = new TightEnd(BLOCKING_SUBPOSITION_NAME);
-        tightend.setRatingsBuffs(buffs);
+        final TightEnd tightend = new TightEnd(SubPositionList.TIGHT_END.BLOCKING);
         tightend.overwriteAttributes(attrs);
         tightend.overwriteDeviations(devs);
         tightend.seedRating(overallSeed);
@@ -398,20 +355,7 @@ public final class TightEnd extends Position{
             routeRunningDeviation
         );
 
-        final List<Attribute<Double>> buffs = Arrays.asList(
-            RECEIVING_ACCELERATION_IMPORTANCE,
-            RECEIVING_AWARENESS_IMPORTANCE,
-            RECEIVING_CARRYING_IMPORTANCE,
-            RECEIVING_CATCHING_IMPORTANCE,
-            RECEIVING_SPEED_IMPORTANCE,
-            RECEIVING_STRENGTH_IMPORTANCE,
-            RECEIVING_BREAK_TACKLE_IMPORTANCE,
-            RECEIVING_PASS_BLOCKING_IMPORTANCE,
-            RECEIVING_RUN_BLOCKING_IMPORTANCE
-        );
-
-        final TightEnd tightend = new TightEnd(RECEIVING_SUBPOSITION_NAME);
-        tightend.setRatingsBuffs(buffs);
+        final TightEnd tightend = new TightEnd(SubPositionList.TIGHT_END.RECEIVING);
         tightend.overwriteAttributes(attrs);
         tightend.overwriteDeviations(devs);
         tightend.seedRating(overallSeed);
@@ -515,20 +459,7 @@ public final class TightEnd extends Position{
             routeRunningDeviation
         );
 
-        final List<Attribute<Double>> buffs = Arrays.asList(
-            NEUTRAL_ACCELERATION_IMPORTANCE,
-            NEUTRAL_AWARENESS_IMPORTANCE,
-            NEUTRAL_CARRYING_IMPORTANCE,
-            NEUTRAL_CATCHING_IMPORTANCE,
-            NEUTRAL_SPEED_IMPORTANCE,
-            NEUTRAL_STRENGTH_IMPORTANCE,
-            NEUTRAL_BREAK_TACKLE_IMPORTANCE,
-            NEUTRAL_PASS_BLOCKING_IMPORTANCE,
-            NEUTRAL_RUN_BLOCKING_IMPORTANCE
-        );
-
-        final TightEnd tightend = new TightEnd(NEUTRAL_SUBPOSITION_NAME);
-        tightend.setRatingsBuffs(buffs);
+        final TightEnd tightend = new TightEnd(SubPositionList.TIGHT_END.NEUTRAL);
         tightend.overwriteAttributes(attrs);
         tightend.overwriteDeviations(devs);
         tightend.seedRating(overallSeed);

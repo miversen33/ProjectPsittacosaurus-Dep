@@ -2,8 +2,9 @@ package Position.Defense;
 
 import Attributes.Attribute;
 import Attributes.StatAttributes;
+import Position.Lists.SubPositionList;
 import Position.Position;
-import Position.PositionList;
+import Position.Lists.PositionList;
 import Position.BaseAttribute;
 import Position.BaseAttributes;
 
@@ -11,10 +12,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public final class Cornerback extends Position{
-
-    public final static String COVERAGE_SUBPOSITION_NAME = "Coverage";
-    public final static String HARDHITTING_SUBPOSITION_NAME = "Hardhitting";
-    public final static String NEUTRAL_SUBPOSITION_NAME = "Neutral";
 
     private final static double POSITION_MEAN_OVERALL = 0.73;
 
@@ -62,15 +59,6 @@ public final class Cornerback extends Position{
         BaseAttributes.CB_THROW_ACCURACY.getMean(), BaseAttributes.CB_THROW_ACCURACY.getDeviation());
     private final static BaseAttribute COVERAGE_ROUTE_RUNNING = new BaseAttribute(
         BaseAttributes.CB_ROUTE_RUNNING.getMean(), BaseAttributes.CB_ROUTE_RUNNING.getDeviation());
-    private final static Attribute<Double> COVERAGE_AWARENESS_IMPORTANCE = new Attribute<>(StatAttributes.AWARENESS.getName(), 1.80);
-    private final static Attribute<Double> COVERAGE_SPEED_IMPORTANCE = new Attribute<>(StatAttributes.SPEED.getName(), 1.60);
-    private final static Attribute<Double> COVERAGE_ACCELERATION_IMPORTANCE = new Attribute<>(StatAttributes.ACCELERATION.getName(), 1.40);
-    private final static Attribute<Double> COVERAGE_STRENGTH_IMPORTANCE = new Attribute<>(StatAttributes.STRENGTH.getName(), 1.01);
-    private final static Attribute<Double> COVERAGE_CARRYING_IMPORTANCE = new Attribute<>(StatAttributes.CARRYING.getName(), 1.01);
-    private final static Attribute<Double> COVERAGE_CATCHING_IMPORTANCE = new Attribute<>(StatAttributes.CATCHING.getName(), 1.01);
-    private final static Attribute<Double> COVERAGE_MAN_COVERAGE_IMPORTANCE = new Attribute<>(StatAttributes.MAN_COVERAGE.getName(), 2.50);
-    private final static Attribute<Double> COVERAGE_ZONE_COVERAGE_IMPORTANCE = new Attribute<>(StatAttributes.ZONE_COVERAGE.getName(), 2.50);
-    private final static Attribute<Double> COVERAGE_TACKLE_IMPORTANCE = new Attribute<>(StatAttributes.TACKLE.getName(), 1.01);
 
     private final static BaseAttribute HARDHITTING_AWARENESS = new BaseAttribute(
         BaseAttributes.CB_AWARENESS.getMean()-.084, BaseAttributes.CB_AWARENESS.getDeviation());
@@ -116,15 +104,6 @@ public final class Cornerback extends Position{
         BaseAttributes.CB_THROW_ACCURACY.getMean(), BaseAttributes.CB_THROW_ACCURACY.getDeviation());
     private final static BaseAttribute HARDHITTING_ROUTE_RUNNING = new BaseAttribute(
         BaseAttributes.CB_ROUTE_RUNNING.getMean(), BaseAttributes.CB_ROUTE_RUNNING.getDeviation());
-    private final static Attribute<Double> HARDHITTING_AWARENESS_IMPORTANCE = new Attribute<>(StatAttributes.AWARENESS.getName(), 1.90);
-    private final static Attribute<Double> HARDHITTING_SPEED_IMPORTANCE = new Attribute<>(StatAttributes.SPEED.getName(), 1.70);
-    private final static Attribute<Double> HARDHITTING_ACCELERATION_IMPORTANCE = new Attribute<>(StatAttributes.ACCELERATION.getName(), 1.45);
-    private final static Attribute<Double> HARDHITTING_STRENGTH_IMPORTANCE = new Attribute<>(StatAttributes.STRENGTH.getName(), 1.01);
-    private final static Attribute<Double> HARDHITTING_CARRYING_IMPORTANCE = new Attribute<>(StatAttributes.CARRYING.getName(), 1.01);
-    private final static Attribute<Double> HARDHITTING_CATCHING_IMPORTANCE = new Attribute<>(StatAttributes.CATCHING.getName(), 1.02);
-    private final static Attribute<Double> HARDHITTING_MAN_COVERAGE_IMPORTANCE = new Attribute<>(StatAttributes.MAN_COVERAGE.getName(), 2.50);
-    private final static Attribute<Double> HARDHITTING_ZONE_COVERAGE_IMPORTANCE = new Attribute<>(StatAttributes.ZONE_COVERAGE.getName(), 2.50);
-    private final static Attribute<Double> HARDHITTING_TACKLE_IMPORTANCE = new Attribute<>(StatAttributes.TACKLE.getName(), 1.20);
 
     private final static BaseAttribute NEUTRAL_AWARENESS = new BaseAttribute(
         BaseAttributes.CB_AWARENESS.getMean(), BaseAttributes.CB_AWARENESS.getDeviation());
@@ -170,15 +149,6 @@ public final class Cornerback extends Position{
         BaseAttributes.CB_THROW_ACCURACY.getMean(), BaseAttributes.CB_THROW_ACCURACY.getDeviation());
     private final static BaseAttribute NEUTRAL_ROUTE_RUNNING = new BaseAttribute(
         BaseAttributes.CB_ROUTE_RUNNING.getMean(), BaseAttributes.CB_ROUTE_RUNNING.getDeviation());
-    private final static Attribute<Double> NEUTRAL_AWARENESS_IMPORTANCE = new Attribute<>(StatAttributes.AWARENESS.getName(), 1.85);
-    private final static Attribute<Double> NEUTRAL_SPEED_IMPORTANCE = new Attribute<>(StatAttributes.SPEED.getName(), 1.65);
-    private final static Attribute<Double> NEUTRAL_ACCELERATION_IMPORTANCE = new Attribute<>(StatAttributes.ACCELERATION.getName(), 1.40);
-    private final static Attribute<Double> NEUTRAL_STRENGTH_IMPORTANCE = new Attribute<>(StatAttributes.STRENGTH.getName(), 1.01);
-    private final static Attribute<Double> NEUTRAL_CARRYING_IMPORTANCE = new Attribute<>(StatAttributes.CARRYING.getName(), 1.01);
-    private final static Attribute<Double> NEUTRAL_CATCHING_IMPORTANCE = new Attribute<>(StatAttributes.CATCHING.getName(), 1.01);
-    private final static Attribute<Double> NEUTRAL_MAN_COVERAGE_IMPORTANCE = new Attribute<>(StatAttributes.MAN_COVERAGE.getName(), 2.65);
-    private final static Attribute<Double> NEUTRAL_ZONE_COVERAGE_IMPORTANCE = new Attribute<>(StatAttributes.ZONE_COVERAGE.getName(), 2.65);
-    private final static Attribute<Double> NEUTRAL_TACKLE_IMPORTANCE = new Attribute<>(StatAttributes.TACKLE.getName(), 1.10);
 
     private Cornerback(final String  subPositionName){
         super(PositionList.CORNERBACK.getName(), subPositionName, BaseAttributes.CB_ATTRIBUTES, POSITION_MEAN_OVERALL);
@@ -281,20 +251,7 @@ public final class Cornerback extends Position{
             routeRunningDeviation
         );
 
-        final List<Attribute<Double>> buffs = Arrays.asList(
-                COVERAGE_AWARENESS_IMPORTANCE,
-                COVERAGE_SPEED_IMPORTANCE,
-                COVERAGE_ACCELERATION_IMPORTANCE,
-                COVERAGE_STRENGTH_IMPORTANCE,
-                COVERAGE_CARRYING_IMPORTANCE,
-                COVERAGE_CATCHING_IMPORTANCE,
-                COVERAGE_MAN_COVERAGE_IMPORTANCE,
-                COVERAGE_ZONE_COVERAGE_IMPORTANCE,
-                COVERAGE_TACKLE_IMPORTANCE
-        );
-
-        final Cornerback cornerback = new Cornerback(COVERAGE_SUBPOSITION_NAME);
-        cornerback.setRatingsBuffs(buffs);
+        final Cornerback cornerback = new Cornerback(SubPositionList.CORNERBACK.COVERAGE);
         cornerback.overwriteAttributes(attrs);
         cornerback.overwriteDeviations(devs);
         cornerback.seedRating(overallSeed);
@@ -398,20 +355,7 @@ public final class Cornerback extends Position{
             routeRunningDeviation
         );
 
-        final List<Attribute<Double>> buffs = Arrays.asList(
-                HARDHITTING_AWARENESS_IMPORTANCE,
-                HARDHITTING_SPEED_IMPORTANCE,
-                HARDHITTING_ACCELERATION_IMPORTANCE,
-                HARDHITTING_STRENGTH_IMPORTANCE,
-                HARDHITTING_CARRYING_IMPORTANCE,
-                HARDHITTING_CATCHING_IMPORTANCE,
-                HARDHITTING_MAN_COVERAGE_IMPORTANCE,
-                HARDHITTING_ZONE_COVERAGE_IMPORTANCE,
-                HARDHITTING_TACKLE_IMPORTANCE
-        );
-
-        final Cornerback cornerback = new Cornerback(HARDHITTING_SUBPOSITION_NAME);
-        cornerback.setRatingsBuffs(buffs);
+        final Cornerback cornerback = new Cornerback(SubPositionList.CORNERBACK.HARDHITTER);
         cornerback.overwriteAttributes(attrs);
         cornerback.overwriteDeviations(devs);
         cornerback.seedRating(overallSeed);
@@ -515,20 +459,7 @@ public final class Cornerback extends Position{
             routeRunningDeviation
         );
 
-        final List<Attribute<Double>> buffs = Arrays.asList(
-            NEUTRAL_AWARENESS_IMPORTANCE,
-            NEUTRAL_SPEED_IMPORTANCE,
-            NEUTRAL_ACCELERATION_IMPORTANCE,
-            NEUTRAL_STRENGTH_IMPORTANCE,
-            NEUTRAL_CARRYING_IMPORTANCE,
-            NEUTRAL_CATCHING_IMPORTANCE,
-            NEUTRAL_MAN_COVERAGE_IMPORTANCE,
-            NEUTRAL_ZONE_COVERAGE_IMPORTANCE,
-            NEUTRAL_TACKLE_IMPORTANCE
-        );
-
-        final Cornerback cornerback = new Cornerback(NEUTRAL_SUBPOSITION_NAME);
-        cornerback.setRatingsBuffs(buffs);
+        final Cornerback cornerback = new Cornerback(SubPositionList.CORNERBACK.NEUTRAL);
         cornerback.overwriteAttributes(attrs);
         cornerback.overwriteDeviations(devs);
         cornerback.seedRating(overallSeed);

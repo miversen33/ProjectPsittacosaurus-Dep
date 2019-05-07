@@ -2,20 +2,16 @@ package Position.Defense;
 
 import Attributes.Attribute;
 import Attributes.StatAttributes;
+import Position.Lists.SubPositionList;
 import Position.Position;
-import Position.PositionList;
+import Position.Lists.PositionList;
 import Position.BaseAttribute;
 import Position.BaseAttributes;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
 
 public final class FreeSafety extends Position{
-
-    public final static String COVERAGE_SUBPOSITION_NAME = "Coverage";
-    public final static String HARDHITTING_SUBPOSITION_NAME = "Hardhitting";
-    public final static String NEUTRAL_SUBPOSITION_NAME = "Neutral";
 
     private final static double POSITION_MEAN_OVERALL = 0.74;
 
@@ -63,14 +59,6 @@ public final class FreeSafety extends Position{
         BaseAttributes.FS_THROW_ACCURACY.getMean(), BaseAttributes.FS_THROW_ACCURACY.getDeviation());
     private final static BaseAttribute COVERAGE_ROUTE_RUNNING = new BaseAttribute(
         BaseAttributes.FS_ROUTE_RUNNING.getMean(), BaseAttributes.FS_ROUTE_RUNNING.getDeviation());
-    private final static Attribute<Double> COVERAGE_AWARENESS_IMPORTANCE = new Attribute<>(StatAttributes.AWARENESS.getName(), 2.25);
-    private final static Attribute<Double> COVERAGE_STRENGTH_IMPORTANCE = new Attribute<>(StatAttributes.STRENGTH.getName(), 1.30);
-    private final static Attribute<Double> COVERAGE_SPEED_IMPORTANCE = new Attribute<>(StatAttributes.SPEED.getName(), 1.65);
-    private final static Attribute<Double> COVERAGE_ZONE_COVERAGE_IMPORTANCE = new Attribute<>(StatAttributes.ZONE_COVERAGE.getName(), 2.25);
-    private final static Attribute<Double> COVERAGE_MAN_COVERAGE_IMPORTANCE = new Attribute<>(StatAttributes.MAN_COVERAGE.getName(), 2.25);
-    private final static Attribute<Double> COVERAGE_TACKLE_IMPORTANCE = new Attribute<>(StatAttributes.TACKLE.getName(), 1.50);
-    private final static Attribute<Double> COVERAGE_CATCHING_IMPORTANCE = new Attribute<>(StatAttributes.CATCHING.getName(), 1.15);
-    private final static Attribute<Double> COVERAGE_AGILITY_IMPORTANCE = new Attribute<>(StatAttributes.AGILITY.getName(), 1.15);
     
     private final static BaseAttribute HARDHITTING_AWARENESS = new BaseAttribute(
         BaseAttributes.FS_AWARENESS.getMean()-.05, BaseAttributes.FS_AWARENESS.getDeviation());
@@ -116,14 +104,6 @@ public final class FreeSafety extends Position{
         BaseAttributes.FS_THROW_ACCURACY.getMean(), BaseAttributes.FS_THROW_ACCURACY.getDeviation());
     private final static BaseAttribute HARDHITTING_ROUTE_RUNNING = new BaseAttribute(
         BaseAttributes.FS_ROUTE_RUNNING.getMean(), BaseAttributes.FS_ROUTE_RUNNING.getDeviation());
-    private final static Attribute<Double> HARDHITTING_AWARENESS_IMPORTANCE = new Attribute<>(StatAttributes.AWARENESS.getName(), 1.35);
-    private final static Attribute<Double> HARDHITTING_STRENGTH_IMPORTANCE = new Attribute<>(StatAttributes.STRENGTH.getName(), 2.10);
-    private final static Attribute<Double> HARDHITTING_SPEED_IMPORTANCE = new Attribute<>(StatAttributes.SPEED.getName(), 1.35);
-    private final static Attribute<Double> HARDHITTING_ZONE_COVERAGE_IMPORTANCE = new Attribute<>(StatAttributes.ZONE_COVERAGE.getName(), 2.10);
-    private final static Attribute<Double> HARDHITTING_MAN_COVERAGE_IMPORTANCE = new Attribute<>(StatAttributes.MAN_COVERAGE.getName(), 2.10);
-    private final static Attribute<Double> HARDHITTING_TACKLE_IMPORTANCE = new Attribute<>(StatAttributes.TACKLE.getName(), 2.35);
-    private final static Attribute<Double> HARDHITTING_CATCHING_IMPORTANCE = new Attribute<>(StatAttributes.CATCHING.getName(), 1.35);
-    private final static Attribute<Double> HARDHITTING_AGILITY_IMPORTANCE = new Attribute<>(StatAttributes.AGILITY.getName(), 1.15);
     
     private final static BaseAttribute NEUTRAL_AWARENESS = new BaseAttribute(
         BaseAttributes.FS_AWARENESS.getMean(), BaseAttributes.FS_AWARENESS.getDeviation());
@@ -169,14 +149,6 @@ public final class FreeSafety extends Position{
         BaseAttributes.FS_THROW_ACCURACY.getMean(), BaseAttributes.FS_THROW_ACCURACY.getDeviation());
     private final static BaseAttribute NEUTRAL_ROUTE_RUNNING = new BaseAttribute(
         BaseAttributes.FS_ROUTE_RUNNING.getMean(), BaseAttributes.FS_ROUTE_RUNNING.getDeviation());
-    private final static Attribute<Double> NEUTRAL_AWARENESS_IMPORTANCE = new Attribute<>(StatAttributes.AWARENESS.getName(), 1.90);
-    private final static Attribute<Double> NEUTRAL_STRENGTH_IMPORTANCE = new Attribute<>(StatAttributes.STRENGTH.getName(), 1.25);
-    private final static Attribute<Double> NEUTRAL_SPEED_IMPORTANCE = new Attribute<>(StatAttributes.SPEED.getName(), 1.60);
-    private final static Attribute<Double> NEUTRAL_ZONE_COVERAGE_IMPORTANCE = new Attribute<>(StatAttributes.ZONE_COVERAGE.getName(), 2.25);
-    private final static Attribute<Double> NEUTRAL_MAN_COVERAGE_IMPORTANCE = new Attribute<>(StatAttributes.MAN_COVERAGE.getName(), 2.25);
-    private final static Attribute<Double> NEUTRAL_TACKLE_IMPORTANCE = new Attribute<>(StatAttributes.TACKLE.getName(), 1.70);
-    private final static Attribute<Double> NEUTRAL_CATCHING_IMPORTANCE = new Attribute<>(StatAttributes.CATCHING.getName(), 1.25);
-    private final static Attribute<Double> NEUTRAL_AGILITY_IMPORTANCE = new Attribute<>(StatAttributes.AGILITY.getName(), 1.60);
 
     private FreeSafety(final String  subPositionName){
         super(PositionList.FREE_SAFETY.getName(), subPositionName, BaseAttributes.FS_ATTRIBUTES, POSITION_MEAN_OVERALL);
@@ -279,19 +251,7 @@ public final class FreeSafety extends Position{
             routeRunningDeviation
         );
 
-        final List<Attribute<Double>> buffs = Arrays.asList(
-                COVERAGE_AWARENESS_IMPORTANCE,
-                COVERAGE_AGILITY_IMPORTANCE,
-                COVERAGE_STRENGTH_IMPORTANCE,
-                COVERAGE_SPEED_IMPORTANCE,
-                COVERAGE_ZONE_COVERAGE_IMPORTANCE,
-                COVERAGE_MAN_COVERAGE_IMPORTANCE,
-                COVERAGE_TACKLE_IMPORTANCE,
-                COVERAGE_CATCHING_IMPORTANCE
-        );
-
-        final FreeSafety freesafety = new FreeSafety(COVERAGE_SUBPOSITION_NAME);
-        freesafety.setRatingsBuffs(buffs);
+        final FreeSafety freesafety = new FreeSafety(SubPositionList.FREE_SAFETY.COVERAGE);
         freesafety.overwriteAttributes(attrs);
         freesafety.overwriteDeviations(devs);
         freesafety.seedRating(overallSeed);
@@ -394,20 +354,8 @@ public final class FreeSafety extends Position{
             throwAccuracyDeviation,
             routeRunningDeviation
         );
-
-        final List<Attribute<Double>> buffs = Arrays.asList(
-                HARDHITTING_AWARENESS_IMPORTANCE,
-                HARDHITTING_AGILITY_IMPORTANCE,
-                HARDHITTING_STRENGTH_IMPORTANCE,
-                HARDHITTING_SPEED_IMPORTANCE,
-                HARDHITTING_ZONE_COVERAGE_IMPORTANCE,
-                HARDHITTING_MAN_COVERAGE_IMPORTANCE,
-                HARDHITTING_TACKLE_IMPORTANCE,
-                HARDHITTING_CATCHING_IMPORTANCE
-        );
         
-        final FreeSafety freesafety = new FreeSafety(HARDHITTING_SUBPOSITION_NAME);
-        freesafety.setRatingsBuffs(buffs);
+        final FreeSafety freesafety = new FreeSafety(SubPositionList.FREE_SAFETY.HARDHITTER);
         freesafety.overwriteAttributes(attrs);
         freesafety.overwriteDeviations(devs);
         freesafety.seedRating(overallSeed);
@@ -511,19 +459,7 @@ public final class FreeSafety extends Position{
             routeRunningDeviation
         );
 
-        final List<Attribute<Double>> buffs = Arrays.asList(
-            NEUTRAL_AWARENESS_IMPORTANCE,
-            NEUTRAL_AGILITY_IMPORTANCE,
-            NEUTRAL_STRENGTH_IMPORTANCE,
-            NEUTRAL_SPEED_IMPORTANCE,
-            NEUTRAL_ZONE_COVERAGE_IMPORTANCE,
-            NEUTRAL_MAN_COVERAGE_IMPORTANCE,
-            NEUTRAL_TACKLE_IMPORTANCE,
-            NEUTRAL_CATCHING_IMPORTANCE
-        );
-
-        final FreeSafety freesafety = new FreeSafety(NEUTRAL_SUBPOSITION_NAME);
-        freesafety.setRatingsBuffs(buffs);
+        final FreeSafety freesafety = new FreeSafety(SubPositionList.FREE_SAFETY.NEUTRAL);
         freesafety.overwriteAttributes(attrs);
         freesafety.overwriteDeviations(devs);
         freesafety.seedRating(overallSeed);

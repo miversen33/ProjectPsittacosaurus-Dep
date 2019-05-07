@@ -2,8 +2,9 @@ package Position.Defense;
 
 import Attributes.Attribute;
 import Attributes.StatAttributes;
+import Position.Lists.SubPositionList;
 import Position.Position;
-import Position.PositionList;
+import Position.Lists.PositionList;
 import Position.BaseAttribute;
 import Position.BaseAttributes;
 
@@ -11,10 +12,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public final class OutsideLinebacker extends Position{
-
-    public final static String BLITZING_SUBPOSITION_NAME = "Blitzing";
-    public final static String COVERAGE_SUBPOSITION_NAME = "Coverage";
-    public final static String NEUTRAL_SUBPOSITION_NAME = "Neutral";
 
     private final static double POSITION_MEAN_OVERALL = 0.72;
 
@@ -62,13 +59,6 @@ public final class OutsideLinebacker extends Position{
             BaseAttributes.OLB_THROW_ACCURACY.getMean(), BaseAttributes.OLB_THROW_ACCURACY.getDeviation());
     private final static BaseAttribute BLITZING_ROUTE_RUNNING = new BaseAttribute(
             BaseAttributes.OLB_ROUTE_RUNNING.getMean(), BaseAttributes.OLB_ROUTE_RUNNING.getDeviation());
-    private final static Attribute<Double> BLITZING_AWARENESS_IMPORTANCE = new Attribute<>(StatAttributes.AWARENESS.getName(), 2.25);
-    private final static Attribute<Double> BLITZING_STRENGTH_IMPORTANCE = new Attribute<>(StatAttributes.STRENGTH.getName(), 2.50);
-    private final static Attribute<Double> BLITZING_SPEED_IMPORTANCE = new Attribute<>(StatAttributes.SPEED.getName(), 1.85);
-    private final static Attribute<Double> BLITZING_BREAK_BLOCK_IMPORTANCE = new Attribute<>(StatAttributes.BREAK_BLOCK.getName(), 1.80);
-    private final static Attribute<Double> BLITZING_TACKLE_IMPORTANCE = new Attribute<>(StatAttributes.TACKLE.getName(), 2.50);
-    private final static Attribute<Double> BLITZING_ACCELERATION_IMPORTANCE = new Attribute<>(StatAttributes.ACCELERATION.getName(), 1.75);
-    private final static Attribute<Double> BLITZING_CATCHING_IMPORTANCE = new Attribute<>(StatAttributes.CATCHING.getName(), 1.01);
 
     private final static BaseAttribute COVERAGE_AWARENESS = new BaseAttribute(
             BaseAttributes.OLB_AWARENESS.getMean()+.025, BaseAttributes.OLB_AWARENESS.getDeviation());
@@ -114,13 +104,6 @@ public final class OutsideLinebacker extends Position{
             BaseAttributes.OLB_THROW_ACCURACY.getMean(), BaseAttributes.OLB_THROW_ACCURACY.getDeviation());
     private final static BaseAttribute COVERAGE_ROUTE_RUNNING = new BaseAttribute(
             BaseAttributes.OLB_ROUTE_RUNNING.getMean(), BaseAttributes.OLB_ROUTE_RUNNING.getDeviation());
-    private final static Attribute<Double> COVERAGE_AWARENESS_IMPORTANCE = new Attribute<>(StatAttributes.AWARENESS.getName(), 2.50);
-    private final static Attribute<Double> COVERAGE_STRENGTH_IMPORTANCE = new Attribute<>(StatAttributes.STRENGTH.getName(), 1.50);
-    private final static Attribute<Double> COVERAGE_SPEED_IMPORTANCE = new Attribute<>(StatAttributes.SPEED.getName(), 2.25);
-    private final static Attribute<Double> COVERAGE_BREAK_BLOCK_IMPORTANCE = new Attribute<>(StatAttributes.BREAK_BLOCK.getName(), 1.55);
-    private final static Attribute<Double> COVERAGE_TACKLE_IMPORTANCE = new Attribute<>(StatAttributes.TACKLE.getName(), 2.25);
-    private final static Attribute<Double> COVERAGE_ACCELERATION_IMPORTANCE = new Attribute<>(StatAttributes.ACCELERATION.getName(), 1.95);
-    private final static Attribute<Double> COVERAGE_CATCHING_IMPORTANCE = new Attribute<>(StatAttributes.CATCHING.getName(), 1.75);
 
     private final static BaseAttribute NEUTRAL_AWARENESS = new BaseAttribute(
             BaseAttributes.OLB_AWARENESS.getMean(), BaseAttributes.OLB_AWARENESS.getDeviation());
@@ -166,13 +149,6 @@ public final class OutsideLinebacker extends Position{
             BaseAttributes.OLB_THROW_ACCURACY.getMean(), BaseAttributes.OLB_THROW_ACCURACY.getDeviation());
     private final static BaseAttribute NEUTRAL_ROUTE_RUNNING = new BaseAttribute(
             BaseAttributes.OLB_ROUTE_RUNNING.getMean(), BaseAttributes.OLB_ROUTE_RUNNING.getDeviation());
-    private final static Attribute<Double> NEUTRAL_AWARENESS_IMPORTANCE = new Attribute<>(StatAttributes.AWARENESS.getName(), 2.50);
-    private final static Attribute<Double> NEUTRAL_STRENGTH_IMPORTANCE = new Attribute<>(StatAttributes.STRENGTH.getName(), 1.90);
-    private final static Attribute<Double> NEUTRAL_SPEED_IMPORTANCE = new Attribute<>(StatAttributes.SPEED.getName(), 2.00);
-    private final static Attribute<Double> NEUTRAL_BREAK_BLOCK_IMPORTANCE = new Attribute<>(StatAttributes.BREAK_BLOCK.getName(), 1.75);
-    private final static Attribute<Double> NEUTRAL_TACKLE_IMPORTANCE = new Attribute<>(StatAttributes.TACKLE.getName(), 2.25);
-    private final static Attribute<Double> NEUTRAL_ACCELERATION_IMPORTANCE = new Attribute<>(StatAttributes.ACCELERATION.getName(), 1.85);
-    private final static Attribute<Double> NEUTRAL_CATCHING_IMPORTANCE = new Attribute<>(StatAttributes.CATCHING.getName(), 1.25);
 
     private OutsideLinebacker(final String  subPositionName){
         super(PositionList.OUTSIDE_LINEBACKER.getName(), subPositionName, BaseAttributes.OLB_ATTRIBUTES, POSITION_MEAN_OVERALL);
@@ -275,18 +251,7 @@ public final class OutsideLinebacker extends Position{
                 routeRunningDeviation
         );
 
-        final List<Attribute<Double>> buffs = Arrays.asList(
-                BLITZING_ACCELERATION_IMPORTANCE,
-                BLITZING_AWARENESS_IMPORTANCE,
-                BLITZING_BREAK_BLOCK_IMPORTANCE,
-                BLITZING_CATCHING_IMPORTANCE,
-                BLITZING_SPEED_IMPORTANCE,
-                BLITZING_STRENGTH_IMPORTANCE,
-                BLITZING_TACKLE_IMPORTANCE
-        );
-
-        final OutsideLinebacker outsideLinebacker = new OutsideLinebacker(BLITZING_SUBPOSITION_NAME);
-        outsideLinebacker.setRatingsBuffs(buffs);
+        final OutsideLinebacker outsideLinebacker = new OutsideLinebacker(SubPositionList.OUTSIDE_LINEBACKER.BLITZING);
         outsideLinebacker.overwriteAttributes(attrs);
         outsideLinebacker.overwriteDeviations(devs);
         outsideLinebacker.seedRating(overallSeed);
@@ -390,18 +355,7 @@ public final class OutsideLinebacker extends Position{
                 routeRunningDeviation
         );
 
-        final List<Attribute<Double>> buffs = Arrays.asList(
-                COVERAGE_ACCELERATION_IMPORTANCE,
-                COVERAGE_AWARENESS_IMPORTANCE,
-                COVERAGE_BREAK_BLOCK_IMPORTANCE,
-                COVERAGE_CATCHING_IMPORTANCE,
-                COVERAGE_SPEED_IMPORTANCE,
-                COVERAGE_STRENGTH_IMPORTANCE,
-                COVERAGE_TACKLE_IMPORTANCE
-        );
-
-        final OutsideLinebacker outsideLinebacker = new OutsideLinebacker(COVERAGE_SUBPOSITION_NAME);
-        outsideLinebacker.setRatingsBuffs(buffs);
+        final OutsideLinebacker outsideLinebacker = new OutsideLinebacker(SubPositionList.OUTSIDE_LINEBACKER.COVERAGE);
         outsideLinebacker.overwriteAttributes(attrs);
         outsideLinebacker.overwriteDeviations(devs);
         outsideLinebacker.seedRating(overallSeed);
@@ -505,18 +459,7 @@ public final class OutsideLinebacker extends Position{
                 routeRunningDeviation
         );
 
-        final List<Attribute<Double>> buffs = Arrays.asList(
-                NEUTRAL_ACCELERATION_IMPORTANCE,
-                NEUTRAL_AWARENESS_IMPORTANCE,
-                NEUTRAL_BREAK_BLOCK_IMPORTANCE,
-                NEUTRAL_CATCHING_IMPORTANCE,
-                NEUTRAL_SPEED_IMPORTANCE,
-                NEUTRAL_STRENGTH_IMPORTANCE,
-                NEUTRAL_TACKLE_IMPORTANCE
-        );
-
-        final OutsideLinebacker outsideLinebacker = new OutsideLinebacker(NEUTRAL_SUBPOSITION_NAME);
-        outsideLinebacker.setRatingsBuffs(buffs);
+        final OutsideLinebacker outsideLinebacker = new OutsideLinebacker(SubPositionList.OUTSIDE_LINEBACKER.NEUTRAL);
         outsideLinebacker.overwriteAttributes(attrs);
         outsideLinebacker.overwriteDeviations(devs);
         outsideLinebacker.seedRating(overallSeed);

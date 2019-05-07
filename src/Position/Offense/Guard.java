@@ -2,8 +2,9 @@ package Position.Offense;
 
 import Attributes.Attribute;
 import Attributes.StatAttributes;
+import Position.Lists.SubPositionList;
 import Position.Position;
-import Position.PositionList;
+import Position.Lists.PositionList;
 import Position.BaseAttribute;
 import Position.BaseAttributes;
 
@@ -11,10 +12,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public final class Guard extends Position{
-
-    public final static String RUNBLOCK_SUBPOSITION_NAME = "Runblock";
-    public final static String PASSBLOCK_SUBPOSITION_NAME = "Passblock";
-    public final static String NEUTRAL_SUBPOSITION_NAME = "Neutral";
 
     private final static double POSITION_MEAN_OVERALL = 0.7;
 
@@ -54,13 +51,6 @@ public final class Guard extends Position{
             BaseAttributes.G_THROW_ACCURACY.getMean(), BaseAttributes.G_THROW_ACCURACY.getDeviation());
     private final static BaseAttribute RUNBLOCK_ROUTE_RUNNING = new BaseAttribute(
             BaseAttributes.G_ROUTE_RUNNING.getMean(), BaseAttributes.G_ROUTE_RUNNING.getDeviation());
-    private final static Attribute<Double> RUNBLOCK_AWARENESS_IMPORTANCE = new Attribute<>(StatAttributes.AWARENESS.getName(), 3.00);
-    private final static Attribute<Double> RUNBLOCK_SPEED_IMPORTANCE = new Attribute<>(StatAttributes.SPEED.getName(), 2.15);
-    private final static Attribute<Double> RUNBLOCK_ACCELERATION_IMPORTANCE = new Attribute<>(StatAttributes.ACCELERATION.getName(), 1.75);
-    private final static Attribute<Double> RUNBLOCK_STRENGTH_IMPORTANCE = new Attribute<>(StatAttributes.STRENGTH.getName(), 2.15);
-    private final static Attribute<Double> RUNBLOCK_AGILITY_IMPORTANCE = new Attribute<>(StatAttributes.AGILITY.getName(), 1.25);
-    private final static Attribute<Double> RUNBLOCK_RUN_BLOCKING_IMPORTANCE = new Attribute<>(StatAttributes.RUN_BLOCKING.getName(), 2.75);
-    private final static Attribute<Double> RUNBLOCK_PASS_BLOCKING_IMPORTANCE = new Attribute<>(StatAttributes.PASS_BLOCKING.getName(), 2.25);
 
     private final static BaseAttribute PASSBLOCK_AWARENESS = new BaseAttribute(
             BaseAttributes.G_AWARENESS.getMean(), BaseAttributes.G_AWARENESS.getDeviation());
@@ -98,13 +88,6 @@ public final class Guard extends Position{
             BaseAttributes.G_THROW_ACCURACY.getMean(), BaseAttributes.G_THROW_ACCURACY.getDeviation());
     private final static BaseAttribute PASSBLOCK_ROUTE_RUNNING = new BaseAttribute(
             BaseAttributes.G_ROUTE_RUNNING.getMean(), BaseAttributes.G_ROUTE_RUNNING.getDeviation());
-    private final static Attribute<Double> PASSBLOCK_AWARENESS_IMPORTANCE = new Attribute<>(StatAttributes.AWARENESS.getName(), 2.75);
-    private final static Attribute<Double> PASSBLOCK_SPEED_IMPORTANCE = new Attribute<>(StatAttributes.SPEED.getName(), 1.75);
-    private final static Attribute<Double> PASSBLOCK_ACCELERATION_IMPORTANCE = new Attribute<>(StatAttributes.ACCELERATION.getName(), 1.70);
-    private final static Attribute<Double> PASSBLOCK_STRENGTH_IMPORTANCE = new Attribute<>(StatAttributes.STRENGTH.getName(), 2.00);
-    private final static Attribute<Double> PASSBLOCK_AGILITY_IMPORTANCE = new Attribute<>(StatAttributes.AGILITY.getName(), 1.25);
-    private final static Attribute<Double> PASSBLOCK_RUN_BLOCKING_IMPORTANCE = new Attribute<>(StatAttributes.RUN_BLOCKING.getName(), 2.75);
-    private final static Attribute<Double> PASSBLOCK_PASS_BLOCKING_IMPORTANCE = new Attribute<>(StatAttributes.PASS_BLOCKING.getName(), 3.25);
 
     private final static BaseAttribute NEUTRAL_AWARENESS = new BaseAttribute(
             BaseAttributes.G_AWARENESS.getMean(), BaseAttributes.G_AWARENESS.getDeviation());
@@ -142,13 +125,6 @@ public final class Guard extends Position{
             BaseAttributes.G_THROW_ACCURACY.getMean(), BaseAttributes.G_THROW_ACCURACY.getDeviation());
     private final static BaseAttribute NEUTRAL_ROUTE_RUNNING = new BaseAttribute(
             BaseAttributes.G_ROUTE_RUNNING.getMean(), BaseAttributes.G_ROUTE_RUNNING.getDeviation());
-    private final static Attribute<Double> NEUTRAL_AWARENESS_IMPORTANCE = new Attribute<>(StatAttributes.AWARENESS.getName(), 3.00);
-    private final static Attribute<Double> NEUTRAL_SPEED_IMPORTANCE = new Attribute<>(StatAttributes.SPEED.getName(), 1.75);
-    private final static Attribute<Double> NEUTRAL_ACCELERATION_IMPORTANCE = new Attribute<>(StatAttributes.ACCELERATION.getName(), 2.00);
-    private final static Attribute<Double> NEUTRAL_STRENGTH_IMPORTANCE = new Attribute<>(StatAttributes.STRENGTH.getName(), 2.25);
-    private final static Attribute<Double> NEUTRAL_AGILITY_IMPORTANCE = new Attribute<>(StatAttributes.AGILITY.getName(), 1.25);
-    private final static Attribute<Double> NEUTRAL_RUN_BLOCKING_IMPORTANCE = new Attribute<>(StatAttributes.RUN_BLOCKING.getName(), 2.65);
-    private final static Attribute<Double> NEUTRAL_PASS_BLOCKING_IMPORTANCE = new Attribute<>(StatAttributes.PASS_BLOCKING.getName(), 2.65);
 
     private Guard(final String  subPositionName){
         super(PositionList.GUARD.getName(), subPositionName, BaseAttributes.G_ATTRIBUTES, POSITION_MEAN_OVERALL);
@@ -235,18 +211,7 @@ public final class Guard extends Position{
                 routeRunningDeviation
         );
 
-        final List<Attribute<Double>> buffs = Arrays.asList(
-                RUNBLOCK_AGILITY_IMPORTANCE,
-                RUNBLOCK_AWARENESS_IMPORTANCE,
-                RUNBLOCK_SPEED_IMPORTANCE,
-                RUNBLOCK_ACCELERATION_IMPORTANCE,
-                RUNBLOCK_STRENGTH_IMPORTANCE,
-                RUNBLOCK_PASS_BLOCKING_IMPORTANCE,
-                RUNBLOCK_RUN_BLOCKING_IMPORTANCE
-        );
-
-        final Guard guard = new Guard(RUNBLOCK_SUBPOSITION_NAME);
-        guard.setRatingsBuffs(buffs);
+        final Guard guard = new Guard(SubPositionList.GUARD.RUN_BLOCK);
         guard.overwriteAttributes(attrs);
         guard.overwriteDeviations(devs);
         guard.seedRating(overallSeed);
@@ -334,18 +299,7 @@ public final class Guard extends Position{
                 routeRunningDeviation
         );
 
-        final List<Attribute<Double>> buffs = Arrays.asList(
-                PASSBLOCK_AGILITY_IMPORTANCE,
-                PASSBLOCK_AWARENESS_IMPORTANCE,
-                PASSBLOCK_SPEED_IMPORTANCE,
-                PASSBLOCK_ACCELERATION_IMPORTANCE,
-                PASSBLOCK_STRENGTH_IMPORTANCE,
-                PASSBLOCK_PASS_BLOCKING_IMPORTANCE,
-                PASSBLOCK_RUN_BLOCKING_IMPORTANCE
-        );
-
-        final Guard guard = new Guard(PASSBLOCK_SUBPOSITION_NAME);
-        guard.setRatingsBuffs(buffs);
+        final Guard guard = new Guard(SubPositionList.GUARD.PASS_BLOCK);
         guard.overwriteAttributes(attrs);
         guard.overwriteDeviations(devs);
         guard.seedRating(overallSeed);
@@ -433,18 +387,7 @@ public final class Guard extends Position{
                 routeRunningDeviation
         );
 
-        final List<Attribute<Double>> buffs = Arrays.asList(
-                NEUTRAL_AGILITY_IMPORTANCE,
-                NEUTRAL_AWARENESS_IMPORTANCE,
-                NEUTRAL_SPEED_IMPORTANCE,
-                NEUTRAL_ACCELERATION_IMPORTANCE,
-                NEUTRAL_STRENGTH_IMPORTANCE,
-                NEUTRAL_PASS_BLOCKING_IMPORTANCE,
-                NEUTRAL_RUN_BLOCKING_IMPORTANCE
-        );
-
-        final Guard guard = new Guard(NEUTRAL_SUBPOSITION_NAME);
-        guard.setRatingsBuffs(buffs);
+        final Guard guard = new Guard(SubPositionList.GUARD.NEUTRAL);
         guard.overwriteAttributes(attrs);
         guard.overwriteDeviations(devs);
         guard.seedRating(overallSeed);

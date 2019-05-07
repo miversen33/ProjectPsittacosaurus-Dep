@@ -2,8 +2,9 @@ package Position.Offense;
 
 import Attributes.Attribute;
 import Attributes.StatAttributes;
+import Position.Lists.SubPositionList;
 import Position.Position;
-import Position.PositionList;
+import Position.Lists.PositionList;
 import Position.BaseAttribute;
 import Position.BaseAttributes;
 
@@ -11,10 +12,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public final class HalfBack extends Position{
-
-    public final static String SPEED_SUBPOSITION_NAME = "Speed";
-    public final static String POWER_SUBPOSITION_NAME = "Power";
-    public final static String NEUTRAL_SUBPOSITION_NAME = "Neutral";
 
     private final static double POSITION_MEAN_OVERALL = 0.74;
 
@@ -62,17 +59,6 @@ public final class HalfBack extends Position{
         BaseAttributes.HB_THROW_ACCURACY.getMean(), BaseAttributes.HB_THROW_ACCURACY.getDeviation());
     private final static BaseAttribute SPEED_ROUTE_RUNNING = new BaseAttribute(
         BaseAttributes.HB_ROUTE_RUNNING.getMean(), BaseAttributes.HB_ROUTE_RUNNING.getDeviation());
-    private final static Attribute<Double> SPEED_AWARENESS_IMPORTANCE = new Attribute<>(StatAttributes.AWARENESS.getName(), 2.50);
-    private final static Attribute<Double> SPEED_STRENGTH_IMPORTANCE = new Attribute<>(StatAttributes.STRENGTH.getName(), 1.15);
-    private final static Attribute<Double> SPEED_SPEED_IMPORTANCE = new Attribute<>(StatAttributes.SPEED.getName(), 2.20);
-    private final static Attribute<Double> SPEED_RUN_BLOCKING_IMPORTANCE = new Attribute<>(StatAttributes.RUN_BLOCKING.getName(), 1.05);
-    private final static Attribute<Double> SPEED_PASS_BLOCKING_IMPORTANCE = new Attribute<>(StatAttributes.PASS_BLOCKING.getName(), 1.05);
-    private final static Attribute<Double> SPEED_CATCHING_IMPORTANCE = new Attribute<>(StatAttributes.CATCHING.getName(), 1.45);
-    private final static Attribute<Double> SPEED_CARRYING_IMPORTANCE = new Attribute<>(StatAttributes.CARRYING.getName(), 1.45);
-    private final static Attribute<Double> SPEED_ACCELERATION_IMPORTANCE = new Attribute<>(StatAttributes.ACCELERATION.getName(), 1.80);
-    private final static Attribute<Double> SPEED_AGILITY_IMPORTANCE = new Attribute<>(StatAttributes.AGILITY.getName(), 1.35);
-    private final static Attribute<Double> SPEED_ELUSIVENESS_IMPORTANCE = new Attribute<>(StatAttributes.ELUSIVENESS.getName(), 1.45);
-    private final static Attribute<Double> SPEED_BREAK_TACKLE_IMPORTANCE = new Attribute<>(StatAttributes.BREAK_TACKLE.getName(), 1.35);
 
     private final static BaseAttribute POWER_AWARENESS = new BaseAttribute(
         BaseAttributes.HB_AWARENESS.getMean(), BaseAttributes.HB_AWARENESS.getDeviation());
@@ -118,17 +104,6 @@ public final class HalfBack extends Position{
         BaseAttributes.HB_THROW_ACCURACY.getMean(), BaseAttributes.HB_THROW_ACCURACY.getDeviation());
     private final static BaseAttribute POWER_ROUTE_RUNNING = new BaseAttribute(
         BaseAttributes.HB_ROUTE_RUNNING.getMean(), BaseAttributes.HB_ROUTE_RUNNING.getDeviation());
-    private final static Attribute<Double> POWER_AWARENESS_IMPORTANCE = new Attribute<>(StatAttributes.AWARENESS.getName(), 2.50);
-    private final static Attribute<Double> POWER_STRENGTH_IMPORTANCE = new Attribute<>(StatAttributes.STRENGTH.getName(), 1.35);
-    private final static Attribute<Double> POWER_SPEED_IMPORTANCE = new Attribute<>(StatAttributes.SPEED.getName(), 1.80);
-    private final static Attribute<Double> POWER_RUN_BLOCKING_IMPORTANCE = new Attribute<>(StatAttributes.RUN_BLOCKING.getName(), 1.15);
-    private final static Attribute<Double> POWER_PASS_BLOCKING_IMPORTANCE = new Attribute<>(StatAttributes.PASS_BLOCKING.getName(), 1.15);
-    private final static Attribute<Double> POWER_CATCHING_IMPORTANCE = new Attribute<>(StatAttributes.CATCHING.getName(), 1.45);
-    private final static Attribute<Double> POWER_CARRYING_IMPORTANCE = new Attribute<>(StatAttributes.CARRYING.getName(), 1.45);
-    private final static Attribute<Double> POWER_ACCELERATION_IMPORTANCE = new Attribute<>(StatAttributes.ACCELERATION.getName(), 1.55);
-    private final static Attribute<Double> POWER_AGILITY_IMPORTANCE = new Attribute<>(StatAttributes.AGILITY.getName(), 1.40);
-    private final static Attribute<Double> POWER_ELUSIVENESS_IMPORTANCE = new Attribute<>(StatAttributes.ELUSIVENESS.getName(), 1.45);
-    private final static Attribute<Double> POWER_BREAK_TACKLE_IMPORTANCE = new Attribute<>(StatAttributes.BREAK_TACKLE.getName(), 1.50);
 
     private final static BaseAttribute NEUTRAL_AWARENESS = new BaseAttribute(
         BaseAttributes.HB_AWARENESS.getMean(), BaseAttributes.HB_AWARENESS.getDeviation());
@@ -174,17 +149,6 @@ public final class HalfBack extends Position{
         BaseAttributes.HB_THROW_ACCURACY.getMean(), BaseAttributes.HB_THROW_ACCURACY.getDeviation());
     private final static BaseAttribute NEUTRAL_ROUTE_RUNNING = new BaseAttribute(
         BaseAttributes.HB_ROUTE_RUNNING.getMean(), BaseAttributes.HB_ROUTE_RUNNING.getDeviation());
-    private final static Attribute<Double> NEUTRAL_AWARENESS_IMPORTANCE = new Attribute<>(StatAttributes.AWARENESS.getName(), 2.50);
-    private final static Attribute<Double> NEUTRAL_STRENGTH_IMPORTANCE = new Attribute<>(StatAttributes.STRENGTH.getName(), 1.35);
-    private final static Attribute<Double> NEUTRAL_SPEED_IMPORTANCE = new Attribute<>(StatAttributes.SPEED.getName(), 1.80);
-    private final static Attribute<Double> NEUTRAL_RUN_BLOCKING_IMPORTANCE = new Attribute<>(StatAttributes.RUN_BLOCKING.getName(), 1.15);
-    private final static Attribute<Double> NEUTRAL_PASS_BLOCKING_IMPORTANCE = new Attribute<>(StatAttributes.PASS_BLOCKING.getName(), 1.15);
-    private final static Attribute<Double> NEUTRAL_CATCHING_IMPORTANCE = new Attribute<>(StatAttributes.CATCHING.getName(), 1.50);
-    private final static Attribute<Double> NEUTRAL_CARRYING_IMPORTANCE = new Attribute<>(StatAttributes.CARRYING.getName(), 1.50);
-    private final static Attribute<Double> NEUTRAL_ACCELERATION_IMPORTANCE = new Attribute<>(StatAttributes.ACCELERATION.getName(), 1.55);
-    private final static Attribute<Double> NEUTRAL_AGILITY_IMPORTANCE = new Attribute<>(StatAttributes.AGILITY.getName(), 1.50);
-    private final static Attribute<Double> NEUTRAL_ELUSIVENESS_IMPORTANCE = new Attribute<>(StatAttributes.ELUSIVENESS.getName(), 1.50);
-    private final static Attribute<Double> NEUTRAL_BREAK_TACKLE_IMPORTANCE = new Attribute<>(StatAttributes.BREAK_TACKLE.getName(), 1.50);
 
     private HalfBack(final String  subPositionName){
         super(PositionList.HALFBACK.getName(), subPositionName, BaseAttributes.HB_ATTRIBUTES, POSITION_MEAN_OVERALL);
@@ -287,22 +251,7 @@ public final class HalfBack extends Position{
             routeRunningDeviation
         );
 
-        final List<Attribute<Double>> buffs = Arrays.asList(
-                SPEED_ACCELERATION_IMPORTANCE,
-                SPEED_AGILITY_IMPORTANCE,
-                SPEED_AWARENESS_IMPORTANCE,
-                SPEED_CARRYING_IMPORTANCE,
-                SPEED_CATCHING_IMPORTANCE,
-                SPEED_ELUSIVENESS_IMPORTANCE,
-                SPEED_SPEED_IMPORTANCE,
-                SPEED_STRENGTH_IMPORTANCE,
-                SPEED_BREAK_TACKLE_IMPORTANCE,
-                SPEED_PASS_BLOCKING_IMPORTANCE,
-                SPEED_RUN_BLOCKING_IMPORTANCE
-        );
-
-        final HalfBack halfback = new HalfBack(SPEED_SUBPOSITION_NAME);
-        halfback.setRatingsBuffs(buffs);
+        final HalfBack halfback = new HalfBack(SubPositionList.HALFBACK.SPEED);
         halfback.overwriteAttributes(attrs);
         halfback.overwriteDeviations(devs);
         halfback.seedRating(overallSeed);
@@ -406,22 +355,7 @@ public final class HalfBack extends Position{
             routeRunningDeviation
         );
 
-        final List<Attribute<Double>> buffs = Arrays.asList(
-                POWER_ACCELERATION_IMPORTANCE,
-                POWER_AGILITY_IMPORTANCE,
-                POWER_AWARENESS_IMPORTANCE,
-                POWER_CARRYING_IMPORTANCE,
-                POWER_CATCHING_IMPORTANCE,
-                POWER_ELUSIVENESS_IMPORTANCE,
-                POWER_SPEED_IMPORTANCE,
-                POWER_STRENGTH_IMPORTANCE,
-                POWER_BREAK_TACKLE_IMPORTANCE,
-                POWER_PASS_BLOCKING_IMPORTANCE,
-                POWER_RUN_BLOCKING_IMPORTANCE
-        );
-
-        final HalfBack halfback = new HalfBack(POWER_SUBPOSITION_NAME);
-        halfback.setRatingsBuffs(buffs);
+        final HalfBack halfback = new HalfBack(SubPositionList.HALFBACK.POWER);
         halfback.overwriteAttributes(attrs);
         halfback.overwriteDeviations(devs);
         halfback.seedRating(overallSeed);
@@ -525,22 +459,7 @@ public final class HalfBack extends Position{
             routeRunningDeviation
         );
 
-        final List<Attribute<Double>> buffs = Arrays.asList(
-                NEUTRAL_ACCELERATION_IMPORTANCE,
-                NEUTRAL_AGILITY_IMPORTANCE,
-                NEUTRAL_AWARENESS_IMPORTANCE,
-                NEUTRAL_CARRYING_IMPORTANCE,
-                NEUTRAL_CATCHING_IMPORTANCE,
-                NEUTRAL_ELUSIVENESS_IMPORTANCE,
-                NEUTRAL_SPEED_IMPORTANCE,
-                NEUTRAL_STRENGTH_IMPORTANCE,
-                NEUTRAL_BREAK_TACKLE_IMPORTANCE,
-                NEUTRAL_PASS_BLOCKING_IMPORTANCE,
-                NEUTRAL_RUN_BLOCKING_IMPORTANCE
-        );
-
-        final HalfBack halfback = new HalfBack(NEUTRAL_SUBPOSITION_NAME);
-        halfback.setRatingsBuffs(buffs);
+        final HalfBack halfback = new HalfBack(SubPositionList.HALFBACK.NEUTRAL);
         halfback.overwriteAttributes(attrs);
         halfback.overwriteDeviations(devs);
         halfback.seedRating(overallSeed);

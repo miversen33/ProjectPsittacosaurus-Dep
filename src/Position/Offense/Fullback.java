@@ -2,8 +2,9 @@ package Position.Offense;
 
 import Attributes.Attribute;
 import Attributes.StatAttributes;
+import Position.Lists.SubPositionList;
 import Position.Position;
-import Position.PositionList;
+import Position.Lists.PositionList;
 import Position.BaseAttribute;
 import Position.BaseAttributes;
 
@@ -11,10 +12,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public final class Fullback extends Position{
-
-    public final static String BLOCKING_SUBPOSITION_NAME = "Blocking";
-    public final static String RUSHING_SUBPOSITION_NAME = "Rushing";
-    public final static String NEUTRAL_SUBPOSITION_NAME = "Neutral";
 
     private final static double POSITION_MEAN_OVERALL = 0.67;
 
@@ -62,17 +59,6 @@ public final class Fullback extends Position{
         BaseAttributes.FB_THROW_ACCURACY.getMean(), BaseAttributes.FB_THROW_ACCURACY.getDeviation());
     private final static BaseAttribute BLOCKING_ROUTE_RUNNING = new BaseAttribute(
         BaseAttributes.FB_ROUTE_RUNNING.getMean(), BaseAttributes.FB_ROUTE_RUNNING.getDeviation());
-    private final static Attribute<Double> BLOCKING_AWARENESS_IMPORTANCE = new Attribute<>(StatAttributes.AWARENESS.getName(), 2.50);
-    private final static Attribute<Double> BLOCKING_STRENGTH_IMPORTANCE = new Attribute<>(StatAttributes.STRENGTH.getName(), 2.00);
-    private final static Attribute<Double> BLOCKING_SPEED_IMPORTANCE = new Attribute<>(StatAttributes.SPEED.getName(), 1.35);
-    private final static Attribute<Double> BLOCKING_RUN_BLOCKING_IMPORTANCE = new Attribute<>(StatAttributes.RUN_BLOCKING.getName(), 2.00);
-    private final static Attribute<Double> BLOCKING_PASS_BLOCKING_IMPORTANCE = new Attribute<>(StatAttributes.PASS_BLOCKING.getName(), 2.00);
-    private final static Attribute<Double> BLOCKING_CATCHING_IMPORTANCE = new Attribute<>(StatAttributes.CATCHING.getName(), 1.25);
-    private final static Attribute<Double> BLOCKING_CARRYING_IMPORTANCE = new Attribute<>(StatAttributes.CARRYING.getName(), 1.25);
-    private final static Attribute<Double> BLOCKING_ACCELERATION_IMPORTANCE = new Attribute<>(StatAttributes.ACCELERATION.getName(), 1.15);
-    private final static Attribute<Double> BLOCKING_AGILITY_IMPORTANCE = new Attribute<>(StatAttributes.AGILITY.getName(), 1.01);
-    private final static Attribute<Double> BLOCKING_ELUSIVENESS_IMPORTANCE = new Attribute<>(StatAttributes.ELUSIVENESS.getName(), 1.01);
-    private final static Attribute<Double> BLOCKING_BREAK_TACKLE_IMPORTANCE = new Attribute<>(StatAttributes.BREAK_TACKLE.getName(), 1.40);
 
     private final static BaseAttribute RUSHING_AWARENESS = new BaseAttribute(
         BaseAttributes.FB_AWARENESS.getMean(), BaseAttributes.FB_AWARENESS.getDeviation());
@@ -118,17 +104,6 @@ public final class Fullback extends Position{
         BaseAttributes.FB_THROW_ACCURACY.getMean(), BaseAttributes.FB_THROW_ACCURACY.getDeviation());
     private final static BaseAttribute RUSHING_ROUTE_RUNNING = new BaseAttribute(
         BaseAttributes.FB_ROUTE_RUNNING.getMean(), BaseAttributes.FB_ROUTE_RUNNING.getDeviation());
-    private final static Attribute<Double> RUSHING_AWARENESS_IMPORTANCE = new Attribute<>(StatAttributes.AWARENESS.getName(), 2.25);
-    private final static Attribute<Double> RUSHING_STRENGTH_IMPORTANCE = new Attribute<>(StatAttributes.STRENGTH.getName(), 1.75);
-    private final static Attribute<Double> RUSHING_SPEED_IMPORTANCE = new Attribute<>(StatAttributes.SPEED.getName(), 1.60);
-    private final static Attribute<Double> RUSHING_RUN_BLOCKING_IMPORTANCE = new Attribute<>(StatAttributes.RUN_BLOCKING.getName(), 1.20);
-    private final static Attribute<Double> RUSHING_PASS_BLOCKING_IMPORTANCE = new Attribute<>(StatAttributes.PASS_BLOCKING.getName(), 1.20);
-    private final static Attribute<Double> RUSHING_CATCHING_IMPORTANCE = new Attribute<>(StatAttributes.CATCHING.getName(), 1.45);
-    private final static Attribute<Double> RUSHING_CARRYING_IMPORTANCE = new Attribute<>(StatAttributes.CARRYING.getName(), 1.45);
-    private final static Attribute<Double> RUSHING_ACCELERATION_IMPORTANCE = new Attribute<>(StatAttributes.ACCELERATION.getName(), 1.50);
-    private final static Attribute<Double> RUSHING_AGILITY_IMPORTANCE = new Attribute<>(StatAttributes.AGILITY.getName(), 1.15);
-    private final static Attribute<Double> RUSHING_ELUSIVENESS_IMPORTANCE = new Attribute<>(StatAttributes.ELUSIVENESS.getName(), 1.15);
-    private final static Attribute<Double> RUSHING_BREAK_TACKLE_IMPORTANCE = new Attribute<>(StatAttributes.BREAK_TACKLE.getName(), 1.75);
 
     private final static BaseAttribute NEUTRAL_AWARENESS = new BaseAttribute(
         BaseAttributes.FB_AWARENESS.getMean(), BaseAttributes.FB_AWARENESS.getDeviation());
@@ -174,17 +149,6 @@ public final class Fullback extends Position{
         BaseAttributes.FB_THROW_ACCURACY.getMean(), BaseAttributes.FB_THROW_ACCURACY.getDeviation());
     private final static BaseAttribute NEUTRAL_ROUTE_RUNNING = new BaseAttribute(
         BaseAttributes.FB_ROUTE_RUNNING.getMean(), BaseAttributes.FB_ROUTE_RUNNING.getDeviation());
-    private final static Attribute<Double> NEUTRAL_AWARENESS_IMPORTANCE = new Attribute<>(StatAttributes.AWARENESS.getName(), 2.25);
-    private final static Attribute<Double> NEUTRAL_STRENGTH_IMPORTANCE = new Attribute<>(StatAttributes.STRENGTH.getName(), 1.75);
-    private final static Attribute<Double> NEUTRAL_SPEED_IMPORTANCE = new Attribute<>(StatAttributes.SPEED.getName(), 1.60);
-    private final static Attribute<Double> NEUTRAL_RUN_BLOCKING_IMPORTANCE = new Attribute<>(StatAttributes.RUN_BLOCKING.getName(), 1.60);
-    private final static Attribute<Double> NEUTRAL_PASS_BLOCKING_IMPORTANCE = new Attribute<>(StatAttributes.PASS_BLOCKING.getName(), 1.60);
-    private final static Attribute<Double> NEUTRAL_CATCHING_IMPORTANCE = new Attribute<>(StatAttributes.CATCHING.getName(), 1.45);
-    private final static Attribute<Double> NEUTRAL_CARRYING_IMPORTANCE = new Attribute<>(StatAttributes.CARRYING.getName(), 1.45);
-    private final static Attribute<Double> NEUTRAL_ACCELERATION_IMPORTANCE = new Attribute<>(StatAttributes.ACCELERATION.getName(), 1.35);
-    private final static Attribute<Double> NEUTRAL_AGILITY_IMPORTANCE = new Attribute<>(StatAttributes.AGILITY.getName(), 1.05);
-    private final static Attribute<Double> NEUTRAL_ELUSIVENESS_IMPORTANCE = new Attribute<>(StatAttributes.ELUSIVENESS.getName(), 1.01);
-    private final static Attribute<Double> NEUTRAL_BREAK_TACKLE_IMPORTANCE = new Attribute<>(StatAttributes.BREAK_TACKLE.getName(), 1.60);
     
     private Fullback(final String  subPositionName){
         super(PositionList.FULLBACK.getName(), subPositionName, BaseAttributes.FB_ATTRIBUTES, POSITION_MEAN_OVERALL);
@@ -287,22 +251,7 @@ public final class Fullback extends Position{
             routeRunningDeviation
         );
 
-        final List<Attribute<Double>> buffs = Arrays.asList(
-                BLOCKING_ACCELERATION_IMPORTANCE,
-                BLOCKING_AGILITY_IMPORTANCE,
-                BLOCKING_AWARENESS_IMPORTANCE,
-                BLOCKING_CARRYING_IMPORTANCE,
-                BLOCKING_CATCHING_IMPORTANCE,
-                BLOCKING_ELUSIVENESS_IMPORTANCE,
-                BLOCKING_SPEED_IMPORTANCE,
-                BLOCKING_STRENGTH_IMPORTANCE,
-                BLOCKING_BREAK_TACKLE_IMPORTANCE,
-                BLOCKING_PASS_BLOCKING_IMPORTANCE,
-                BLOCKING_RUN_BLOCKING_IMPORTANCE
-        );
-
-        final Fullback fullback = new Fullback(BLOCKING_SUBPOSITION_NAME);
-        fullback.setRatingsBuffs(buffs);
+        final Fullback fullback = new Fullback(SubPositionList.FULLBACK.BLOCKING);
         fullback.overwriteAttributes(attrs);
         fullback.overwriteDeviations(devs);
         fullback.seedRating(overallSeed);
@@ -406,22 +355,7 @@ public final class Fullback extends Position{
             routeRunningDeviation
         );
 
-        final List<Attribute<Double>> buffs = Arrays.asList(
-                RUSHING_ACCELERATION_IMPORTANCE,
-                RUSHING_AGILITY_IMPORTANCE,
-                RUSHING_AWARENESS_IMPORTANCE,
-                RUSHING_CARRYING_IMPORTANCE,
-                RUSHING_CATCHING_IMPORTANCE,
-                RUSHING_ELUSIVENESS_IMPORTANCE,
-                RUSHING_SPEED_IMPORTANCE,
-                RUSHING_STRENGTH_IMPORTANCE,
-                RUSHING_BREAK_TACKLE_IMPORTANCE,
-                RUSHING_PASS_BLOCKING_IMPORTANCE,
-                RUSHING_RUN_BLOCKING_IMPORTANCE
-        );
-
-        final Fullback fullback = new Fullback(RUSHING_SUBPOSITION_NAME);
-        fullback.setRatingsBuffs(buffs);
+        final Fullback fullback = new Fullback(SubPositionList.FULLBACK.RUSHING);
         fullback.overwriteAttributes(attrs);
         fullback.overwriteDeviations(devs);
         fullback.seedRating(overallSeed);
@@ -525,22 +459,7 @@ public final class Fullback extends Position{
             routeRunningDeviation
         );
 
-        final List<Attribute<Double>> buffs = Arrays.asList(
-            NEUTRAL_ACCELERATION_IMPORTANCE,
-            NEUTRAL_AGILITY_IMPORTANCE,
-            NEUTRAL_AWARENESS_IMPORTANCE,
-            NEUTRAL_CARRYING_IMPORTANCE,
-            NEUTRAL_CATCHING_IMPORTANCE,
-            NEUTRAL_ELUSIVENESS_IMPORTANCE,
-            NEUTRAL_SPEED_IMPORTANCE,
-            NEUTRAL_STRENGTH_IMPORTANCE,
-            NEUTRAL_BREAK_TACKLE_IMPORTANCE,
-            NEUTRAL_PASS_BLOCKING_IMPORTANCE,
-            NEUTRAL_RUN_BLOCKING_IMPORTANCE
-        );
-
-        final Fullback fullback = new Fullback(NEUTRAL_SUBPOSITION_NAME);
-        fullback.setRatingsBuffs(buffs);
+        final Fullback fullback = new Fullback(SubPositionList.FULLBACK.NEUTRAL);
         fullback.overwriteAttributes(attrs);
         fullback.overwriteDeviations(devs);
         fullback.seedRating(overallSeed);

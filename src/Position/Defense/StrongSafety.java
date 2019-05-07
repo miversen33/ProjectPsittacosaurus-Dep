@@ -2,8 +2,9 @@ package Position.Defense;
 
 import Attributes.Attribute;
 import Attributes.StatAttributes;
+import Position.Lists.SubPositionList;
 import Position.Position;
-import Position.PositionList;
+import Position.Lists.PositionList;
 import Position.BaseAttribute;
 import Position.BaseAttributes;
 
@@ -11,10 +12,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public final class StrongSafety extends Position{
-
-    public final static String COVERAGE_SUBPOSITION_NAME = "Coverage";
-    public final static String HARDHITTING_SUBPOSITION_NAME = "Hardhitting";
-    public final static String NEUTRAL_SUBPOSITION_NAME = "Neutral";
 
     private final static double POSITION_MEAN_OVERALL = 0.73;
 
@@ -62,14 +59,6 @@ public final class StrongSafety extends Position{
         BaseAttributes.SS_THROW_ACCURACY.getMean(), BaseAttributes.SS_THROW_ACCURACY.getDeviation());
     private final static BaseAttribute COVERAGE_ROUTE_RUNNING = new BaseAttribute(
         BaseAttributes.SS_ROUTE_RUNNING.getMean(), BaseAttributes.SS_ROUTE_RUNNING.getDeviation());
-    private final static Attribute<Double> COVERAGE_AWARENESS_IMPORTANCE = new Attribute<>(StatAttributes.AWARENESS.getName(), 2.15);
-    private final static Attribute<Double> COVERAGE_MAN_COVERAGE_IMPORTANCE = new Attribute<>(StatAttributes.MAN_COVERAGE.getName(), 2.00);
-    private final static Attribute<Double> COVERAGE_ZONE_COVERAGE_IMPORTANCE = new Attribute<>(StatAttributes.ZONE_COVERAGE.getName(), 2.00);
-    private final static Attribute<Double> COVERAGE_CATCHING_IMPORTANCE = new Attribute<>(StatAttributes.CATCHING.getName(), 1.50);
-    private final static Attribute<Double> COVERAGE_SPEED_IMPORTANCE = new Attribute<>(StatAttributes.SPEED.getName(), 1.45);
-    private final static Attribute<Double> COVERAGE_TACKLE_IMPORTANCE = new Attribute<>(StatAttributes.TACKLE.getName(), 1.25);
-    private final static Attribute<Double> COVERAGE_STRENGTH_IMPORTANCE = new Attribute<>(StatAttributes.STRENGTH.getName(), 1.01);
-
     
     private final static BaseAttribute HARDHITTING_AWARENESS = new BaseAttribute(
         BaseAttributes.SS_AWARENESS.getMean(), BaseAttributes.SS_AWARENESS.getDeviation());
@@ -115,13 +104,6 @@ public final class StrongSafety extends Position{
         BaseAttributes.SS_THROW_ACCURACY.getMean(), BaseAttributes.SS_THROW_ACCURACY.getDeviation());
     private final static BaseAttribute HARDHITTING_ROUTE_RUNNING = new BaseAttribute(
         BaseAttributes.SS_ROUTE_RUNNING.getMean(), BaseAttributes.SS_ROUTE_RUNNING.getDeviation());
-    private final static Attribute<Double> HARDHITTING_AWARENESS_IMPORTANCE = new Attribute<>(StatAttributes.AWARENESS.getName(), 2.20);
-    private final static Attribute<Double> HARDHITTING_MAN_COVERAGE_IMPORTANCE = new Attribute<>(StatAttributes.MAN_COVERAGE.getName(), 1.80);
-    private final static Attribute<Double> HARDHITTING_ZONE_COVERAGE_IMPORTANCE = new Attribute<>(StatAttributes.ZONE_COVERAGE.getName(), 1.80);
-    private final static Attribute<Double> HARDHITTING_TACKLE_IMPORTANCE = new Attribute<>(StatAttributes.TACKLE.getName(), 1.60);
-    private final static Attribute<Double> HARDHITTING_SPEED_IMPORTANCE = new Attribute<>(StatAttributes.SPEED.getName(), 1.55);
-    private final static Attribute<Double> HARDHITTING_STRENGTH_IMPORTANCE = new Attribute<>(StatAttributes.STRENGTH.getName(), 1.45);
-    private final static Attribute<Double> HARDHITTING_CATCHING_IMPORTANCE = new Attribute<>(StatAttributes.CATCHING.getName(), 1.40);
 
     private final static BaseAttribute NEUTRAL_AWARENESS = new BaseAttribute(
         BaseAttributes.SS_AWARENESS.getMean(), BaseAttributes.SS_AWARENESS.getDeviation());
@@ -167,13 +149,6 @@ public final class StrongSafety extends Position{
         BaseAttributes.SS_THROW_ACCURACY.getMean(), BaseAttributes.SS_THROW_ACCURACY.getDeviation());
     private final static BaseAttribute NEUTRAL_ROUTE_RUNNING = new BaseAttribute(
         BaseAttributes.SS_ROUTE_RUNNING.getMean(), BaseAttributes.SS_ROUTE_RUNNING.getDeviation());
-    private final static Attribute<Double> NEUTRAL_AWARENESS_IMPORTANCE = new Attribute<>(StatAttributes.AWARENESS.getName(), 2.35);
-    private final static Attribute<Double> NEUTRAL_MAN_COVERAGE_IMPORTANCE = new Attribute<>(StatAttributes.MAN_COVERAGE.getName(), 2.05);
-    private final static Attribute<Double> NEUTRAL_ZONE_COVERAGE_IMPORTANCE = new Attribute<>(StatAttributes.ZONE_COVERAGE.getName(), 2.05);
-    private final static Attribute<Double> NEUTRAL_CATCHING_IMPORTANCE = new Attribute<>(StatAttributes.CATCHING.getName(), 1.65);
-    private final static Attribute<Double> NEUTRAL_TACKLE_IMPORTANCE = new Attribute<>(StatAttributes.TACKLE.getName(), 1.60);
-    private final static Attribute<Double> NEUTRAL_SPEED_IMPORTANCE = new Attribute<>(StatAttributes.SPEED.getName(), 1.60);
-    private final static Attribute<Double> NEUTRAL_STRENGTH_IMPORTANCE = new Attribute<>(StatAttributes.STRENGTH.getName(), 1.20);
 
     private StrongSafety(final String  subPositionName){
         super(PositionList.STRONG_SAFETY.getName(), subPositionName, BaseAttributes.SS_ATTRIBUTES, POSITION_MEAN_OVERALL);
@@ -276,19 +251,7 @@ public final class StrongSafety extends Position{
             routeRunningDeviation
         );
 
-
-        final List<Attribute<Double>> buffs = Arrays.asList(
-                COVERAGE_AWARENESS_IMPORTANCE,
-                COVERAGE_SPEED_IMPORTANCE,
-                COVERAGE_STRENGTH_IMPORTANCE,
-                COVERAGE_TACKLE_IMPORTANCE,
-                COVERAGE_CATCHING_IMPORTANCE,
-                COVERAGE_MAN_COVERAGE_IMPORTANCE,
-                COVERAGE_ZONE_COVERAGE_IMPORTANCE
-        );
-
-        final StrongSafety strongSafety = new StrongSafety(COVERAGE_SUBPOSITION_NAME);
-        strongSafety.setRatingsBuffs(buffs);
+        final StrongSafety strongSafety = new StrongSafety(SubPositionList.STRONG_SAFETY.COVERAGE);
         strongSafety.overwriteAttributes(attrs);
         strongSafety.overwriteDeviations(devs);
         strongSafety.seedRating(overallSeed);
@@ -392,19 +355,7 @@ public final class StrongSafety extends Position{
             routeRunningDeviation
         );
 
-
-        final List<Attribute<Double>> buffs = Arrays.asList(
-                HARDHITTING_AWARENESS_IMPORTANCE,
-                HARDHITTING_SPEED_IMPORTANCE,
-                HARDHITTING_STRENGTH_IMPORTANCE,
-                HARDHITTING_TACKLE_IMPORTANCE,
-                HARDHITTING_CATCHING_IMPORTANCE,
-                HARDHITTING_MAN_COVERAGE_IMPORTANCE,
-                HARDHITTING_ZONE_COVERAGE_IMPORTANCE
-        );
-
-        final StrongSafety strongSafety = new StrongSafety(HARDHITTING_SUBPOSITION_NAME);
-        strongSafety.setRatingsBuffs(buffs);
+        final StrongSafety strongSafety = new StrongSafety(SubPositionList.STRONG_SAFETY.HARDHITTER);
         strongSafety.overwriteAttributes(attrs);
         strongSafety.overwriteDeviations(devs);
         strongSafety.seedRating(overallSeed);
@@ -507,19 +458,8 @@ public final class StrongSafety extends Position{
             throwAccuracyDeviation,
             routeRunningDeviation
         );
-        
-        final List<Attribute<Double>> buffs = Arrays.asList(
-            NEUTRAL_AWARENESS_IMPORTANCE,
-            NEUTRAL_SPEED_IMPORTANCE,
-            NEUTRAL_STRENGTH_IMPORTANCE,
-            NEUTRAL_TACKLE_IMPORTANCE,
-            NEUTRAL_CATCHING_IMPORTANCE,
-            NEUTRAL_MAN_COVERAGE_IMPORTANCE,
-            NEUTRAL_ZONE_COVERAGE_IMPORTANCE
-        );
 
-        final StrongSafety strongSafety = new StrongSafety(NEUTRAL_SUBPOSITION_NAME);
-        strongSafety.setRatingsBuffs(buffs);
+        final StrongSafety strongSafety = new StrongSafety(SubPositionList.STRONG_SAFETY.NEUTRAL);
         strongSafety.overwriteAttributes(attrs);
         strongSafety.overwriteDeviations(devs);
         strongSafety.seedRating(overallSeed);

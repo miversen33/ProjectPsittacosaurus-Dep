@@ -15,13 +15,14 @@ public abstract class Position {
     private final Attributes<Double> attributes = new Attributes<Double>();
     private final Attributes<Double> deviations = new Attributes<Double>();
     private final Attributes<Double> tailCaps = new Attributes<Double>();
-    private final Attributes<Double> attrBuffs = new Attributes<Double>();
+    private final Attributes<Double> attrsImportance = new Attributes<Double>();
     private int overall;
 
     public Position(final String name, final String subPosition, final List<BaseAttributes> baseAttrs, final double meanOverall){
         this.name = name;
         this.subPosition = subPosition;
         this.meanOverall = meanOverall;
+        attrsImportance.addAttributes(PositionImportanceValues.GetPositionImportanceValues(name, subPosition));
         handleBaseAttrs(baseAttrs);
     }
 
@@ -76,14 +77,15 @@ public abstract class Position {
     }
 
     private final void addRatingsBuff(final Attribute<Double> buff){
-        if(attrBuffs.containsAttribute(buff)){
+        if(attrsImportance.containsAttribute(buff)){
 //            HANDLE LOGGING TODO
             System.out.println("Unable to add buff as there is already a buff for this attribute");
             return;
         }
-        attrBuffs.addAttribute(buff);
+        attrsImportance.addAttribute(buff);
     }
 
+    @Deprecated
     protected final void setRatingsBuffs(final List<Attribute<Double>> buffs){
         for(final Attribute<Double> buff : buffs){
             addRatingsBuff(buff);
@@ -132,8 +134,8 @@ public abstract class Position {
     private final void calculateOverall(){
         double rating = 0;
         for(final Attribute<Double> attr : attributes){
-            if(attrBuffs.containsAttribute(attr)){
-                rating += (attr.getValue() * attrBuffs.getAttribute(attr.getName()).getValue());
+            if(attrsImportance.containsAttribute(attr)){
+                rating += (attr.getValue() * attrsImportance.getAttribute(attr.getName()).getValue());
             } else {
                 rating += attr.getValue();
             }

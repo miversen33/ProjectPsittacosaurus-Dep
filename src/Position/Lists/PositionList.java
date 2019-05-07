@@ -1,6 +1,7 @@
-package Position;
+package Position.Lists;
 
 import Game.SideOfBall;
+import Position.Position;
 
 public enum PositionList {
 

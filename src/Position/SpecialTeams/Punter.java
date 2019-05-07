@@ -2,8 +2,9 @@ package Position.SpecialTeams;
 
 import Attributes.Attribute;
 import Attributes.StatAttributes;
+import Position.Lists.SubPositionList;
 import Position.Position;
-import Position.PositionList;
+import Position.Lists.PositionList;
 import Position.BaseAttribute;
 import Position.BaseAttributes;
 
@@ -11,10 +12,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public final class Punter extends Position{
-
-    public final static String POWER_SUBPOSITION_NAME = "Power";
-    public final static String ACCURATE_SUBPOSITION_NAME = "Accurate";
-    public final static String NEUTRAL_SUBPOSITION_NAME = "Neutral";
 
     private final static double POSITION_MEAN_OVERALL = 0.79;
 
@@ -62,13 +59,6 @@ public final class Punter extends Position{
             BaseAttributes.P_THROW_ACCURACY.getMean(), BaseAttributes.P_THROW_ACCURACY.getDeviation());
     private final static BaseAttribute POWER_ROUTE_RUNNING = new BaseAttribute(
             BaseAttributes.P_ROUTE_RUNNING.getMean(), BaseAttributes.P_ROUTE_RUNNING.getDeviation());
-    private final static Attribute<Double> POWER_AWARENESS_IMPORTANCE = new Attribute<>(StatAttributes.AWARENESS.getName(), 3.00);
-    private final static Attribute<Double> POWER_KICK_POWER_IMPORTANCE = new Attribute<>(StatAttributes.KICK_POWER.getName(), 3.50);
-    private final static Attribute<Double> POWER_KICK_ACCURACY_IMPORTANCE = new Attribute<>(StatAttributes.KICK_ACCURACY.getName(), 2.50);
-    private final static Attribute<Double> POWER_SPEED_IMPORTANCE = new Attribute<>(StatAttributes.SPEED.getName(), 2.25);
-    private final static Attribute<Double> POWER_TACKLE_IMPORTANCE = new Attribute<>(StatAttributes.TACKLE.getName(), 1.90);
-    private final static Attribute<Double> POWER_BREAK_BLOCK_IMPORTANCE = new Attribute<>(StatAttributes.BREAK_BLOCK.getName(), 1.75);
-    private final static Attribute<Double> POWER_ACCELERATION_IMPORTANCE = new Attribute<>(StatAttributes.ACCELERATION.getName(), 1.75);
 
     private final static BaseAttribute ACCURATE_AWARENESS = new BaseAttribute(
             BaseAttributes.P_AWARENESS.getMean(), BaseAttributes.P_AWARENESS.getDeviation());
@@ -114,13 +104,6 @@ public final class Punter extends Position{
             BaseAttributes.P_THROW_ACCURACY.getMean(), BaseAttributes.P_THROW_ACCURACY.getDeviation());
     private final static BaseAttribute ACCURATE_ROUTE_RUNNING = new BaseAttribute(
             BaseAttributes.P_ROUTE_RUNNING.getMean(), BaseAttributes.P_ROUTE_RUNNING.getDeviation());
-    private final static Attribute<Double> ACCURATE_AWARENESS_IMPORTANCE = new Attribute<>(StatAttributes.AWARENESS.getName(), 3.00);
-    private final static Attribute<Double> ACCURATE_KICK_POWER_IMPORTANCE = new Attribute<>(StatAttributes.KICK_POWER.getName(), 2.50);
-    private final static Attribute<Double> ACCURATE_KICK_ACCURACY_IMPORTANCE = new Attribute<>(StatAttributes.KICK_ACCURACY.getName(), 3.50);
-    private final static Attribute<Double> ACCURATE_SPEED_IMPORTANCE = new Attribute<>(StatAttributes.SPEED.getName(), 2.25);
-    private final static Attribute<Double> ACCURATE_TACKLE_IMPORTANCE = new Attribute<>(StatAttributes.TACKLE.getName(), 1.90);
-    private final static Attribute<Double> ACCURATE_BREAK_BLOCK_IMPORTANCE = new Attribute<>(StatAttributes.BREAK_BLOCK.getName(), 1.75);
-    private final static Attribute<Double> ACCURATE_ACCELERATION_IMPORTANCE = new Attribute<>(StatAttributes.ACCELERATION.getName(), 1.75);
 
     private final static BaseAttribute NEUTRAL_AWARENESS = new BaseAttribute(
             BaseAttributes.P_AWARENESS.getMean(), BaseAttributes.P_AWARENESS.getDeviation());
@@ -166,13 +149,6 @@ public final class Punter extends Position{
             BaseAttributes.P_THROW_ACCURACY.getMean(), BaseAttributes.P_THROW_ACCURACY.getDeviation());
     private final static BaseAttribute NEUTRAL_ROUTE_RUNNING = new BaseAttribute(
             BaseAttributes.P_ROUTE_RUNNING.getMean(), BaseAttributes.P_ROUTE_RUNNING.getDeviation());
-    private final static Attribute<Double> NEUTRAL_AWARENESS_IMPORTANCE = new Attribute<>(StatAttributes.AWARENESS.getName(), 3.00);
-    private final static Attribute<Double> NEUTRAL_KICK_POWER_IMPORTANCE = new Attribute<>(StatAttributes.KICK_POWER.getName(), 3.00);
-    private final static Attribute<Double> NEUTRAL_KICK_ACCURACY_IMPORTANCE = new Attribute<>(StatAttributes.KICK_ACCURACY.getName(), 3.00);
-    private final static Attribute<Double> NEUTRAL_SPEED_IMPORTANCE = new Attribute<>(StatAttributes.SPEED.getName(), 2.25);
-    private final static Attribute<Double> NEUTRAL_TACKLE_IMPORTANCE = new Attribute<>(StatAttributes.TACKLE.getName(), 1.90);
-    private final static Attribute<Double> NEUTRAL_BREAK_BLOCK_IMPORTANCE = new Attribute<>(StatAttributes.BREAK_BLOCK.getName(), 1.70);
-    private final static Attribute<Double> NEUTRAL_ACCELERATION_IMPORTANCE = new Attribute<>(StatAttributes.ACCELERATION.getName(), 1.70);
 
     private Punter(final String  subPositionName){
         super(PositionList.PUNTER.getName(), subPositionName, BaseAttributes.P_ATTRIBUTES, POSITION_MEAN_OVERALL);
@@ -275,18 +251,7 @@ public final class Punter extends Position{
                 routeRunningDeviation
         );
 
-        final List<Attribute<Double>> buffs = Arrays.asList(
-                POWER_ACCELERATION_IMPORTANCE,
-                POWER_AWARENESS_IMPORTANCE,
-                POWER_SPEED_IMPORTANCE,
-                POWER_TACKLE_IMPORTANCE,
-                POWER_BREAK_BLOCK_IMPORTANCE,
-                POWER_KICK_ACCURACY_IMPORTANCE,
-                POWER_KICK_POWER_IMPORTANCE
-        );
-
-        final Punter punter = new Punter(POWER_SUBPOSITION_NAME);
-        punter.setRatingsBuffs(buffs);
+        final Punter punter = new Punter(SubPositionList.PUNTER.POWER);
         punter.overwriteAttributes(attrs);
         punter.overwriteDeviations(devs);
         punter.seedRating(overallSeed);
@@ -390,18 +355,7 @@ public final class Punter extends Position{
                 routeRunningDeviation
         );
 
-        final List<Attribute<Double>> buffs = Arrays.asList(
-                ACCURATE_ACCELERATION_IMPORTANCE,
-                ACCURATE_AWARENESS_IMPORTANCE,
-                ACCURATE_SPEED_IMPORTANCE,
-                ACCURATE_TACKLE_IMPORTANCE,
-                ACCURATE_BREAK_BLOCK_IMPORTANCE,
-                ACCURATE_KICK_ACCURACY_IMPORTANCE,
-                ACCURATE_KICK_POWER_IMPORTANCE
-        );
-
-        final Punter punter = new Punter(ACCURATE_SUBPOSITION_NAME);
-        punter.setRatingsBuffs(buffs);
+        final Punter punter = new Punter(SubPositionList.PUNTER.ACCURATE);
         punter.overwriteAttributes(attrs);
         punter.overwriteDeviations(devs);
         punter.seedRating(overallSeed);
@@ -505,18 +459,7 @@ public final class Punter extends Position{
                 routeRunningDeviation
         );
 
-        final List<Attribute<Double>> buffs = Arrays.asList(
-                NEUTRAL_ACCELERATION_IMPORTANCE,
-                NEUTRAL_AWARENESS_IMPORTANCE,
-                NEUTRAL_SPEED_IMPORTANCE,
-                NEUTRAL_TACKLE_IMPORTANCE,
-                NEUTRAL_BREAK_BLOCK_IMPORTANCE,
-                NEUTRAL_KICK_ACCURACY_IMPORTANCE,
-                NEUTRAL_KICK_POWER_IMPORTANCE
-        );
-
-        final Punter punter = new Punter(NEUTRAL_SUBPOSITION_NAME);
-        punter.setRatingsBuffs(buffs);
+        final Punter punter = new Punter(SubPositionList.PUNTER.NEUTRAL);
         punter.overwriteAttributes(attrs);
         punter.overwriteDeviations(devs);
         punter.seedRating(overallSeed);
