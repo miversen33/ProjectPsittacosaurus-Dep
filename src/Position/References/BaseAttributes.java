@@ -1,9 +1,9 @@
 package Position;
 
 import Attributes.StatAttributes;
+import Position.Lists.PositionList;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public enum BaseAttributes {
 
@@ -846,6 +846,29 @@ public enum BaseAttributes {
             FB_ROUTE_RUNNING
     );
 
+    private final static Map<String, List<BaseAttributes>> positionMap;
+    static{
+        Map<String, List<BaseAttributes>> map = new HashMap<>();
+        map.put(PositionList.QUARTERBACK.getName(), QB_ATTRIBUTES);
+        map.put(PositionList.HALFBACK.getName(), HB_ATTRIBUTES);
+        map.put(PositionList.FULLBACK.getName(), FB_ATTRIBUTES);
+        map.put(PositionList.WIDE_RECEIVER.getName(), WR_ATTRIBUTES);
+        map.put(PositionList.TIGHT_END.getName(), TE_ATTRIBUTES);
+        map.put(PositionList.OFFENSIVE_TACKLE.getName(), OT_ATTRIBUTES);
+        map.put(PositionList.CENTER.getName(), C_ATTRIBUTES);
+        map.put(PositionList.GUARD.getName(), G_ATTRIBUTES);
+        map.put(PositionList.DEFENSIVE_TACKLE.getName(), DT_ATTRIBUTES);
+        map.put(PositionList.DEFENSIVE_END.getName(), DE_ATTRIBUTES);
+        map.put(PositionList.MIDDLE_LINEBACKER.getName(), MLB_ATTRIBUTES);
+        map.put(PositionList.OUTSIDE_LINEBACKER.getName(), OLB_ATTRIBUTES);
+        map.put(PositionList.CORNERBACK.getName(), CB_ATTRIBUTES);
+        map.put(PositionList.FREE_SAFETY.getName(), FS_ATTRIBUTES);
+        map.put(PositionList.STRONG_SAFETY.getName(), SS_ATTRIBUTES);
+        map.put(PositionList.PUNTER.getName(), P_ATTRIBUTES);
+        map.put(PositionList.KICKER.getName(), K_ATTRIBUTES);
+        positionMap = map;
+    }
+
     private final String name;
     private final double mean;
     private final double deviation;
@@ -872,6 +895,13 @@ public enum BaseAttributes {
 
     public final double getCap(){
         return cap;
+    }
+
+    public final static List<BaseAttributes> GetPositionAttributes(final String position){
+        if(!positionMap.containsKey(position)) {
+            System.out.println("Unable to find " + position + ". Please try again");
+        }
+        return positionMap.get(position);
     }
 
 }

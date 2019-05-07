@@ -685,7 +685,7 @@ public enum PositionImportanceValues {
         return subPosition;
     }
 
-    public final List<Attribute<Double>> getImportance(){
+    private final List<Attribute<Double>> getImportance(){
         return importance.asList();
     }
 
