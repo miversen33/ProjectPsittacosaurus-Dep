@@ -18,7 +18,6 @@ import Position.Offense.*;
 import Position.Position;
 import Position.SpecialTeams.Kicker;
 import Position.SpecialTeams.Punter;
-import Position.Lists.SubPositionList;
 import Tuple.Tuple2;
 import Utils.PhysicsObjects.Vector;
 
@@ -95,18 +94,14 @@ public class Main {
     }
 
     private final static void test(){
-        Position cornerback = Cornerback.GenerateNeutralCornerback(80);
 
-        String name = SubPositionList.CORNERBACK.COVERAGE;
-
-        int i = 0;
     }
 
     private final static void testSeedGeneration(final int seedValue){
 
         Position coverageCornerback = Cornerback.GenerateCoverageCornerback(seedValue);
-        Position ballhawkCornerback = Cornerback.GenerateHardhittingCornerback(seedValue);
         Position neutralCornerback = Cornerback.GenerateNeutralCornerback(seedValue);
+        Position ballhawkCornerback = Cornerback.GenerateHardhittingCornerback(seedValue);
 
         Position passDefensiveEnd = DefensiveEnd.GeneratePassrushDefensiveEnd(seedValue);
         Position runDefensiveEnd = DefensiveEnd.GenerateRunrushDefensiveEnd(seedValue);
@@ -115,7 +110,7 @@ public class Main {
         Position runDefensiveTackle = DefensiveTackle.GenerateRunrushDefensiveTackle(seedValue);
         Position passDefensiveTackle = DefensiveTackle.GeneratePassrushDefensiveTackle(seedValue);
         Position neutralDefensiveTackle = DefensiveTackle.GenerateNeutralrushDefensiveTackle(seedValue);
-
+//
         Position coverageFreeSafety = FreeSafety.GenerateCoverageFreeSafety(seedValue);
         Position hardhitterFreeSafety = FreeSafety.GenerateHardhittingFreeSafety(seedValue);
         Position neutralFreeSafety = FreeSafety.GenerateNeutralFreeSafety(seedValue);
