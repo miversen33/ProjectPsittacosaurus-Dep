@@ -77,4 +77,12 @@ public enum StatAttributes{
         return new Attributes<Double>(new ArrayList<>(DEFAULTS_ATTRS));
     }
 
+    public final static List<String> GetAttributeNames(){
+        final List<String> attrs = new ArrayList<>(DEFAULTS_ATTRS.size());
+        for(Attribute attr : DEFAULTS_ATTRS){
+            attrs.add(attr.getName());
+        }
+        return attrs;
+    }
+
 }
