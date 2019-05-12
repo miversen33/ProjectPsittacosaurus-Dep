@@ -12,11 +12,11 @@ public final class EventListener{
 
     private final static Map<Signature, EventHandler> handlers = new HashMap<>();
 
-    public static EventHandler CreateListener(final Observer<IEvent> observer, final IEventType ... types){
+    public static EventHandler CreateListener(final Observer<IEvent> observer, final String ... types){
         return CreateListener(observer, Arrays.asList(types));
     }
 
-    public static EventHandler CreateListener(final Observer<IEvent> observer, final List<IEventType> types){
+    public static EventHandler CreateListener(final Observer<IEvent> observer, final List<String> types){
         final EventHandler newEventHandler = new EventHandler(Signature.GenerateNewSignature(), types);
         handlers.put(newEventHandler.getSignature(), newEventHandler);
         newEventHandler.registerObserver(observer);

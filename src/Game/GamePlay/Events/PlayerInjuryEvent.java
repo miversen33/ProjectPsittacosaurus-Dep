@@ -4,14 +4,14 @@ import Game.GamePlay.GamePlayer;
 import Utils.Event.Event;
 import Utils.Signature;
 
-public final class
-PlayerInjuryEvent extends Event {
+public final class PlayerInjuryEvent extends Event {
+    public final static String NAME  = "Player Injured";
 
     private final GamePlayer injuredPlayer;
 //    Should also have a thing here to tell what kind of injury they suffered
 
     public PlayerInjuryEvent(final Signature signature, final GamePlayer player) {
-        super(signature, new PlayerInjuryEventType());
+        super(signature, NAME);
         injuredPlayer = player;
     }
 
@@ -21,6 +21,6 @@ PlayerInjuryEvent extends Event {
 
     @Override
     public String toString() {
-        return getType().getEventType()+" | "+injuredPlayer;
+        return getType()+" | "+injuredPlayer;
     }
 }

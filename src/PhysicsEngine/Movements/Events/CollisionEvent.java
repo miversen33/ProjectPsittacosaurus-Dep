@@ -7,11 +7,12 @@ import Utils.Signature;
 
 public final class CollisionEvent extends Event {
 
+    public final static String NAME  = "Collision";
     private final GamePlayer mPlayer1;
     private final GamePlayer mPlayer2;
 
     public CollisionEvent(final Signature signature, final GamePlayer player1, final GamePlayer player2){
-        super(signature, new CollisionEventType());
+        super(signature, NAME);
         mPlayer1 = player1;
         mPlayer2 = player2;
     }
@@ -22,6 +23,6 @@ public final class CollisionEvent extends Event {
 
     @Override
     public String toString() {
-        return getType().getEventType()+" "+getCollisionPair();
+        return getType()+" "+getCollisionPair();
     }
 }

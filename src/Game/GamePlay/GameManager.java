@@ -3,16 +3,13 @@ package Game.GamePlay;
 import Game.GamePlay.Events.PlayerInEndzoneEvent;
 import Game.GamePlay.Events.PlayerOutOfBoundsEvent;
 import Game.GamePlay.TimeManagement.Clock;
+import Game.GamePlay.TimeManagement.Events.GameClockEmptyEvent;
+import Game.GamePlay.TimeManagement.Events.PlayClockEmptyEvent;
 import PhysicsEngine.Movements.Events.*;
 import Utils.Event.EventHandler;
 import Utils.Event.EventListener;
 import Utils.Event.IEvent;
-import Utils.Event.IEventType;
 import Game.Field.Field;
-import Game.GamePlay.Events.PlayerInEndzoneEventType;
-import Game.GamePlay.Events.PlayerOutOfBoundsEventType;
-import Game.GamePlay.TimeManagement.Events.GameClockOutEventType;
-import Game.GamePlay.TimeManagement.Events.PlayClockOutEventType;
 import PhysicsEngine.Movements.MovementEngine;
 import Tuple.Tuple2;
 import Utils.Location;
@@ -23,6 +20,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public final class GameManager {
+
+    public final static int ON_FIELD_TEAM_SIZE = 11;
 
     private final Observer<IEvent> mEventObserver;
     private final EventHandler mEventHandler;
@@ -35,14 +34,14 @@ public final class GameManager {
 
     private final MovementEngine mMovementEngine;
 
-    private final List<IEventType> mEventTypes = Arrays.asList(
-            new GameClockOutEventType(),
-            new PlayClockOutEventType(),
-            new CollisionEventType(),
-            new TackleEventType(),
-            new PlayerInEndzoneEventType(),
-            new PlayerOutOfBoundsEventType(),
-            new BreakTackleEventType()
+    private final List<String> mEventTypes = Arrays.asList(
+            GameClockEmptyEvent.NAME,
+            PlayClockEmptyEvent.NAME,
+            CollisionEvent.NAME,
+            TackleEvent.NAME,
+            PlayerInEndzoneEvent.NAME,
+            PlayerOutOfBoundsEvent.NAME,
+            BreakTackleEvent.NAME
     );
 
     private GameTeam offense;
@@ -75,8 +74,12 @@ public final class GameManager {
         if(DEBUG){
             DEBUG_INIT();
         } else {
-
+            finishInit();
         }
+    }
+
+    private final void finishInit(){
+
     }
 
     private final void DEBUG_INIT(){
@@ -124,33 +127,35 @@ public final class GameManager {
     }
 
     private final Observer<IEvent> getEventObserver(){
+//        This should be handled by an external manager. We should register ourselves as an event
+//        handler for the following events.
         return (key, event) -> {
             switch (key.toString()){
-                case PlayerInEndzoneEventType.NAME:
+                case PlayerInEndzoneEvent.NAME:
                     handlePlayerInEndzone((PlayerInEndzoneEvent) event);
                     break;
 
-                case GameClockOutEventType.NAME:
+                case GameClockEmptyEvent.NAME:
                     handleQuarterClockEmpty();
                     break;
 
-                case PlayClockOutEventType.NAME:
+                case PlayClockEmptyEvent.NAME:
                     handlePlayClockEmpty();
                     break;
 
-                case CollisionEventType.NAME:
+                case CollisionEvent.NAME:
                     handleCollisionCheck((CollisionEvent) event);
                     break;
 
-                case PlayerOutOfBoundsEventType.NAME:
+                case PlayerOutOfBoundsEvent.NAME:
                     handlePlayerOutOfBounds((PlayerOutOfBoundsEvent) event);
                     break;
 
-                case TackleEventType.NAME:
+                case TackleEvent.NAME:
                     handleTackle((TackleEvent) event);
                     break;
 
-                case BreakTackleEventType.NAME:
+                case BreakTackleEvent.NAME:
                     handleBreakTackle((BreakTackleEvent) event);
             }
         };

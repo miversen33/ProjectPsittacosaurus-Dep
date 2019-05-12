@@ -3,11 +3,12 @@ package Utils.Event;
 import Utils.Signature;
 
 public class Event implements IEvent {
+//    TODO Document this
 
     private final Signature mSig;
-    private final IEventType mType;
+    private final String mType;
 
-    public Event(final Signature signature, final IEventType type){
+    public Event(final Signature signature, final String type){
         mSig = signature;
         mType = type;
     }
@@ -17,7 +18,7 @@ public class Event implements IEvent {
     }
 
     @Override
-    public final IEventType getType() {
+    public final String getType() {
         return mType;
     }
 

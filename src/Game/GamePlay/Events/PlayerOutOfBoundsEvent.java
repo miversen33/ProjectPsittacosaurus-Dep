@@ -5,11 +5,12 @@ import Game.GamePlay.GamePlayer;
 import Utils.Signature;
 
 public final class PlayerOutOfBoundsEvent extends Event {
+    public final static String NAME  = "Out Of Bounds";
 
     private final GamePlayer mPlayer;
 
     public PlayerOutOfBoundsEvent(final Signature signature, final GamePlayer player) {
-        super(signature, new PlayerOutOfBoundsEventType());
+        super(signature, NAME);
         mPlayer = player;
     }
 
@@ -19,6 +20,6 @@ public final class PlayerOutOfBoundsEvent extends Event {
 
     @Override
     public String toString() {
-        return getType().getEventType()+" "+mPlayer;
+        return getType()+" "+mPlayer;
     }
 }

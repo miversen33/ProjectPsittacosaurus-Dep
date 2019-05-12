@@ -5,12 +5,13 @@ import Utils.Event.Event;
 import Utils.Signature;
 
 public final class BreakTackleEvent extends Event {
+    public final static String NAME = "Break Tackle Event";
 
     private final GamePlayer mTacklee;
     private final GamePlayer mTackler;
 
     public BreakTackleEvent(final Signature signature, final GamePlayer tacklee, final GamePlayer tackler) {
-        super(signature, new BreakTackleEventType());
+        super(signature, NAME);
         mTacklee = tacklee;
         mTackler = tackler;
     }

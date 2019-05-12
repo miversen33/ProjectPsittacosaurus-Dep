@@ -5,11 +5,12 @@ import Utils.Event.Event;
 import Utils.Signature;
 
 public final class PlayerInEndzoneEvent extends Event {
+    public final static String NAME = "Player Is In Endzone";
 
     private final GamePlayer mPlayer;
 
     public PlayerInEndzoneEvent(final Signature signature, final GamePlayer player) {
-        super(signature, new PlayerInEndzoneEventType());
+        super(signature, NAME);
         mPlayer = player;
     }
 
@@ -19,6 +20,6 @@ public final class PlayerInEndzoneEvent extends Event {
 
     @Override
     public String toString() {
-        return getType().getEventType()+" "+mPlayer;
+        return getType()+" "+mPlayer;
     }
 }
