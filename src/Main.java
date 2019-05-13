@@ -251,7 +251,9 @@ public class Main {
         final Endzone offensiveGoal = Endzone.NORTH;
         final Endzone defensiveGoal = Endzone.SOUTH;
 
-        final Route offensivePlayerRoute = getInRoute(CardinalDirection.WEST, offensiveGoal.getCardinalDirection(), 15);
+        final Route offensivePlayerRoute =
+                getChairRoute(CardinalDirection.WEST, offensiveGoal.getCardinalDirection());
+//                getInRoute(CardinalDirection.WEST, offensiveGoal.getCardinalDirection(), 15);
 
         final IPlayerStrategy offensivePlayerStrat = new DefaultOffensiveStrategy(offensivePlayerRoute);
 
