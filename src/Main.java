@@ -1,3 +1,5 @@
+import Game.Field.Ball.GameBall;
+import Game.Field.Ball.GameBallState;
 import Game.Field.CardinalDirection;
 import Game.Field.Endzone;
 import Game.Field.Field;
@@ -20,6 +22,7 @@ import Position.SpecialTeams.Kicker;
 import Position.SpecialTeams.Punter;
 import Tuple.Tuple2;
 import Utils.PhysicsObjects.Vector;
+import Utils.RNG;
 import Utils.Signature;
 
 import java.util.Arrays;
@@ -33,7 +36,7 @@ public class Main {
      */
     public static void main(String[] args) {
 
-//        test();
+        testGameBall();
 //        testSeedGeneration(80);
 //        testSeedGeneration(40);
 //        testSeedGeneration(70);
@@ -42,7 +45,7 @@ public class Main {
 
 //        testNormalGeneration(495);
 
-        testRoutes();
+//        testRoutes();
 //        This is a pseudo gameManager class. Eventually this will be cleaned up
 //        And placed in its own class.
 
@@ -94,8 +97,27 @@ public class Main {
 //        }
     }
 
-    private final static void test(){
+    private final static void testGameBall(){
+        final Signature signature = Signature.GenerateNewSignature();
+        final GameManager m = new GameManager();
+        final GameBall ball = new GameBall(signature, m);
 
+        double startTime = System.currentTimeMillis();
+        double count = 1000;
+
+        while(true) {
+            if (startTime + count < System.currentTimeMillis()) {
+                double rng = RNG.Generate(0,100);
+                if (rng < 50) {
+                    if(ball.getPossessionState().isInPossession()){
+                        ball.lostPossession(m);
+                    }
+                } else {
+                    ball.changePossession(m);
+                }
+                startTime = System.currentTimeMillis();
+            }
+        }
     }
 
     private final static void testSeedGeneration(final int seedValue){
