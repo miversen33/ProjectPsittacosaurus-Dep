@@ -2,7 +2,7 @@ package Game.Field.StateMachine;
 
 import Utils.StateMachines.State;
 
-public class FieldObjectState extends State {
+public final class FieldObjectState extends State {
 
     public final static String OUT_OF_BOUNDS = "Out Of Bounds";
     public final static String IN_BOUNDS     = "In Bounds";
