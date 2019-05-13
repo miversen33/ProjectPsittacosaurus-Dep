@@ -4,7 +4,7 @@ import Game.GamePlay.GameField;
 import Game.GamePlay.GameManager;
 import Game.GamePlay.GamePlayer;
 import Game.GamePlay.PlayerStrategy.BasePlayerStrategy;
-import Game.PlayerState;
+import Game.GamePlay.StateMachine.GamePlayerState;
 import PhysicsEngine.Movements.Events.BreakTackleEvent;
 import PhysicsEngine.Movements.Events.CollisionEvent;
 import PhysicsEngine.Movements.Events.TackleEvent;
@@ -27,6 +27,11 @@ public final class MovementEngine {
         mSig = signature;
     }
 
+    /**
+     * TODO
+     * This defeats the entire purpose to having the signatures for security
+     */
+    @Deprecated
     public final Signature getSignature(){
         return mSig;
     }
@@ -63,7 +68,7 @@ public final class MovementEngine {
             if(!player.getMovementInstruction().hasBeenExecuted() && player.getMovementState().isColliding()) {
                 if (!tickClock){
                     tickClock = true;
-                    gameManager.microTickGameClock(getSignature());
+                    gameManager.microTickGameClock(mSig);
                 }
                 handleCollision(player.getMovementInstruction(), field, gameManager.getTimeStamp());
             }
@@ -92,8 +97,8 @@ public final class MovementEngine {
                 final Vector revisedP1Vector = new Vector(p1.getLocation(), collision);
                 final Vector revisedP2Vector = new Vector(p2.getLocation(), collision);
 
-                PlayerState p1CollisionState = PlayerState.COLLIDING;
-                PlayerState p2CollisionState = PlayerState.COLLIDING;
+                GamePlayerState p1CollisionState = GamePlayerState.Colliding;
+                GamePlayerState p2CollisionState = GamePlayerState.Colliding;
 
 //                Quick check to see if we are blocking instead of "colliding"
                 if(p1.getMovementState().isBlocking() || p1.getMovementState().isBlocked()){
@@ -105,11 +110,11 @@ public final class MovementEngine {
 
                 if(!tickClock){
                     tickClock = true;
-                    gameManager.microTickGameClock(getSignature());
+                    gameManager.microTickGameClock(mSig);
                 }
 
-                MovementInstruction revisedP1Instruction = new MovementInstruction(new MovementAction(PlayerState.NULL, p1, p2), revisedP1Vector);
-                MovementInstruction revisedP2Instruction = new MovementInstruction(new MovementAction(PlayerState.NULL, p2, p1), revisedP2Vector);
+                MovementInstruction revisedP1Instruction = new MovementInstruction(new MovementAction(GamePlayerState.Null, p1, p2), revisedP1Vector);
+                MovementInstruction revisedP2Instruction = new MovementInstruction(new MovementAction(GamePlayerState.Null, p2, p1), revisedP2Vector);
 
                 p1.setMovementInstruction(this, revisedP1Instruction);
                 p2.setMovementInstruction(this, revisedP2Instruction);
@@ -131,7 +136,7 @@ public final class MovementEngine {
             if (!player.getMovementState().isColliding()) {
                 if (!tickClock) {
                     tickClock = true;
-                    gameManager.tickGameClock(getSignature());
+                    gameManager.tickGameClock(mSig);
                 }
                 keepLooping = !handleMovement(player.getMovementInstruction(), field, gameManager.getTimeStamp());
             } else {
@@ -200,7 +205,7 @@ public final class MovementEngine {
         instruction.getAction().getAffectedPlayer().getMovementInstruction().execute(timestamp);
 
 //        Throws new collision event
-        new CollisionEvent(getSignature(), instruction1.getPlayer(), instruction2.getPlayer()).fire();
+        new CollisionEvent(mSig, instruction1.getPlayer(), instruction2.getPlayer()).fire();
 //        Also need to handle if collision force generated causes injury
 
     }
@@ -232,27 +237,26 @@ public final class MovementEngine {
     private final void handlePostMoveCollision(final MovementInstruction instruction, final List<GamePlayer> collidingPlayers){
         GamePlayer collidedPlayer = collidingPlayers.get(0);
 
-        PlayerState affectingState = instruction.getAction().getActionState();
-        PlayerState affectedState = PlayerState.COLLIDING;
+        GamePlayerState affectingState = instruction.getAction().getActionState();
+        GamePlayerState affectedState = GamePlayerState.Colliding;
 
         if(affectingState.isBlocking() || affectingState.isTackling()){
-            if(affectingState.isBlocking()) affectedState = PlayerState.IS_BLOCKED;
-            if(affectingState.isTackling()) affectedState = PlayerState.IS_TACKLED;
+            if(affectingState.isBlocking()) affectedState = GamePlayerState.IsBlocked;
+            if(affectingState.isTackling()) affectedState = GamePlayerState.IsTackled;
         }
 
-        final MovementInstruction firstPlayerRevisedInstruction = new MovementInstruction(new MovementAction(PlayerState.COLLIDING, instruction.getPlayer(), collidedPlayer), instruction.getVector());
-        final MovementInstruction secondPlayerRevisedInstruction = new MovementInstruction(new MovementAction(PlayerState.COLLIDING, collidedPlayer, instruction.getPlayer()), collidedPlayer.getMovementInstruction().getVector());
+        final MovementInstruction firstPlayerRevisedInstruction = new MovementInstruction(new MovementAction(GamePlayerState.Colliding, instruction.getPlayer(), collidedPlayer), instruction.getVector());
+        final MovementInstruction secondPlayerRevisedInstruction = new MovementInstruction(new MovementAction(GamePlayerState.Colliding, collidedPlayer, instruction.getPlayer()), collidedPlayer.getMovementInstruction().getVector());
 
         instruction.getPlayer().setMovementInstruction(this, firstPlayerRevisedInstruction);
-//        instruction.getPlayer().setPlayerState(this, affectingState);
         collidedPlayer.setMovementInstruction(this, secondPlayerRevisedInstruction);
-        collidedPlayer.setPlayerState(this, affectedState);
+        collidedPlayer.setCollisionState(this, affectedState);
     }
 
     //Returns true if the movement it to be completed, false if not
     private final boolean handleMovementAction(final MovementInstruction instruction, final GameField field){
-        final PlayerState movementState = instruction.getAction().getActionState();
-        final PlayerState playerCurrentState = instruction.getPlayer().getPlayerState();
+        final GamePlayerState movementState = instruction.getAction().getActionState();
+        final GamePlayerState playerCurrentState = instruction.getPlayer().getPlayerState();
 
         if(!playerCurrentState.getCounterState().isNull()){
             if(playerCurrentState.getCounterState().equals(movementState)) return handleCounterMovementAction(instruction);
@@ -264,12 +268,12 @@ public final class MovementEngine {
     }
 
     private final boolean handleCounterMovementAction(final MovementInstruction instruction){
-        final PlayerState movementState = instruction.getAction().getActionState();
-        final PlayerState playerCurrentState = instruction.getPlayer().getPlayerState();
+        final GamePlayerState movementState = instruction.getAction().getActionState();
+        final GamePlayerState playerCurrentState = instruction.getPlayer().getPlayerState();
         final double minValue = 0;
         final double maxValue = 100;
 //        TODO There should be more in this than just that. Include attributes and such
-        final double breakPoint = movementState.getDefaultCounterValue();
+        final double breakPoint = movementState.getCounterValue();
 
 //        Just in case we end up here when we aren't supposed to
         if(!playerCurrentState.getCounterState().equals(movementState)){
@@ -281,12 +285,12 @@ public final class MovementEngine {
     }
 
     private final boolean handleMissingCounterMovementAction(final MovementInstruction instruction){
-        final PlayerState movementState = instruction.getAction().getActionState();
-        final PlayerState playerCurrentState = instruction.getPlayer().getPlayerState();
+        final GamePlayerState movementState = instruction.getAction().getActionState();
+        final GamePlayerState playerCurrentState = instruction.getPlayer().getPlayerState();
         final double minValue = 0;
         final double maxValue = 100;
 //        TODO There should be more in this than just that. Include attributes and such
-        final double breakPoint = playerCurrentState.getDefaultCounterValue();
+        final double breakPoint = playerCurrentState.getCounterValue();
 
 //        Just in case we end up here when we aren't supposed to
         if(playerCurrentState.getCounterState().equals(movementState)){
@@ -311,7 +315,7 @@ public final class MovementEngine {
 
         final double minValue = 0;
         final double maxValue = 100;
-        final double breakPoint = tackled.getPlayerState().getDefaultCounterValue();
+        final double breakPoint = tackled.getPlayerState().getCounterValue();
 
         double rng = RNG.Generate(minValue, maxValue);
         if(rng < breakPoint){
