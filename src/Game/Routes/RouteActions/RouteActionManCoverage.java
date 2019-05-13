@@ -6,7 +6,7 @@ import Game.GamePlay.GameField;
 import Game.GamePlay.GamePlayer;
 import PhysicsEngine.Movements.MovementInstruction;
 import Tuple.Tuple2;
-import Utils.Location;
+import Game.Utils.Location;
 import Utils.PhysicsObjects.Vector;
 
 public class RouteActionManCoverage extends BaseRouteAction{

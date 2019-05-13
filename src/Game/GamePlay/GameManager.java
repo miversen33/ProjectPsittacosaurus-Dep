@@ -12,7 +12,7 @@ import Utils.Event.IEvent;
 import Game.Field.Field;
 import PhysicsEngine.Movements.MovementEngine;
 import Tuple.Tuple2;
-import Utils.Location;
+import Game.Utils.Location;
 import Utils.Observable.Observer;
 import Utils.Signature;
 
@@ -68,6 +68,21 @@ public final class GameManager {
         mMovementEngine = generateMovementEngine();
 
         init();
+    }
+
+    /**
+     * DONT USE
+     */
+    @Deprecated
+    public GameManager(){
+        mEventObserver = null;
+        mEventHandler = null;
+        mGameSignature = null;
+        mGameClock = null;
+        mField = null;
+        mHomeTeam = null;
+        mAwayTeam = null;
+        mMovementEngine = null;
     }
 
     private final void init(){

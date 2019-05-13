@@ -6,9 +6,9 @@ import Game.GamePlay.Events.PlayerInEndzoneEvent;
 import PhysicsEngine.Movements.MovementEngine;
 import Utils.PhysicsObjects.Vector;
 import Tuple.Tuple2;
-import Utils.Exceptions.FieldLockException;
-import Utils.Location;
-import Utils.Location.LocationKey;
+import Game.Field.FieldLockException;
+import Game.Utils.Location;
+import Game.Utils.Location.LocationKey;
 import Utils.Signature;
 
 import java.util.*;

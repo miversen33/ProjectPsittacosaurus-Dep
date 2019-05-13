@@ -2,7 +2,7 @@ package Utils.Shapes;
 
 import Utils.PhysicsObjects.Vector;
 import Tuple.Tuple2;
-import Utils.Location;
+import Game.Utils.Location;
 
 public final class Line{
     private final Tuple2<Double, Double> startingPoint;

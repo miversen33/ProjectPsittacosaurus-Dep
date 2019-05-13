@@ -2,7 +2,7 @@ package Game.Field;
 
 import Game.Field.StateMachine.FieldObjectState;
 import Tuple.Tuple2;
-import Utils.Location;
+import Game.Utils.Location;
 
 public class Field{
 

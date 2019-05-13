@@ -2,7 +2,7 @@ package Game.Field.StateMachine;
 
 import Game.Field.Field;
 import Tuple.Tuple2;
-import Utils.Location;
+import Game.Utils.Location;
 import Utils.Signature;
 import Utils.StateMachines.State;
 import Utils.StateMachines.StateMachine;

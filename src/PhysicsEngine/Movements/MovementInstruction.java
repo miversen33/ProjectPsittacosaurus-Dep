@@ -4,7 +4,7 @@ import Game.GamePlay.GamePlayer;
 import Game.GamePlay.StateMachine.GamePlayerState;
 import Utils.PhysicsObjects.Vector;
 import Tuple.Tuple2;
-import Utils.Location;
+import Game.Utils.Location;
 
 public final class MovementInstruction implements Comparable<MovementInstruction> {
     private final GamePlayer mPlayer;

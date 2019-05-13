@@ -4,7 +4,6 @@ import Game.GamePlay.GameField;
 import Game.GamePlay.GamePlayer;
 import PhysicsEngine.Movements.MovementInstruction;
 import Tuple.Tuple2;
-import Utils.Location;
 import Utils.PhysicsObjects.Vector;
 
 public final class RouteActionMove extends BaseRouteAction{

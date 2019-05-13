@@ -1,4 +1,4 @@
-package Utils;
+package Game.Utils;
 
 import Game.Field.FieldObject;
 import Utils.PhysicsObjects.Vector;

@@ -11,7 +11,7 @@ import Game.GamePlay.GamePlayer;
 import Game.IGamePlayerOwner;
 import PhysicsEngine.Movements.MovementInstruction;
 import Tuple.Tuple2;
-import Utils.Location;
+import Game.Utils.Location;
 
 import java.util.ArrayList;
 import java.util.List;

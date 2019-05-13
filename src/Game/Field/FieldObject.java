@@ -7,10 +7,9 @@ import PhysicsEngine.Movements.Movement;
 import Utils.PhysicsObjects.PhysicsObject;
 import Utils.PhysicsObjects.Vector;
 import Tuple.Tuple2;
-import Utils.Location;
+import Game.Utils.Location;
 import Utils.Observable.Observer;
 import Utils.Signature;
-import Utils.StateMachines.State;
 
 import java.util.ArrayList;
 import java.util.List;

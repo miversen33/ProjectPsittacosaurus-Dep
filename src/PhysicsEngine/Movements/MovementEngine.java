@@ -10,7 +10,7 @@ import PhysicsEngine.Movements.Events.CollisionEvent;
 import PhysicsEngine.Movements.Events.TackleEvent;
 import Utils.PhysicsObjects.Vector;
 import Tuple.Tuple2;
-import Utils.Location;
+import Game.Utils.Location;
 import Utils.RNG;
 import Utils.Signature;
 

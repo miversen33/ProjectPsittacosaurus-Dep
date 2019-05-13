@@ -13,7 +13,7 @@ import PhysicsEngine.Movements.MovementAction;
 import Utils.PhysicsObjects.Vector;
 import PhysicsEngine.Movements.MovementInstruction;
 import Tuple.Tuple2;
-import Utils.Location;
+import Game.Utils.Location;
 
 import java.util.ArrayList;
 import java.util.List;
