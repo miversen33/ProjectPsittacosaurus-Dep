@@ -4,8 +4,9 @@ import Game.Field.Endzone;
 import Game.Field.Field;
 import Game.Field.FieldObject;
 import Game.GamePlay.PlayerStrategy.IPlayerStrategy;
+import Game.GamePlay.StateMachine.GamePlayerState;
+import Game.GamePlay.StateMachine.GamePlayerStateMachine;
 import Game.IPlayerObject;
-import Game.PlayerState;
 import PhysicsEngine.Movements.MovementEngine;
 import PhysicsEngine.Movements.MovementInstruction;
 import Utils.PhysicsObjects.Vector;
@@ -29,15 +30,19 @@ public final class GamePlayer extends FieldObject implements IPlayerObject {
     private MovementInstruction mCurrentInstructions;
 
 //    private final Player player = null;
-    private PlayerState playerState = PlayerState.NULL;
+    private final GamePlayerStateMachine playerState;
+//    private PlayerState playerState = PlayerState.NULL;
 
     private IPlayerStrategy mPlayerStrat;
+    private final Signature mSignature;
 
     private boolean BALLCARRIER_FUCK_IS_THIS = false;
 
     public GamePlayer(double mass, final String name, final IPlayerStrategy playerLogic, final Signature signature) {
         super(mass, signature);
+        playerState = new GamePlayerStateMachine(signature);
         mName = name;
+        mSignature = signature;
         setPlayerStrategy(playerLogic);
     }
 //    // Eventually
@@ -122,13 +127,17 @@ public final class GamePlayer extends FieldObject implements IPlayerObject {
     }
 
     @Override
-    public final PlayerState getPlayerState() {
-        return playerState;
+    public final GamePlayerState getPlayerState() {
+        return playerState.getPlayerState();
+    }
+
+    public final GamePlayerState getPlayerCollisionState(){
+        return playerState.getCollisionState();
     }
 
     @Override
-    public final PlayerState getMovementState(){
-        if(getMovementInstruction() == null) return PlayerState.NULL;
+    public final GamePlayerState getMovementState(){
+        if(getMovementInstruction() == null) return GamePlayerState.Null;
         return getMovementInstruction().getAction().getActionState();
     }
 
@@ -137,16 +146,24 @@ public final class GamePlayer extends FieldObject implements IPlayerObject {
         return getName()+" | "+getLocation();
     }
 
-    @Override
-    public final void setPlayerState(final MovementEngine engine, final PlayerState state) {
-//        For now we accept any state. We will figure out a way to verify the engine is ours
+    public final void setCollisionState(final MovementEngine engine, final GamePlayerState state){
         if(!Signature.ValidateSignatures(mTeam.getSignature(), engine.getSignature())){
-//            Log invalid movement engine. Do not allow state change
-//            TODO
+            System.out.println("Unable to change collision state as invalid engine signature was provided.");
             return;
         }
-        playerState = state;
+        if(state.isColliding()) playerState.setCollision(mSignature);
+        if(state.isNull()) playerState.exitCollision(mSignature);
     }
+//    @Override
+//    public final void setPlayerState(final MovementEngine engine, final GamePlayerState state) {
+////        For now we accept any state. We will figure out a way to verify the engine is ours
+//        if(!Signature.ValidateSignatures(mTeam.getSignature(), engine.getSignature())){
+////            Log invalid movement engine. Do not allow state change
+////            TODO
+//            return;
+//        }
+//        playerState = state;
+//    }
 
     @Override
     public boolean sameTeamCheck(final GamePlayer comparePlayer) {
