@@ -1,5 +1,6 @@
 package Game.GamePlay;
 
+import Game.Field.StateMachine.FieldObjectState;
 import Game.GamePlay.Events.PlayerOutOfBoundsEvent;
 import Game.GamePlay.Events.PlayerInEndzoneEvent;
 import PhysicsEngine.Movements.MovementEngine;
@@ -123,8 +124,8 @@ public final class GameField {
         }
         mPlayers.get(player).move(movement);
         List<GamePlayer> playersInSpace = checkLocation(player, COLLISION_DISTANCE_CHECK);
-        if(player.getLocationState().isOutOfBounds()) new PlayerOutOfBoundsEvent(mSignature, player).fire();
-        if(player.getLocationState().isInEndzone()) new PlayerInEndzoneEvent(mSignature, player).fire();
+        if(player.getState().equals(FieldObjectState.OutOfBounds)) new PlayerOutOfBoundsEvent(mSignature, player).fire();
+        if(player.getState().equals(FieldObjectState.Endzone)) new PlayerInEndzoneEvent(mSignature, player).fire();
         return playersInSpace;
     }
 

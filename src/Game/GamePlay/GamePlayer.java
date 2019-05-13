@@ -6,7 +6,6 @@ import Game.Field.FieldObject;
 import Game.GamePlay.PlayerStrategy.IPlayerStrategy;
 import Game.IPlayerObject;
 import Game.PlayerState;
-import PhysicsEngine.Movements.MovementAction;
 import PhysicsEngine.Movements.MovementEngine;
 import PhysicsEngine.Movements.MovementInstruction;
 import Utils.PhysicsObjects.Vector;
@@ -36,8 +35,8 @@ public final class GamePlayer extends FieldObject implements IPlayerObject {
 
     private boolean BALLCARRIER_FUCK_IS_THIS = false;
 
-    public GamePlayer(double mass, final String name, final IPlayerStrategy playerLogic) {
-        super(mass);
+    public GamePlayer(double mass, final String name, final IPlayerStrategy playerLogic, final Signature signature) {
+        super(mass, signature);
         mName = name;
         setPlayerStrategy(playerLogic);
     }

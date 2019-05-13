@@ -20,6 +20,7 @@ import Position.SpecialTeams.Kicker;
 import Position.SpecialTeams.Punter;
 import Tuple.Tuple2;
 import Utils.PhysicsObjects.Vector;
+import Utils.Signature;
 
 import java.util.Arrays;
 import java.util.List;
@@ -33,7 +34,7 @@ public class Main {
     public static void main(String[] args) {
 
 //        test();
-        testSeedGeneration(80);
+//        testSeedGeneration(80);
 //        testSeedGeneration(40);
 //        testSeedGeneration(70);
 //        testSeedGeneration(99);
@@ -41,7 +42,7 @@ public class Main {
 
 //        testNormalGeneration(495);
 
-//        testRoutes();
+        testRoutes();
 //        This is a pseudo gameManager class. Eventually this will be cleaned up
 //        And placed in its own class.
 
@@ -246,6 +247,7 @@ public class Main {
 //    }
 
     private final static void testRoutes(){
+        final Signature signature = Signature.GenerateNewSignature();
         final Endzone offensiveGoal = Endzone.NORTH;
         final Endzone defensiveGoal = Endzone.SOUTH;
 
@@ -253,7 +255,7 @@ public class Main {
 
         final IPlayerStrategy offensivePlayerStrat = new DefaultOffensiveStrategy(offensivePlayerRoute);
 
-        final GamePlayer offensivePlayer = new GamePlayer(100, "Offensive Game Player", offensivePlayerStrat);
+        final GamePlayer offensivePlayer = new GamePlayer(100, "Offensive Game Player", offensivePlayerStrat, signature);
 
 //        final IRouteAction defensiveFirstMovement = new RouteActionManCoverage(offensivePlayer);
         final IRouteAction firstDefenderMovement = new RouteActionZoneCoverage(15);
@@ -270,8 +272,8 @@ public class Main {
         final IPlayerStrategy defensivePlayerStrat = new DefaultDefensiveStrategy(defender1);
         final IPlayerStrategy defensivePlayer2Strat = new DefaultDefensiveStrategy(defender2);
 
-        final GamePlayer defensivePlayer = new GamePlayer(100, "Defensive Game Player 1", defensivePlayerStrat);
-        final GamePlayer defensivePlayer2 = new GamePlayer(100, "Defensive Game Player 2", defensivePlayer2Strat);
+        final GamePlayer defensivePlayer = new GamePlayer(100, "Defensive Game Player 1", defensivePlayerStrat, signature);
+        final GamePlayer defensivePlayer2 = new GamePlayer(100, "Defensive Game Player 2", defensivePlayer2Strat, signature);
 
         final List<GamePlayer> homeTeamList = Arrays.asList(
             offensivePlayer

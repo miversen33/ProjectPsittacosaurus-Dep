@@ -3,8 +3,7 @@ package Utils.StateMachines;
 import Utils.Event.Event;
 import Utils.Signature;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class StateMachine {
     public final static String TRANSITIONING = "Transitioning";
@@ -28,18 +27,22 @@ public class StateMachine {
 
     class TransitionEvent extends Event{
         public TransitionEvent(final Signature signature, final String transition){
-            super(signature, TRANSITIONING+" to "+transition+" state");
+            super(signature, StateMachine.this+" - "+TRANSITIONING+" to "+transition+" state");
         }
     }
 
     public StateMachine(final Signature signature, final State initialState, final Transition ... transitions){
+        this(signature, initialState, Arrays.asList(transitions));
+    }
+
+    public StateMachine(final Signature signature, final State initialState, final List<Transition> transitions){
         this.signature = signature;
         currentState = initialState;
         addTransition(signature, transitions);
     }
 
-    private final void addTransition(final Signature signature, final Transition ... transition){
-        for(final Transition t : transition){
+    private final void addTransition(final Signature signature, final List<Transition> transitions){
+        for(final Transition t : transitions){
             addTransition(signature, t);
         }
     }
@@ -55,18 +58,16 @@ public class StateMachine {
     public final void transition(final String proposedTransition) throws TransitionNonExistFailure, TransitionFailure {
         if(!transitionMap.keySet().contains(proposedTransition)) throw new TransitionNonExistFailure(proposedTransition);
         final Transition transition = transitionMap.get(proposedTransition);
-        if(transition.getPreviousState() != getCurrentState()) throw new TransitionFailure(proposedTransition);
-        setState(signature, transition.getNewState());
+        if(!transition.isValidState(getCurrentState())) throw new TransitionFailure(proposedTransition);
+        setState(transition.getNewState());
     }
 
-    protected final void setState(final Signature signature, final State newState){
-        if(Signature.ValidateSignatures(this.signature, signature)){
-            previousState = currentState;
-            currentState = newState;
-            System.out.println("Transitioning to "+newState.getState());
-            new TransitionEvent(signature, newState.getState()).fire();
-            currentState.enter();
-        }
+    private final void setState(final State newState){
+        previousState = currentState;
+        currentState = newState;
+        System.out.println("Transitioning to "+newState.getState());
+        new TransitionEvent(signature, newState.getState()).fire();
+        currentState.enter();
     }
 
     public final State getCurrentState(){

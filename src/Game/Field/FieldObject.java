@@ -1,5 +1,8 @@
 package Game.Field;
 
+import Game.Field.StateMachine.FieldObjectState;
+import Game.Field.StateMachine.FieldObjectStateMachine;
+import Game.Field.StateMachine.FieldObjectTransitions;
 import Game.GamePlay.GameField;
 import PhysicsEngine.Movements.Movement;
 import Utils.PhysicsObjects.PhysicsObject;
@@ -7,8 +10,13 @@ import Utils.PhysicsObjects.Vector;
 import Tuple.Tuple2;
 import Utils.Location;
 import Utils.Observable.Observer;
+import Utils.Signature;
+import Utils.StateMachines.State;
+import Utils.StateMachines.StateMachine;
+import Utils.StateMachines.Transition;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public abstract class FieldObject extends PhysicsObject implements Observer<Tuple2<Double, Double>> {
@@ -19,12 +27,14 @@ public abstract class FieldObject extends PhysicsObject implements Observer<Tupl
     private final List<Movement> movements = new ArrayList<>();
     private Vector currentMovement = new Vector(0,0);
     private Location currentLocation = null;
-    private PlayerLocationState locationState = PlayerLocationState.OutOfBounds;
+//    private FieldObjectState locationState = FieldObjectState.OutOfBounds;
+    private final FieldObjectStateMachine fieldFSM;
     private GameField mOwner;
     private int currentTimeStamp = 0;
 
-    public FieldObject(double mass) {
+    public FieldObject(double mass, final Signature signature) {
         super(mass);
+        fieldFSM = new FieldObjectStateMachine(signature);
     }
 
     public final GameField getOwner(){
@@ -46,8 +56,8 @@ public abstract class FieldObject extends PhysicsObject implements Observer<Tupl
 
         setCurrentMovement(currentMovement);
 
-        locationState = Field.GetLocationState(new Location(getLocation()));
-
+        fieldFSM.handleMove(currentLocation.getLocation());
+//        locationState = Field.GetLocationState(new Location(getLocation()));
         if(!movements.isEmpty()) handleAccelerationCalculation();
     }
 
@@ -95,8 +105,8 @@ public abstract class FieldObject extends PhysicsObject implements Observer<Tupl
         mOwner = null;
     }
 
-    public final PlayerLocationState getLocationState(){
-        return locationState;
+    public final State getState(){
+        return fieldFSM.getCurrentState();
     }
 
     public final void clearMovementsQueue(final GameField owner){
@@ -147,4 +157,5 @@ public abstract class FieldObject extends PhysicsObject implements Observer<Tupl
     public final int getNumberOfMovementsMade(){
         return movements.size();
     }
+
 }

@@ -1,5 +1,6 @@
 package Game.Field;
 
+import Game.Field.StateMachine.FieldObjectState;
 import Tuple.Tuple2;
 import Utils.Location;
 
@@ -29,10 +30,10 @@ public class Field{
     }
 
 
-    public final static PlayerLocationState GetLocationState(final Location location){
-        if(!IsInBounds(location)) return PlayerLocationState.OutOfBounds;
-        if(IsInEndzone(location)) return PlayerLocationState.FieldOfPlay_Endzone;
-        return PlayerLocationState.FieldOfPlay;
+    public final static FieldObjectState GetLocationState(final Location location){
+        if(!IsInBounds(location)) return FieldObjectState.OutOfBounds;
+        if(IsInEndzone(location)) return FieldObjectState.Endzone;
+        return FieldObjectState.FieldOfPlay;
     }
 
     public final static boolean IsInBounds(final Location location){
