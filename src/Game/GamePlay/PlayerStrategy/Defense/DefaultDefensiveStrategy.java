@@ -6,6 +6,7 @@ import Game.GamePlay.GameField;
 import Game.GamePlay.GamePlayer;
 import Game.GamePlay.PlayerInfluence;
 import Game.GamePlay.PlayerStrategy.BasePlayerStrategy;
+import Game.GamePlay.StateMachine.GamePlayerState;
 import Game.Routes.Route;
 import PhysicsEngine.Movements.Movement;
 import PhysicsEngine.Movements.MovementAction;
@@ -82,11 +83,11 @@ public class DefaultDefensiveStrategy extends BasePlayerStrategy {
         return new Tuple2<>(GRADE, move);
     }
 
-    private final PlayerState generateMovementState(final GamePlayer host){
+    private final GamePlayerState generateMovementState(final GamePlayer host){
 //        We need some actual logic here. For now, this works
-        if(host.getPlayerState().isBlocked()) return PlayerState.BREAK_BLOCK;
-        if(Location.GetDistance(host.getLocation(), host.getBallCarrier().getLocation()) <= tackleTargetDistance) return PlayerState.TACKLING;
-        return PlayerState.NULL;
+        if(host.getPlayerState().isBlocked()) return GamePlayerState.BreakBlock;
+        if(Location.GetDistance(host.getLocation(), host.getBallCarrier().getLocation()) <= tackleTargetDistance) return GamePlayerState.Tackling;
+        return GamePlayerState.Null;
     }
 
     private final void setMove(final MovementInstruction movementInstruction){

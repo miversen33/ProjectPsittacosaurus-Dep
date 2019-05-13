@@ -2,6 +2,7 @@ package Game;
 
 import Game.Field.Endzone;
 import Game.GamePlay.GamePlayer;
+import Game.GamePlay.StateMachine.GamePlayerState;
 import PhysicsEngine.Movements.MovementAction;
 import PhysicsEngine.Movements.MovementEngine;
 
@@ -10,9 +11,9 @@ public interface IPlayerObject {
     String getName();
     String getOwnerHash();
     String getPlayerHash();
-    PlayerState getPlayerState();
-    PlayerState getMovementState();
+    GamePlayerState getPlayerState();
+    GamePlayerState getMovementState();
     void calculateMove();
-    void setPlayerState(MovementEngine engine, PlayerState state);
+//    void setPlayerState(MovementEngine engine, PlayerState state);
     boolean sameTeamCheck(GamePlayer comparePlayer);
 }

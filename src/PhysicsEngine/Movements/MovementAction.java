@@ -1,28 +1,25 @@
 package PhysicsEngine.Movements;
 
 import Game.GamePlay.GamePlayer;
-import Game.PlayerState;
-
-import java.util.Arrays;
-import java.util.List;
+import Game.GamePlay.StateMachine.GamePlayerState;
 
 public final class MovementAction {
 
-    private final PlayerState mPlayerState;
+    private final GamePlayerState mGamePlayerState;
     private final GamePlayer mAffectingPlayer;
     private final GamePlayer mAffectedPlayer;
 
-    public MovementAction(final PlayerState actionState, final GamePlayer affectingPlayer, final GamePlayer affectedPlayer){
-        mPlayerState = actionState;
+    public MovementAction(final GamePlayerState actionState, final GamePlayer affectingPlayer, final GamePlayer affectedPlayer){
+        mGamePlayerState = actionState;
         mAffectingPlayer = affectingPlayer;
         mAffectedPlayer = affectedPlayer;
     }
 
     public MovementAction(final GamePlayer affectingPlayer){
-        this(PlayerState.NULL, affectingPlayer, null);
+        this(GamePlayerState.Null, affectingPlayer, null);
     }
 
-    public final PlayerState getActionState(){ return mPlayerState; }
+    public final GamePlayerState getActionState(){ return mGamePlayerState; }
 
     /**
      * Player doing the action

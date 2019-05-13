@@ -5,10 +5,9 @@ import Game.Field.Field;
 import Game.GamePlay.GameField;
 import Game.GamePlay.GamePlayer;
 import Game.GamePlay.PlayerStrategy.BasePlayerStrategy;
-import Game.PlayerState;
+import Game.GamePlay.StateMachine.GamePlayerState;
 import PhysicsEngine.Movements.MovementAction;
 import PhysicsEngine.Movements.MovementInstruction;
-import Tuple.Tuple2;
 import Utils.PhysicsObjects.Vector;
 
 import java.util.List;
@@ -58,7 +57,7 @@ public class RouteActionRunBlock extends BaseRouteAction{
             }
         }
 
-        final MovementAction moveAction = new MovementAction(PlayerState.RUN_BLOCKING, hostPlayer, playerToBlock);
+        final MovementAction moveAction = new MovementAction(GamePlayerState.RunBlocking, hostPlayer, playerToBlock);
         return new MovementInstruction(moveAction, new Vector(hostPlayer.getLocation(), playerToBlock.getLocation()));
     }
 

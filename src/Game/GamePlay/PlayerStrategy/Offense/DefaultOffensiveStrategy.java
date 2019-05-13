@@ -6,8 +6,8 @@ import Game.GamePlay.GameField;
 import Game.GamePlay.GamePlayer;
 import Game.GamePlay.PlayerInfluence;
 import Game.GamePlay.PlayerStrategy.BasePlayerStrategy;
+import Game.GamePlay.StateMachine.GamePlayerState;
 import Game.IGamePlayerOwner;
-import Game.PlayerState;
 import Game.Routes.Route;
 import PhysicsEngine.Movements.Movement;
 import PhysicsEngine.Movements.MovementAction;
@@ -106,7 +106,7 @@ public class DefaultOffensiveStrategy extends BasePlayerStrategy {
             v = new Vector(v.getDirection(), magnitude);
         }
 
-        final MovementAction a = new MovementAction(PlayerState.RUN_BLOCKING, hostPlayer, defender);
+        final MovementAction a = new MovementAction(GamePlayerState.RunBlocking, hostPlayer, defender);
 
         setMove(new MovementInstruction(a, v));
     }
