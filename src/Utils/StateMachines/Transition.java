@@ -4,14 +4,25 @@ public class Transition {
     private final String transition;
     private final State prevState;
     private final State newState;
+    private final boolean bothWays;
+    /**
+     * This assumes transitions can only be one way
+     */
+    public Transition(final String transition, final State previousState, final State newState){
+        this(transition, previousState, newState, false);
+    }
 
     /**
      * This allows for a transition to be for both ways (to either state)
      */
-    public Transition(final String transition, final State previousState, final State newState){
+    @Deprecated
+    public Transition(final String transition, final State previousState, final State newState, final boolean bothWays){
+//        TODO
+//        Figure out if we really want this...?
         this.transition = transition;
         this.prevState = previousState;
         this.newState = newState;
+        this.bothWays = bothWays;
     }
 
     public final String getTransition(){
@@ -26,8 +37,9 @@ public class Transition {
         return newState;
     }
 
-    public final boolean isValidState(final State previousState){
-       return previousState == null || getPreviousState().equals(previousState);
+    public final boolean isValidState(final State state){
+        if(!bothWays) return state == null || getPreviousState().equals(state);
+        return getPreviousState().equals(state) || getNewState().equals(state);
     }
 
     @Override
