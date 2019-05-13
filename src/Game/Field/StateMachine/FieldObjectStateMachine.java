@@ -15,7 +15,8 @@ public class FieldObjectStateMachine extends StateMachine {
 
     public final void handleMove(final Tuple2<Double, Double> newLocation){
         final State newState = Field.GetLocationState(new Location(newLocation));
-        final String transition = FieldObjectTransitions.GetTransition(newState);
+        if(newState.equals(getCurrentState())) return;
+        final String transition = FieldObjectTransitions.GetTransition(getCurrentState(), newState);
         try {
             transition(transition);
         } catch (TransitionNonExistFailure | TransitionFailure transitionFailure) {

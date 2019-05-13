@@ -10,7 +10,7 @@ public class FieldObjectState extends State {
 
     public final static FieldObjectState OutOfBounds = new FieldObjectState(OUT_OF_BOUNDS);
     public final static FieldObjectState Endzone = new FieldObjectState(IN_ENDZONE);
-    public final static FieldObjectState FieldOfPlay = new FieldObjectState(IN_BOUNDS);
+    public final static FieldObjectState InBounds = new FieldObjectState(IN_BOUNDS);
 
     private FieldObjectState(final String newState) {
         super(newState);

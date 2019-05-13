@@ -88,8 +88,8 @@ public final class GameManager {
 
 //        These should not be done here, but rather by a coach object or the player themselves
         final Tuple2<Double, Double> offensive1Location = new Tuple2<>(Field.FIELD_WIDTH - 20, Field.FIELD_HEIGHT - 30);
-        final Tuple2<Double, Double> defender1Location = new Tuple2<>(offensive1Location.getFirst() - 30, offensive1Location.getSecond() - 25);
-        final Tuple2<Double, Double> defender2Location = new Tuple2<>(offensive1Location.getFirst() - 75, offensive1Location.getSecond() - 25);
+//        final Tuple2<Double, Double> defender1Location = new Tuple2<>(offensive1Location.getFirst() - 30, offensive1Location.getSecond() - 25);
+//        final Tuple2<Double, Double> defender2Location = new Tuple2<>(offensive1Location.getFirst() - 75, offensive1Location.getSecond() - 25);
 
         offense = mHomeTeam;
         defense = mAwayTeam;
@@ -99,11 +99,11 @@ public final class GameManager {
 
         mField.addPlayer(offensive1, new Location(offensive1Location));
 
-        final GamePlayer defender = defense.getPlayers().get(0);
-        final GamePlayer defender2 = defense.getPlayers().get(1);
+//        final GamePlayer defender = defense.getPlayers().get(0);
+//        final GamePlayer defender2 = defense.getPlayers().get(1);
 
-        mField.addPlayer(defender, new Location(defender1Location));
-        mField.addPlayer(defender2, new Location(defender2Location));
+//        mField.addPlayer(defender, new Location(defender1Location));
+//        mField.addPlayer(defender2, new Location(defender2Location));
 
         fieldLock = mField.lock();
     }

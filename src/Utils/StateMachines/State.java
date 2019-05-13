@@ -17,4 +17,9 @@ public class State {
      * or listen for the event, or both in order to handle the transition
      */
     protected void enter(){}
+
+    @Override
+    public String toString() {
+        return "State ("+state+")";
+    }
 }

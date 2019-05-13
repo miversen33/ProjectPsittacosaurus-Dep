@@ -65,7 +65,7 @@ public class StateMachine {
     private final void setState(final State newState){
         previousState = currentState;
         currentState = newState;
-        System.out.println("Transitioning to "+newState.getState());
+        System.out.println(StateMachine.this+" - "+TRANSITIONING+" to "+newState.getState());
         new TransitionEvent(signature, newState.getState()).fire();
         currentState.enter();
     }

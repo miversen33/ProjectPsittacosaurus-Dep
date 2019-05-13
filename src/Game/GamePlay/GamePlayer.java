@@ -52,7 +52,7 @@ public final class GamePlayer extends FieldObject implements IPlayerObject {
     final void assignManager(final GameManager manager){
         if(mManager != null){
 //            Log invalid attempt to overwrite game manager
-            System.out.println("Cannot overwite existing game manager in game player");
+            System.out.println("Cannot overwrite existing game manager in game player");
             return;
         }
         mManager= manager;
@@ -218,6 +218,8 @@ public final class GamePlayer extends FieldObject implements IPlayerObject {
 //        If we reach here, we can assume that the movement instruction has been executed
 //        if(mCurrentInstructions != null && mCurrentInstructions.hasBeenExecuted()) timeStampMovement();
     }
+
+
 
     private final void timeStampMovement(){
 //        if(mCurrentInstructions.getAction().getActionState().isColliding()){

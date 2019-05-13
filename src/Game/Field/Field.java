@@ -33,7 +33,7 @@ public class Field{
     public final static FieldObjectState GetLocationState(final Location location){
         if(!IsInBounds(location)) return FieldObjectState.OutOfBounds;
         if(IsInEndzone(location)) return FieldObjectState.Endzone;
-        return FieldObjectState.FieldOfPlay;
+        return FieldObjectState.InBounds;
     }
 
     public final static boolean IsInBounds(final Location location){
