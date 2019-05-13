@@ -124,8 +124,8 @@ public final class GameField {
         }
         mPlayers.get(player).move(movement);
         List<GamePlayer> playersInSpace = checkLocation(player, COLLISION_DISTANCE_CHECK);
-        if(player.getState().equals(FieldObjectState.OutOfBounds)) new PlayerOutOfBoundsEvent(mSignature, player).fire();
-        if(player.getState().equals(FieldObjectState.Endzone)) new PlayerInEndzoneEvent(mSignature, player).fire();
+        if(player.getFieldState().equals(FieldObjectState.OutOfBounds)) new PlayerOutOfBoundsEvent(mSignature, player).fire();
+        if(player.getFieldState().equals(FieldObjectState.Endzone)) new PlayerInEndzoneEvent(mSignature, player).fire();
         return playersInSpace;
     }
 

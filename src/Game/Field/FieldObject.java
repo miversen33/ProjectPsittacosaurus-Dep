@@ -1,5 +1,6 @@
 package Game.Field;
 
+import Game.Field.StateMachine.FieldObjectState;
 import Game.Field.StateMachine.FieldObjectStateMachine;
 import Game.GamePlay.GameField;
 import PhysicsEngine.Movements.Movement;
@@ -99,8 +100,8 @@ public abstract class FieldObject extends PhysicsObject implements Observer<Tupl
         mOwner = null;
     }
 
-    public final State getState(){
-        return fieldFSM.getCurrentState();
+    public final FieldObjectState getFieldState(){
+        return (FieldObjectState) fieldFSM.getCurrentState();
     }
 
     public final void clearMovementsQueue(final GameField owner){
