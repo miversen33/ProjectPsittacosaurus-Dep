@@ -9,6 +9,7 @@ import Game.GamePlay.StateMachine.GamePlayerStateMachine;
 import Game.IPlayerObject;
 import PhysicsEngine.Movements.MovementEngine;
 import PhysicsEngine.Movements.MovementInstruction;
+import Position.Position;
 import Utils.PhysicsObjects.Vector;
 import Tuple.Tuple2;
 import Utils.Signature;
@@ -17,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class GamePlayer extends FieldObject implements IPlayerObject {
-//    Find a better location than Field Package
 
     private GameTeam mTeam = null;
     private final String mName;
@@ -35,6 +35,7 @@ public final class GamePlayer extends FieldObject implements IPlayerObject {
 
     private IPlayerStrategy mPlayerStrat;
     private final Signature mSignature;
+    private final Position mPosition;
 
     private boolean BALLCARRIER_FUCK_IS_THIS = false;
 
@@ -43,8 +44,13 @@ public final class GamePlayer extends FieldObject implements IPlayerObject {
         playerState = new GamePlayerStateMachine(signature);
         mName = name;
         mSignature = signature;
+        mPosition = null;
         setPlayerStrategy(playerLogic);
     }
+
+//    public GamePlayer(final double mass, final String name, final IPlayerStrategy playerLogic, final Signature signature, final Position position){
+//
+//    }
 //    // Eventually
 //    public GamePlayer(final GameTeam mTeam, final Player player, final IPlayerStrategy strategy) {
 //        super(player.getMass());
@@ -69,11 +75,13 @@ public final class GamePlayer extends FieldObject implements IPlayerObject {
         return new ArrayList<>();
     }
 
+    @Deprecated
     public final void DEBUG_setBallCarrier(final boolean isBallCarrier){
 //        Who cares about security, this is the worst thing in existence anyway
         BALLCARRIER_FUCK_IS_THIS = isBallCarrier;
     }
 
+    @Deprecated
     public final boolean DEBUG_isBallCarrier(){
         return BALLCARRIER_FUCK_IS_THIS;
     }
@@ -154,16 +162,6 @@ public final class GamePlayer extends FieldObject implements IPlayerObject {
         if(state.isColliding()) playerState.setCollision(mSignature);
         if(state.isNull()) playerState.exitCollision(mSignature);
     }
-//    @Override
-//    public final void setPlayerState(final MovementEngine engine, final GamePlayerState state) {
-////        For now we accept any state. We will figure out a way to verify the engine is ours
-//        if(!Signature.ValidateSignatures(mTeam.getSignature(), engine.getSignature())){
-////            Log invalid movement engine. Do not allow state change
-////            TODO
-//            return;
-//        }
-//        playerState = state;
-//    }
 
     @Override
     public boolean sameTeamCheck(final GamePlayer comparePlayer) {
@@ -232,17 +230,6 @@ public final class GamePlayer extends FieldObject implements IPlayerObject {
     public final void updateObserver(Object key, Tuple2<Double, Double> itemChanged) {
         provideTimeStamp(mManager.getTimeStamp());
         super.updateObserver(key, itemChanged);
-//        If we reach here, we can assume that the movement instruction has been executed
-//        if(mCurrentInstructions != null && mCurrentInstructions.hasBeenExecuted()) timeStampMovement();
     }
 
-
-
-    private final void timeStampMovement(){
-//        if(mCurrentInstructions.getAction().getActionState().isColliding()){
-//            mCurrentInstructions.setUsedTime(MovementInstruction.COLLISION_USED_TIME);
-//        } else {
-//            mCurrentInstructions.setUsedTime(MovementInstruction.DEFAULT_USED_TIME);
-//        }
-    }
 }
