@@ -8,34 +8,23 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Formation {
-    private List<Tuple2<String, Tuple2<Double, Double>>> locations = new ArrayList<>(GameManager.ON_FIELD_TEAM_SIZE);
+public abstract class Formation{
 
-    protected Formation(final List<Tuple2<String, Tuple2<Double, Double>>> locations){
-        if(locations.size() != GameManager.ON_FIELD_TEAM_SIZE){
-//            TODO Handle Logging
-            System.out.println("We cannot add the locations given as it is incorrectly formatted. Please check and try again");
-            return;
-        }
-        this.locations.addAll(Collections.unmodifiableList(locations));
+    private final List<Tuple2<GamePlayer, Tuple2<Double, Double>>> locations = new ArrayList<>(GameManager.ON_FIELD_TEAM_SIZE);
+
+    public final void addLocation(final int slot, final GamePlayer player, final Tuple2<Double, Double> newLocation){
+        locations.add(slot, new Tuple2<>(player, newLocation));
+    }
+
+    public final List<Tuple2<GamePlayer, Tuple2<Double, Double>>> getLocations(){
+        return new ArrayList<>(Collections.unmodifiableList(locations));
     }
 
     /**
-     * This will return a Tuple2 with coordinates off the center (position 1)
+     * Returns a list (in importance order) of slots that are recommended for this player.
+     * This may return an empty list, if that is the case, this player is not recommended
+     * for this formation. That doesn't mean you can't use them, just that the
+     * system doesn't believe that player will be effective in the provided formation
      */
-    public final Tuple2<Double, Double> getLocation(final int locationInList){
-        if(locationInList > locations.size()){
-//            TODO Handle logging
-            System.out.println("Unable to get position "+locationInList+" as that is outside the locations list");
-            return null;
-        }
-        return locations.get(locationInList).getSecond();
-    }
-//
-//    public final List<Tuple2<Double, Double>> getRecommendedLocations(final GamePlayer player){
-//        final List<Tuple2<Double, Double>> l = new ArrayList<>();
-//        for(final Tuple2<String, Tuple2<Double, Double>> location : locations){
-//            if(location.getFirst().equalsIgnoreCase(player.))
-//        }
-//    }
+    public abstract List<Integer> getRecommendedLocations(final GamePlayer player);
 }
