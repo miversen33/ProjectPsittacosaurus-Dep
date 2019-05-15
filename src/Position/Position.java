@@ -47,6 +47,14 @@ public abstract class Position {
         }
     }
 
+    public final String getPosition(){
+        return name;
+    }
+
+    public final String getSubPosition(){
+        return subPosition;
+    }
+
     private final void handleBaseAttrs(final List<BaseAttributes> baseAttrs){
         for(final BaseAttributes baseAttr : baseAttrs){
             attributes.addAttribute(new Attribute<>(baseAttr.getName(), baseAttr.getMean()));
