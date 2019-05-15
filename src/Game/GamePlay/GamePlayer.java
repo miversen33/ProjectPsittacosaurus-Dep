@@ -180,6 +180,10 @@ public final class GamePlayer extends FieldObject implements IPlayerObject {
 //        return true;
 //    }
 
+    public final Position DEBUG_getPosition(){
+        return mPosition;
+    }
+
     final void clearMovementInstruction(final GameField field){
         if(!(getOwner().equals(field))){
 //            Handle logging due to invalid field
