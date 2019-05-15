@@ -1,8 +1,8 @@
 package Position.Defense;
 
-import Position.Lists.SubPositionList;
+import Position.References.Lists.SubPositionList;
 import Position.Position;
-import Position.Lists.PositionList;
+import Position.References.Lists.PositionList;
 
 public final class DefensiveTackle extends Position{
 

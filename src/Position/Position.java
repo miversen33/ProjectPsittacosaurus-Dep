@@ -2,7 +2,7 @@ package Position;
 
 import Attributes.Attribute;
 import Attributes.Attributes;
-import Position.Lists.SubPositionList;
+import Position.References.Lists.SubPositionList;
 import Position.References.BaseAttributes;
 import Position.References.MeanOverallValues;
 import Position.References.PositionImportanceValues;

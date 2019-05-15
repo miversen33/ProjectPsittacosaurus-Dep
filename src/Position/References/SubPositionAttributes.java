@@ -3,8 +3,8 @@ package Position.References;
 import Attributes.Attribute;
 import Attributes.Attributes;
 import Attributes.StatAttributes;
-import Position.Lists.PositionList;
-import Position.Lists.SubPositionList;
+import Position.References.Lists.PositionList;
+import Position.References.Lists.SubPositionList;
 
 import java.util.ArrayList;
 import java.util.Arrays;

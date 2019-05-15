@@ -1,6 +1,6 @@
 package Position.References;
 
-import Position.Lists.PositionList;
+import Position.References.Lists.PositionList;
 
 import java.util.Arrays;
 import java.util.List;

@@ -1,7 +1,7 @@
 package Position.References;
 
 import Attributes.StatAttributes;
-import Position.Lists.PositionList;
+import Position.References.Lists.PositionList;
 
 import java.util.*;
 
