@@ -4,12 +4,17 @@ import Game.GamePlay.Formation.Formation;
 import Game.GamePlay.GamePlayer;
 import Position.References.Lists.PositionList;
 import Position.Position;
+import Tuple.Tuple2;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 public final class TEST_Twins_Right extends Formation {
+
+    public TEST_Twins_Right(List<Tuple2<Double, Double>> locationsOffBall) {
+        super(locationsOffBall);
+    }
 
     /**
      * This should look something like this
