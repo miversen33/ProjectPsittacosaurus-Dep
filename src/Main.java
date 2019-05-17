@@ -25,6 +25,7 @@ import Utils.PhysicsObjects.Vector;
 import Utils.RNG;
 import Utils.Signature;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
@@ -36,7 +37,8 @@ public class Main {
      */
     public static void main(String[] args) {
 
-        testGameBall();
+        testXMLReader();
+//        testGameBall();
 //        testSeedGeneration(80);
 //        testSeedGeneration(40);
 //        testSeedGeneration(70);
@@ -95,6 +97,16 @@ public class Main {
 //        while(true){
 //            gameManager.cycle();
 //        }
+    }
+
+    private final static void testXMLReader(){
+        final String fileLocation = "/home/mike/git/ProjectPsittacosaurus/testResources/formationTest.xml";
+        final File readInFile = new File(fileLocation);
+        if(!readInFile.exists()){
+            System.out.println("Unable to read in file. Exiting");
+            return;
+        }
+
     }
 
     private final static void testGameBall(){
