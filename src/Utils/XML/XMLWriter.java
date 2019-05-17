@@ -19,14 +19,10 @@ public final class XMLWriter implements XMLStrings{
         mXML = xml;
     }
 
-    public final void write(){
-        try {
-            FileWriter w = new FileWriter(mOutput);
-            handleSiftXML(w, mXML);
-            w.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public final void write() throws IOException {
+        FileWriter w = new FileWriter(mOutput);
+        handleSiftXML(w, mXML);
+        w.close();
     }
 
     private final void handleSiftXML(final Writer w, final XMLEntry e) throws IOException {
