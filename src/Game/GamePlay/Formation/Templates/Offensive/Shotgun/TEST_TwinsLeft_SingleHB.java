@@ -12,8 +12,54 @@ import java.util.List;
 
 public final class TEST_TwinsLeft_SingleHB extends Formation {
 
-    public TEST_TwinsLeft_SingleHB(List<Tuple2<Double, Double>> locationsOffBall) {
-        super(locationsOffBall);
+    /**
+     *   	     °
+     * W1	TGCGT		W3
+     *  W2	           E
+     *
+     *
+     * 	    RQ
+     * C   (0,1)
+     * LG (-3,1)
+     * LT  (-6,1)
+     * RG (3,1)
+     * RT (6,1)
+     * W1 (-15,1)
+     * W2 (-12,3)
+     * W3 (21,1)
+     * E (7,3)
+     * Q (0, 16)
+     * R (-3, 16)
+     */
+
+    private static final Tuple2<Double, Double> W1 = new Tuple2<>(-15.0, 1.0);
+    private static final Tuple2<Double, Double> W2 = new Tuple2<>(-12.0, 3.0);
+    private static final Tuple2<Double, Double> W3 = new Tuple2<>(21.0, 1.0);
+    private static final Tuple2<Double, Double> LT = new Tuple2<>(-6.0, 1.0);
+    private static final Tuple2<Double, Double> LG = new Tuple2<>(-3.0, 1.0);
+    private static final Tuple2<Double, Double> C  = new Tuple2<>(0.0, 1.0);
+    private static final Tuple2<Double, Double> RG = new Tuple2<>(3.0, 1.0);
+    private static final Tuple2<Double, Double> RT = new Tuple2<>(6.0, 1.0);
+    private static final Tuple2<Double, Double> TE = new Tuple2<>(7.0, 3.0);
+    private static final Tuple2<Double, Double> RB = new Tuple2<>(-3.0, 16.0);
+    private static final Tuple2<Double, Double> QB = new Tuple2<>(0.0, 16.0);
+
+    private static final List<Tuple2<Double, Double>> locations = Arrays.asList(
+        QB,
+        LT,
+        LG,
+        C,
+        RG,
+        RT,
+        W1,
+        W2,
+        RB,
+        TE,
+        W3
+    );
+
+    public TEST_TwinsLeft_SingleHB(){
+        super(locations);
     }
 
     /**

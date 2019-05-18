@@ -12,8 +12,34 @@ import java.util.List;
 
 public final class TEST_Twins_Right extends Formation {
 
-    public TEST_Twins_Right(List<Tuple2<Double, Double>> locationsOffBall) {
-        super(locationsOffBall);
+    private static final Tuple2<Double, Double> W1 = new Tuple2<>(15.0, 1.0);
+    private static final Tuple2<Double, Double> FB = new Tuple2<>(0.0, 8.0);
+    private static final Tuple2<Double, Double> W2 = new Tuple2<>(21.0, 1.0);
+    private static final Tuple2<Double, Double> LT = new Tuple2<>(-6.0, 1.0);
+    private static final Tuple2<Double, Double> LG = new Tuple2<>(-3.0, 1.0);
+    private static final Tuple2<Double, Double> C  = new Tuple2<>(0.0, 1.0);
+    private static final Tuple2<Double, Double> RG = new Tuple2<>(3.0, 1.0);
+    private static final Tuple2<Double, Double> RT = new Tuple2<>(6.0, 1.0);
+    private static final Tuple2<Double, Double> TE = new Tuple2<>(9.0, 3.0);
+    private static final Tuple2<Double, Double> RB = new Tuple2<>(0.0, 16.0);
+    private static final Tuple2<Double, Double> QB = new Tuple2<>(0.0, 4.0);
+
+    private static final List<Tuple2<Double, Double>> locations = Arrays.asList(
+            QB,
+            LT,
+            LG,
+            C,
+            RG,
+            RT,
+            TE,
+            FB,
+            RB,
+            W1,
+            W2
+    );
+
+    public TEST_Twins_Right() {
+        super(locations);
     }
 
     /**

@@ -24,8 +24,10 @@ import Tuple.Tuple2;
 import Utils.PhysicsObjects.Vector;
 import Utils.RNG;
 import Utils.Signature;
+import Utils.XML.XMLReader;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -100,12 +102,18 @@ public class Main {
     }
 
     private final static void testXMLReader(){
-        final String fileLocation = "/home/mike/git/ProjectPsittacosaurus/testResources/formationTest.xml";
-        final File readInFile = new File(fileLocation);
-        if(!readInFile.exists()){
-            System.out.println("Unable to read in file. Exiting");
-            return;
+//        final String fileLocation = "/home/mike/git/ProjectPsittacosaurus/testResources/formationTest.xml";
+        final String fileLocation = "/home/miversen33/git/ProjectPsittacosaurus/testResources/formationTest.xml";
+        try {
+            XMLReader.Read(fileLocation);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+//        final File readInFile = new File(fileLocation);
+//        if(!readInFile.exists()){
+//            System.out.println("Unable to read in file. Exiting");
+//            return;
+//        }
 
     }
 
