@@ -1,0 +1,10 @@
+<Formation>
+    <Slot>
+        <index>"0"</index>
+        <Location>
+            <x>"0"</x>
+            <y>"0"</y>
+        </Location>
+        <Test>"0"</Test>
+    </Slot>
+</Formation>
