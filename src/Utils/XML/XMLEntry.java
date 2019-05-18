@@ -36,15 +36,15 @@ public class XMLEntry implements XMLStrings{
     }
 
     public final String getCloseLabel(){
-        return CLOSE_BRACKET+mLabel+END_BRACKET;
+        return CLOSE_BRACKET_WITH_TITLE+mLabel+ OPEN_END_BRACKET;
     }
 
     private final String parseAsChild(){
-        return parseAsParent()+mInfo+getCloseLabel();
+        return parseAsParent()+QUOTATION+mInfo+QUOTATION+getCloseLabel();
     }
 
     private final String parseAsParent(){
-        return getXMLLabel()+END_BRACKET;
+        return getXMLLabel()+ OPEN_END_BRACKET;
     }
 
     private final String getXMLLabel(){

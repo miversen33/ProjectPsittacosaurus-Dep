@@ -26,5 +26,4 @@ public class XMLParent extends XMLEntry{
     public final boolean isEmpty(){
         return size() == 0;
     }
-
 }
