@@ -25,7 +25,6 @@ import Utils.PhysicsObjects.Vector;
 import Utils.RNG;
 import Utils.Signature;
 import Utils.XML.XMLEntry;
-import Utils.XML.XMLParent;
 import Utils.XML.XMLReader;
 import Utils.XML.XMLWriter;
 
@@ -33,8 +32,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-
-import static Utils.XML.XMLStrings.LINE_BREAK;
 
 public class Main {
 
@@ -111,7 +108,7 @@ public class Main {
 //        final String fileLocation = "/home/miversen33/git/ProjectPsittacosaurus/testResources/";
 //        final String inputFile = fileLocation + "formationTest.xml";
         final String outputFile = fileLocation + "formationOutputTest.xml";
-        final String inputFile = fileLocation + "formationOutputTest.xml";
+        final String inputFile = fileLocation + "formationTest.xml";
         XMLEntry entry = null;
         try {
             entry = XMLReader.Read(inputFile);
@@ -119,12 +116,13 @@ public class Main {
             e.printStackTrace();
         }
 
-        XMLParent p = (XMLParent) entry;
-        try {
-            XMLWriter.NewInstance(outputFile, p).write();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        int i = 0;
+        // XMLParent p = (XMLParent) entry;
+        // try {
+        //     XMLWriter.NewInstance(outputFile, p).write();
+        // } catch (IOException e) {
+        //     e.printStackTrace();
+        // }
     }
 
     private final static void testGameBall(){
