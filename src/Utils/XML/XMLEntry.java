@@ -13,8 +13,8 @@ public class XMLEntry implements XMLStrings{
 
     public XMLEntry(final String label) {
         mLabel = label;
-        mProperties = new ArrayList<>();
         mChildren = new ArrayList<>();
+        mProperties = new ArrayList<>();
     }
 
     public final boolean hasParent(){
@@ -23,8 +23,8 @@ public class XMLEntry implements XMLStrings{
 
     public final void setParent(final XMLEntry parent){
         if(mParent != null){
-            // TODO
-            // LOG INVALID PARENT OVERRIDE
+//             TODO
+//             LOG INVALID PARENT OVERRIDE
             System.out.println("Cannot overwrite parent for "+mLabel);
             return;
         }
@@ -57,9 +57,8 @@ public class XMLEntry implements XMLStrings{
     }
 
     public final void addChild(final Object child){
-        int i = 0;
         this.mChildren.add(child);
-        i = 1;
+        if(child instanceof XMLEntry) ((XMLEntry) child).setParent(this);
     }
 
     public final String getLabel(){
@@ -75,15 +74,25 @@ public class XMLEntry implements XMLStrings{
     }
 
     public final String parseToXML(){
+        return parseToXML(true);
+    }
+
+    private final String parseToXML(final boolean discardChildren){
         String xml = getOpenLabel();
         for(final XMLProperty property : mProperties){
             xml += LINE_BREAK;
             xml += property.toString();
         }
         xml += OPEN_END_BRACKET;
-        while(!mChildren.isEmpty()){
-            xml += mChildren.get(0).toString();
-            mChildren.remove(0);
+        if(discardChildren) {
+            while (!mChildren.isEmpty()) {
+                xml += mChildren.get(0).toString();
+                mChildren.remove(0);
+            }
+        } else {
+            for (final Object child : mChildren){
+                xml += child.toString();
+            }
         }
 
         return xml;
@@ -91,7 +100,8 @@ public class XMLEntry implements XMLStrings{
 
     @Override
     public final String toString(){
-        return parseToXML();
+//        return super.toString();
+        return parseToXML(false);
     }
 
 }

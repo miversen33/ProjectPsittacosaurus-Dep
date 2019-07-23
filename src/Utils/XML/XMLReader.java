@@ -75,28 +75,36 @@ public final class XMLReader implements XMLStrings{
         boolean isProperty;
         line = line.replace(INDENTATION,"");
         isEnd = line.startsWith(CLOSE_BRACKET_WITH_TITLE);
-        isBeginning = (!isEnd && line.startsWith(BEGIN_BRACKET) &! line.endsWith(CLOSE_BRACKET) &! line.contains(CLOSE_BRACKET_WITH_TITLE));
+        isBeginning = (!isEnd && line.startsWith(BEGIN_BRACKET)/* &! line.endsWith(CLOSE_BRACKET) &! line.contains(CLOSE_BRACKET_WITH_TITLE)*/);
         isProperty = (!isEnd && !isBeginning && line.length() > 0);
-        line = line.replace(CLOSE_BRACKET,"");
-        line = line.replace(OPEN_END_BRACKET,"");
-        line = line.replace(QUOTATION,"");
-        line = line.replace(BEGIN_BRACKET, "");
+        // line = line.replace(CLOSE_BRACKET,"");
+        // line = line.replace(OPEN_END_BRACKET,"");
+        // line = line.replace(QUOTATION,"");
+        // line = line.replace(BEGIN_BRACKET, "");
         
         if(!isBeginning && !isEnd && !isProperty){
             parent.addChild(line);
         }
 
-        if(isProperty){
-            parent.addProperty(createProperty(line));
+        if(isBeginning){
+            String label = line.split(BEGIN_BRACKET)[1];
+            if(label.contains(OPEN_END_BRACKET)) label = label.split(OPEN_END_BRACKET)[0];
+            String remainingLine = line.split(BEGIN_BRACKET)[1];
+            if(remainingLine.contains(OPEN_END_BRACKET)) remainingLine = remainingLine.split(OPEN_END_BRACKET)[1];
+            if(remainingLine.contains("\\")) remainingLine = remainingLine.split("\\")[0];
+            if(remainingLine.equalsIgnoreCase(label)) remainingLine = "";
+            // final String remainingLine = line.split(BEGIN_BRACKET)[1].split(OPEN_END_BRACKET)[0].split("\\")[0];
+            XMLEntry child = createNewChild(label);
+            parent.addChild(child);
+            if(remainingLine.length() > 0){
+                return handleLine(remainingLine, child);
+            }
+            return child;
         }
 
-        if(isBeginning){
-            XMLEntry child = createNewChild(line);
-            parent.addChild(child);
-            child.setParent(parent);
-            // TODO
-            // Handle if there is more after the initial create
-            return child;
+        if(isProperty){
+            final String sanitizedLine = line.replace(OPEN_END_BRACKET, "").replace(QUOTATION, "");
+            parent.addProperty(createProperty(sanitizedLine));
         }
 
         if(isEnd && parent.hasParent()){
