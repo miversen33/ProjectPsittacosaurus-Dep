@@ -1,0 +1,33 @@
+Formation
+<<constructor>> (XMLParent)
+<<constructor>> (SQLDataset)
+- name: String
+- slots: List<FormationSlot>
+- id: int
+* getName(): String
+* getSlot(slot) : FormationSlot
+* getId(): int
++ parseXML (XMLParent)
++ parseDataSet (SQLDataset)
+
+FormationSlot
+<<constructor>> (XMLParent)
+<<constructor>> (SQLDataset)
+- index: int
+- location: Location
+- route: Route
+- recommendedPositions: List<Position>
+- housePlayer: GamePlayer
+* getIndex(): int
+* getLocation(): Location
+* getRoute() : Route
+* getRecommendedPositions: List<Position>
+* setPlayer(GamePlayer)
+* getPlayer(): GamePlayerReference
++ parseXML(XMLParent)
++ parseDataSet(SQLDataset)
+
+Route
+<<constructor>> (Unknown)
+- routeQueue: List<RouteAction>
+* getNextRouteAction(): RouteAction
