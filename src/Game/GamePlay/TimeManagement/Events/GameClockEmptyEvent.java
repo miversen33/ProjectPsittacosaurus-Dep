@@ -1,15 +1,14 @@
 package Game.GamePlay.TimeManagement.Events;
 
-import Utils.Event.Event;
-import Utils.Signature;
+import Event.Event;
 
 public final class GameClockEmptyEvent extends Event {
     public final static String NAME  = "Game Clock Is Empty";
 
     private final int clock;
 
-    public GameClockEmptyEvent(final Signature signature, final int clockNum) {
-        super(signature, NAME);
+    public GameClockEmptyEvent(final int clockNum) {
+        super(NAME);
         clock = clockNum;
     }
 

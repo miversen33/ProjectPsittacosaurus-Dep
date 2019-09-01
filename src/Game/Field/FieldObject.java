@@ -1,15 +1,14 @@
 package Game.Field;
 
-import Game.Field.StateMachine.FieldObjectState;
-import Game.Field.StateMachine.FieldObjectStateMachine;
+import Game.StateMachine.FieldObjectState;
+import Game.StateMachine.FieldObjectStateMachine;
 import Game.GamePlay.GameField;
 import PhysicsEngine.Movements.Movement;
 import Utils.PhysicsObjects.PhysicsObject;
 import Utils.PhysicsObjects.Vector;
 import Tuple.Tuple2;
 import Game.Utils.Location;
-import Utils.Observable.Observer;
-import Utils.Signature;
+import Observable.Observer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,9 +25,9 @@ public abstract class FieldObject extends PhysicsObject implements Observer<Tupl
     private GameField mOwner;
     private int currentTimeStamp = 0;
 
-    public FieldObject(double mass, final Signature signature) {
+    public FieldObject(final String uID, double mass) {
         super(mass);
-        fieldFSM = new FieldObjectStateMachine(signature);
+        fieldFSM = new FieldObjectStateMachine(uID);
     }
 
     public final GameField getOwner(){

@@ -6,7 +6,7 @@ import Game.GamePlay.GameField;
 import Game.GamePlay.GamePlayer;
 import Game.GamePlay.PlayerInfluence;
 import Game.GamePlay.PlayerStrategy.BasePlayerStrategy;
-import Game.GamePlay.StateMachine.GamePlayerState;
+import Game.StateMachine.GamePlayerState;
 import Game.Routes.Route;
 import PhysicsEngine.Movements.Movement;
 import PhysicsEngine.Movements.MovementAction;

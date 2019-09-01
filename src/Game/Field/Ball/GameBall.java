@@ -1,21 +1,24 @@
 package Game.Field.Ball;
 
+import Exceptions.TransitionFailureException;
+import Exceptions.TransitionNonExistentException;
 import Game.Field.FieldObject;
 import Game.GamePlay.GameManager;
 import Game.GamePlay.GamePlayer;
-import Utils.Signature;
-import Utils.StateMachines.State;
-import Utils.StateMachines.StateMachine;
+import StateMachines.State;
+import StateMachines.StateMachine;
 
 public final class GameBall extends FieldObject {
     private final static double MASS = 0;
     private final GameBallStateMachine gameBallFSM;
     private final GameManager mOwner;
 
-    public GameBall(final Signature signature, final GameManager owner) {
-        super(MASS, signature);
+    public final static String DEBUG_UID = "Game Ball";
+
+    public GameBall(final GameManager owner) {
+        super(DEBUG_UID, MASS);
         mOwner = owner;
-        gameBallFSM = new GameBallStateMachine(signature);
+        gameBallFSM = new GameBallStateMachine();
     }
 
     public final void lostPossession(final GameManager owner){
@@ -26,7 +29,7 @@ public final class GameBall extends FieldObject {
         }
         try {
             gameBallFSM.transition(GameBallTransitions.LOST_POSSESSION);
-        } catch (StateMachine.TransitionNonExistFailure | StateMachine.TransitionFailure transitionNonExistFailure) {
+        } catch (TransitionNonExistentException | TransitionFailureException transitionNonExistFailure) {
             transitionNonExistFailure.printStackTrace();
         }
     }
@@ -40,7 +43,7 @@ public final class GameBall extends FieldObject {
         if(gameBallFSM.getCurrentState().getState().equalsIgnoreCase(GameBallState.OUT_POSSESSION)){
             try {
                 gameBallFSM.transition(GameBallTransitions.GAINED_POSSESSION);
-            } catch (StateMachine.TransitionNonExistFailure | StateMachine.TransitionFailure transitionNonExistFailure) {
+            } catch (TransitionNonExistentException | TransitionFailureException transitionNonExistFailure) {
                 transitionNonExistFailure.printStackTrace();
             }
         }

@@ -4,15 +4,14 @@ import Game.Field.Endzone;
 import Game.Field.Field;
 import Game.Field.FieldObject;
 import Game.GamePlay.PlayerStrategy.IPlayerStrategy;
-import Game.GamePlay.StateMachine.GamePlayerState;
-import Game.GamePlay.StateMachine.GamePlayerStateMachine;
+import Game.StateMachine.GamePlayerState;
+import Game.StateMachine.GamePlayerStateMachine;
 import Game.IPlayerObject;
 import PhysicsEngine.Movements.MovementEngine;
 import PhysicsEngine.Movements.MovementInstruction;
 import Position.Position;
 import Utils.PhysicsObjects.Vector;
 import Tuple.Tuple2;
-import Utils.Signature;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,16 +33,16 @@ public final class GamePlayer extends FieldObject implements IPlayerObject {
 //    private PlayerState playerState = PlayerState.NULL;
 
     private IPlayerStrategy mPlayerStrat;
-    private final Signature mSignature;
     private final Position mPosition;
 
     private boolean BALLCARRIER_FUCK_IS_THIS = false;
+    private final static String DEBUG_FO_UID = "GAME PLAYER FO";
+    private final static String DEBUG_GPSM_UID = "GAME PLAYER GPSM";
 
-    public GamePlayer(double mass, final String name, final IPlayerStrategy playerLogic, final Signature signature) {
-        super(mass, signature);
-        playerState = new GamePlayerStateMachine(signature);
+    public GamePlayer(double mass, final String name, final IPlayerStrategy playerLogic) {
+        super(DEBUG_FO_UID, mass);
+        playerState = new GamePlayerStateMachine(DEBUG_GPSM_UID);
         mName = name;
-        mSignature = signature;
         mPosition = null;
         setPlayerStrategy(playerLogic);
     }
@@ -155,12 +154,8 @@ public final class GamePlayer extends FieldObject implements IPlayerObject {
     }
 
     public final void setCollisionState(final MovementEngine engine, final GamePlayerState state){
-        if(!Signature.ValidateSignatures(mTeam.getSignature(), engine.getSignature())){
-            System.out.println("Unable to change collision state as invalid engine signature was provided.");
-            return;
-        }
-        if(state.isColliding()) playerState.setCollision(mSignature);
-        if(state.isNull()) playerState.exitCollision(mSignature);
+        if(state.isColliding()) playerState.setCollision();
+        if(state.isNull()) playerState.exitCollision();
     }
 
     @Override
@@ -197,11 +192,6 @@ public final class GamePlayer extends FieldObject implements IPlayerObject {
     }
 
     public final void setMovementInstruction(final MovementEngine engine, final MovementInstruction instruction){
-        if(!Signature.ValidateSignatures(mTeam.getSignature(), engine.getSignature())){
-//            Log invalid engine.
-//            TODO
-            return;
-        }
         setMovementInstruction(instruction);
     }
 

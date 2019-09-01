@@ -2,8 +2,7 @@ package PhysicsEngine.Movements.Events;
 
 import Game.GamePlay.GamePlayer;
 import Tuple.Tuple2;
-import Utils.Event.Event;
-import Utils.Signature;
+import Event.Event;
 
 public final class CollisionEvent extends Event {
 
@@ -11,8 +10,8 @@ public final class CollisionEvent extends Event {
     private final GamePlayer mPlayer1;
     private final GamePlayer mPlayer2;
 
-    public CollisionEvent(final Signature signature, final GamePlayer player1, final GamePlayer player2){
-        super(signature, NAME);
+    public CollisionEvent(final GamePlayer player1, final GamePlayer player2){
+        super(NAME);
         mPlayer1 = player1;
         mPlayer2 = player2;
     }

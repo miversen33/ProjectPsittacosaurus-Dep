@@ -5,7 +5,7 @@ import Game.Field.Field;
 import Game.GamePlay.GameField;
 import Game.GamePlay.GamePlayer;
 import Game.GamePlay.PlayerStrategy.BasePlayerStrategy;
-import Game.GamePlay.StateMachine.GamePlayerState;
+import Game.StateMachine.GamePlayerState;
 import PhysicsEngine.Movements.MovementAction;
 import PhysicsEngine.Movements.MovementInstruction;
 import Utils.PhysicsObjects.Vector;

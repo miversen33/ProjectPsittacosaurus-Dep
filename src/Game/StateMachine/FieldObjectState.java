@@ -1,6 +1,6 @@
-package Game.Field.StateMachine;
+package Game.StateMachine;
 
-import Utils.StateMachines.State;
+import StateMachines.State;
 
 public final class FieldObjectState extends State {
 

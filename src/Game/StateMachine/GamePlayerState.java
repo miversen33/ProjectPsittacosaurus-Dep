@@ -1,6 +1,6 @@
-package Game.GamePlay.StateMachine;
+package Game.StateMachine;
 
-import Utils.StateMachines.State;
+import StateMachines.State;
 
 import java.util.*;
 

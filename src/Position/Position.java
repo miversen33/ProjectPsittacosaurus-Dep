@@ -7,7 +7,7 @@ import Position.References.BaseAttributes;
 import Position.References.MeanOverallValues;
 import Position.References.PositionImportanceValues;
 import Position.References.SubPositionAttributes;
-import Utils.Stats;
+import Math.Stats;
 
 import java.util.List;
 

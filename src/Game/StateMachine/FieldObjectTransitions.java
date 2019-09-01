@@ -1,7 +1,7 @@
-package Game.Field.StateMachine;
+package Game.StateMachine;
 
-import Utils.StateMachines.State;
-import Utils.StateMachines.Transition;
+import StateMachines.State;
+import StateMachines.Transition;
 
 import java.util.ArrayList;
 import java.util.Arrays;

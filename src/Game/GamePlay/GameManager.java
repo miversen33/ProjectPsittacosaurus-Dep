@@ -6,15 +6,13 @@ import Game.GamePlay.TimeManagement.Clock;
 import Game.GamePlay.TimeManagement.Events.GameClockEmptyEvent;
 import Game.GamePlay.TimeManagement.Events.PlayClockEmptyEvent;
 import PhysicsEngine.Movements.Events.*;
-import Utils.Event.EventHandler;
-import Utils.Event.EventListener;
-import Utils.Event.IEvent;
+import Event.EventListener;
+import Event.IEvent;
 import Game.Field.Field;
 import PhysicsEngine.Movements.MovementEngine;
 import Tuple.Tuple2;
 import Game.Utils.Location;
-import Utils.Observable.Observer;
-import Utils.Signature;
+import Observable.Observer;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,8 +22,6 @@ public final class GameManager {
     public final static int ON_FIELD_TEAM_SIZE = 11;
 
     private final Observer<IEvent> mEventObserver;
-    private final EventHandler mEventHandler;
-    private final Signature mGameSignature;
 
     private final GameClock mGameClock;
     private final GameField mField;
@@ -53,14 +49,10 @@ public final class GameManager {
 
     public GameManager(final GameTeam homeTeam, final GameTeam awayTeam, final Clock.DefaultQuarterLength gameClock, final Clock.DefaultPlayClock playClock){
         mEventObserver = getEventObserver();
-        mEventHandler = getEventHandler();
-        mGameSignature = mEventHandler.getSignature();
 
         mHomeTeam = homeTeam;
-        mHomeTeam.signTeam(mGameSignature);
         mHomeTeam.setGameManager(this);
         mAwayTeam = awayTeam;
-        mAwayTeam.signTeam(mGameSignature);
         mAwayTeam.setGameManager(this);
 
         mGameClock = generateGameClock(gameClock, playClock);
@@ -76,8 +68,6 @@ public final class GameManager {
     @Deprecated
     public GameManager(){
         mEventObserver = null;
-        mEventHandler = null;
-        mGameSignature = null;
         mGameClock = null;
         mField = null;
         mHomeTeam = null;
@@ -126,19 +116,15 @@ public final class GameManager {
 //    \/ Generating stuff needed for gameplay
 
     private final GameClock generateGameClock(final Clock.DefaultQuarterLength g, final Clock.DefaultPlayClock p){
-        return new GameClock(mGameSignature, g, p);
+        return new GameClock(g, p);
     }
 
     private final GameField generateGameField(){
-        return new GameField(mGameSignature);
+        return new GameField();
     }
 
     private final MovementEngine generateMovementEngine(){
-        return new MovementEngine(mGameSignature);
-    }
-
-    private final EventHandler getEventHandler(){
-        return EventListener.CreateListener(mEventObserver, mEventTypes);
+        return new MovementEngine();
     }
 
     private final Observer<IEvent> getEventObserver(){
@@ -212,24 +198,14 @@ public final class GameManager {
         mField.DEBUG_DumpPlayerLocations();
         offense.cycle();
         defense.cycle();
-        mMovementEngine.cycleQueue(mField.getMovements(mGameSignature), mField,this);
+        mMovementEngine.cycleQueue(mField.getMovements(), mField,this);
     }
 
-    public final void tickGameClock(final Signature signature){
-        if(!Signature.ValidateSignatures(mGameSignature, signature)){
-//            Handle logging due to possible malicious clock attempt
-//            TODO LOGGING
-            return;
-        }
+    public final void tickGameClock(){
         mGameClock.tickQuarterClock();
     }
 
-    public final void microTickGameClock(final Signature signature){
-        if(!Signature.ValidateSignatures(mGameSignature, signature)){
-//            Handle logging due to possible malicious clock attempt
-//            TODO LOGGING
-            return;
-        }
+    public final void microTickGameClock(){
         mGameClock.microTickQuarterClock();
     }
 

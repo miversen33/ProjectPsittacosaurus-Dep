@@ -1,6 +1,6 @@
 package Game.GamePlay;
 
-import Game.Field.StateMachine.FieldObjectState;
+import Game.StateMachine.FieldObjectState;
 import Game.GamePlay.Events.PlayerOutOfBoundsEvent;
 import Game.GamePlay.Events.PlayerInEndzoneEvent;
 import PhysicsEngine.Movements.MovementEngine;
@@ -9,7 +9,6 @@ import Tuple.Tuple2;
 import Game.Field.FieldLockException;
 import Game.Utils.Location;
 import Game.Utils.Location.LocationKey;
-import Utils.Signature;
 
 import java.util.*;
 
@@ -19,12 +18,7 @@ public final class GameField {
     private final FieldLockException fieldLockException = new FieldLockException();
     private Map<GamePlayer, Location> mPlayers = new HashMap<>();
     private Map<Location, GamePlayer> mLocationMap = new HashMap<>();
-    private final Signature mSignature;
     private final double COLLISION_DISTANCE_CHECK = 2;
-
-    public GameField(final Signature signature){
-        mSignature = signature;
-    }
 
     public final List<GamePlayer> checkLocation(final GamePlayer player, final double radius){
         final List<GamePlayer> playersInLocation = new ArrayList<>();
@@ -116,23 +110,14 @@ public final class GameField {
      */
     public final List<GamePlayer> movePlayer(final MovementEngine engine, final GamePlayer player, final Vector movement){
 //        Validate engine
-        if(!Signature.ValidateSignatures(mSignature, engine.getSignature())){
-//            Log possible malicious attempt to move players. Do not move players
-//            TODO
-            System.out.println("Unable to verify engine");
-            return null;
-        }
         mPlayers.get(player).move(movement);
         List<GamePlayer> playersInSpace = checkLocation(player, COLLISION_DISTANCE_CHECK);
-        if(player.getFieldState().equals(FieldObjectState.OutOfBounds)) new PlayerOutOfBoundsEvent(mSignature, player).fire();
-        if(player.getFieldState().equals(FieldObjectState.Endzone)) new PlayerInEndzoneEvent(mSignature, player).fire();
+        if(player.getFieldState().equals(FieldObjectState.OutOfBounds)) new PlayerOutOfBoundsEvent(player).fire();
+        if(player.getFieldState().equals(FieldObjectState.Endzone)) new PlayerInEndzoneEvent(player).fire();
         return playersInSpace;
     }
 
-    final List<GamePlayer> getMovements(final Signature signature){
-        if(Signature.ValidateSignatures(mSignature, signature)) return new ArrayList<>(mPlayers.keySet());
-//        Handle possible malicious attempt at getting movement queue
-//        TODO LOGGING
+    final List<GamePlayer> getMovements(){
         return null;
     }
 

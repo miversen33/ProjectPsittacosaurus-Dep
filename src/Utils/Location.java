@@ -1,4 +1,4 @@
-package Game.Utils;
+package Utils;
 
 import Game.Field.FieldObject;
 import Utils.PhysicsObjects.Vector;
@@ -8,7 +8,7 @@ import Tuple.Tuple2;
 public final class Location extends Observable<Tuple2<Double, Double>> {
 
     public enum LocationKey{
-//        LOCATION_VECTOR_KEY,
+        //        LOCATION_VECTOR_KEY,
         LOCATION_UPDATED_KEY
     }
 

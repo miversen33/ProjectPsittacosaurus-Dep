@@ -4,7 +4,7 @@ import Game.GamePlay.GameField;
 import Game.GamePlay.GameManager;
 import Game.GamePlay.GamePlayer;
 import Game.GamePlay.PlayerStrategy.BasePlayerStrategy;
-import Game.GamePlay.StateMachine.GamePlayerState;
+import Game.StateMachine.GamePlayerState;
 import PhysicsEngine.Movements.Events.BreakTackleEvent;
 import PhysicsEngine.Movements.Events.CollisionEvent;
 import PhysicsEngine.Movements.Events.TackleEvent;
@@ -12,7 +12,6 @@ import Utils.PhysicsObjects.Vector;
 import Tuple.Tuple2;
 import Game.Utils.Location;
 import Utils.RNG;
-import Utils.Signature;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -21,20 +20,6 @@ import java.util.List;
 public final class MovementEngine {
 
     private final static int CYCLE_LIMIT = 3;
-    private final Signature mSig;
-
-    public MovementEngine(final Signature signature) {
-        mSig = signature;
-    }
-
-    /**
-     * TODO
-     * This defeats the entire purpose to having the signatures for security
-     */
-    @Deprecated
-    public final Signature getSignature(){
-        return mSig;
-    }
 
     private final List<GamePlayer> prioritizeQueue(final List<GamePlayer> playerQueue) {
         final List<MovementInstruction> instructionsQueue = new ArrayList<>();
@@ -68,7 +53,7 @@ public final class MovementEngine {
             if(!player.getMovementInstruction().hasBeenExecuted() && player.getMovementState().isColliding()) {
                 if (!tickClock){
                     tickClock = true;
-                    gameManager.microTickGameClock(mSig);
+                    gameManager.microTickGameClock();
                 }
                 handleCollision(player.getMovementInstruction(), field, gameManager.getTimeStamp());
             }
@@ -110,7 +95,7 @@ public final class MovementEngine {
 
                 if(!tickClock){
                     tickClock = true;
-                    gameManager.microTickGameClock(mSig);
+                    gameManager.microTickGameClock();
                 }
 
                 MovementInstruction revisedP1Instruction = new MovementInstruction(new MovementAction(GamePlayerState.Null, p1, p2), revisedP1Vector);
@@ -136,7 +121,7 @@ public final class MovementEngine {
             if (!player.getMovementState().isColliding()) {
                 if (!tickClock) {
                     tickClock = true;
-                    gameManager.tickGameClock(mSig);
+                    gameManager.tickGameClock();
                 }
                 keepLooping = !handleMovement(player.getMovementInstruction(), field, gameManager.getTimeStamp());
             } else {
@@ -205,7 +190,7 @@ public final class MovementEngine {
         instruction.getAction().getAffectedPlayer().getMovementInstruction().execute(timestamp);
 
 //        Throws new collision event
-        new CollisionEvent(mSig, instruction1.getPlayer(), instruction2.getPlayer()).fire();
+        new CollisionEvent(instruction1.getPlayer(), instruction2.getPlayer()).fire();
 //        Also need to handle if collision force generated causes injury
 
     }
@@ -320,7 +305,7 @@ public final class MovementEngine {
         double rng = RNG.Generate(minValue, maxValue);
         if(rng < breakPoint){
 //            Handle break tackle event
-            new BreakTackleEvent(mSig, tackled, tackler).fire();
+            new BreakTackleEvent(tackled, tackler).fire();
             return false;
         }
 
@@ -334,7 +319,7 @@ public final class MovementEngine {
             if(defender.getPlayerState().isTackling()) tacklers.add(defender);
         }
 
-        new TackleEvent(mSig, tackled, tacklers).fire();
+        new TackleEvent(tackled, tacklers).fire();
         return true;
     }
 

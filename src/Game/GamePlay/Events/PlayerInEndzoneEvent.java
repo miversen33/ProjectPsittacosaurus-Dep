@@ -1,16 +1,15 @@
 package Game.GamePlay.Events;
 
 import Game.GamePlay.GamePlayer;
-import Utils.Event.Event;
-import Utils.Signature;
+import Event.Event;
 
 public final class PlayerInEndzoneEvent extends Event {
     public final static String NAME = "Player Is In Endzone";
 
     private final GamePlayer mPlayer;
 
-    public PlayerInEndzoneEvent(final Signature signature, final GamePlayer player) {
-        super(signature, NAME);
+    public PlayerInEndzoneEvent(final GamePlayer player) {
+        super(NAME);
         mPlayer = player;
     }
 

@@ -2,9 +2,7 @@ package Game;
 
 import Game.Field.Endzone;
 import Game.GamePlay.GamePlayer;
-import Game.GamePlay.StateMachine.GamePlayerState;
-import PhysicsEngine.Movements.MovementAction;
-import PhysicsEngine.Movements.MovementEngine;
+import Game.StateMachine.GamePlayerState;
 
 public interface IPlayerObject {
     Endzone getTeamGoal();

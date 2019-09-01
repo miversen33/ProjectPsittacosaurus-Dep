@@ -1,8 +1,8 @@
 import Game.Field.Ball.GameBall;
-import Game.Field.Ball.GameBallState;
 import Game.Field.CardinalDirection;
 import Game.Field.Endzone;
 import Game.Field.Field;
+import Game.GamePlay.Formation.Formation;
 import Game.GamePlay.GameManager;
 import Game.GamePlay.GamePlayer;
 import Game.GamePlay.GameTeam;
@@ -15,6 +15,8 @@ import Game.Routes.RouteActions.IRouteAction;
 import Game.Routes.RouteActions.RouteActionMove;
 import Game.Routes.RouteActions.RouteActionZoneCoverage;
 import Game.Routes.RouteFactory;
+import JavaXMLUtility.MalformedXMLException;
+import JavaXMLUtility.XMLParser;
 import Position.Defense.*;
 import Position.Offense.*;
 import Position.Position;
@@ -23,13 +25,8 @@ import Position.SpecialTeams.Punter;
 import Tuple.Tuple2;
 import Utils.PhysicsObjects.Vector;
 import Utils.RNG;
-import Utils.Signature;
-import Utils.XML.XMLEntry;
-import Utils.XML.XMLReader;
-import Utils.XML.XMLWriter;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -40,8 +37,7 @@ public class Main {
      * @param args
      */
     public static void main(String[] args) {
-
-        testXMLReader();
+        testFormation();
 //        testGameBall();
 //        testSeedGeneration(80);
 //        testSeedGeneration(40);
@@ -103,32 +99,44 @@ public class Main {
 //        }
     }
 
-    private final static void testXMLReader(){
-        final String fileLocation = "/home/mike/git/ProjectPsittacosaurus/testResources/";
-//        final String fileLocation = "/home/miversen33/git/ProjectPsittacosaurus/testResources/";
+
+//
+//    private final static void testXMLReader(){
+//        final String fileLocation = "/home/mike/git/ProjectPsittacosaurus/testResources/";
+////        final String fileLocation = "/home/miversen33/git/ProjectPsittacosaurus/testResources/";
+////        final String inputFile = fileLocation + "formationTest.xml";
+//        final String outputFile = fileLocation + "formationOutputTest.xml";
 //        final String inputFile = fileLocation + "formationTest.xml";
-        final String outputFile = fileLocation + "formationOutputTest.xml";
-        final String inputFile = fileLocation + "formationTest.xml";
-        XMLEntry entry = null;
+//        XMLEntry entry = null;
+//        try {
+//            entry = XMLReader.Read(inputFile);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//        int i = 0;
+//        // XMLParent p = (XMLParent) entry;
+//        // try {
+//        //     XMLWriter.NewInstance(outputFile, p).write();
+//        // } catch (IOException e) {
+//        //     e.printStackTrace();
+//        // }
+//    }
+
+    private final static void testFormation(){
+        final String formationFile = "/home/mike/git/ProjectPsittacosaurus/testResources/formationTest.xml";
+        final File file = new File(formationFile);
+        Formation formation;
         try {
-            entry = XMLReader.Read(inputFile);
-        } catch (IOException e) {
+            formation = new Formation(XMLParser.DefaultParse(file).get(0));
+        } catch (MalformedXMLException e) {
             e.printStackTrace();
         }
-
-        int i = 0;
-        // XMLParent p = (XMLParent) entry;
-        // try {
-        //     XMLWriter.NewInstance(outputFile, p).write();
-        // } catch (IOException e) {
-        //     e.printStackTrace();
-        // }
     }
 
     private final static void testGameBall(){
-        final Signature signature = Signature.GenerateNewSignature();
         final GameManager m = new GameManager();
-        final GameBall ball = new GameBall(signature, m);
+        final GameBall ball = new GameBall(m);
 
         double startTime = System.currentTimeMillis();
         double count = 1000;
@@ -297,7 +305,6 @@ public class Main {
 //    }
 
     private final static void testRoutes(){
-        final Signature signature = Signature.GenerateNewSignature();
         final Endzone offensiveGoal = Endzone.NORTH;
         final Endzone defensiveGoal = Endzone.SOUTH;
 
@@ -307,7 +314,7 @@ public class Main {
 
         final IPlayerStrategy offensivePlayerStrat = new DefaultOffensiveStrategy(offensivePlayerRoute);
 
-        final GamePlayer offensivePlayer = new GamePlayer(100, "Offensive Game Player", offensivePlayerStrat, signature);
+        final GamePlayer offensivePlayer = new GamePlayer(100, "Offensive Game Player", offensivePlayerStrat);
 
 //        final IRouteAction defensiveFirstMovement = new RouteActionManCoverage(offensivePlayer);
         final IRouteAction firstDefenderMovement = new RouteActionZoneCoverage(15);
@@ -324,8 +331,8 @@ public class Main {
         final IPlayerStrategy defensivePlayerStrat = new DefaultDefensiveStrategy(defender1);
         final IPlayerStrategy defensivePlayer2Strat = new DefaultDefensiveStrategy(defender2);
 
-        final GamePlayer defensivePlayer = new GamePlayer(100, "Defensive Game Player 1", defensivePlayerStrat, signature);
-        final GamePlayer defensivePlayer2 = new GamePlayer(100, "Defensive Game Player 2", defensivePlayer2Strat, signature);
+        final GamePlayer defensivePlayer = new GamePlayer(100, "Defensive Game Player 1", defensivePlayerStrat);
+        final GamePlayer defensivePlayer2 = new GamePlayer(100, "Defensive Game Player 2", defensivePlayer2Strat);
 
         final List<GamePlayer> homeTeamList = Arrays.asList(
             offensivePlayer

@@ -1,16 +1,15 @@
 package Game.GamePlay.Events;
 
-import Utils.Event.Event;
+import Event.Event;
 import Game.GamePlay.GamePlayer;
-import Utils.Signature;
 
 public final class PlayerOutOfBoundsEvent extends Event {
     public final static String NAME  = "Out Of Bounds";
 
     private final GamePlayer mPlayer;
 
-    public PlayerOutOfBoundsEvent(final Signature signature, final GamePlayer player) {
-        super(signature, NAME);
+    public PlayerOutOfBoundsEvent(final GamePlayer player) {
+        super(NAME);
         mPlayer = player;
     }
 

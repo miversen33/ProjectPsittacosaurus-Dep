@@ -1,6 +1,6 @@
 package Game.Field.Ball;
 
-import Utils.StateMachines.State;
+import StateMachines.State;
 
 public final class GameBallState extends State {
 

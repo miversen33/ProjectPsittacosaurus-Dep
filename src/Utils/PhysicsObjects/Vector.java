@@ -1,6 +1,6 @@
 package Utils.PhysicsObjects;
 
-import Utils.Observable.Observable;
+import Observable.Observable;
 import Tuple.Tuple2;
 import Utils.Shapes.Line;
 

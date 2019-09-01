@@ -1,16 +1,17 @@
-package Game.Field.StateMachine;
+package Game.StateMachine;
 
+import Exceptions.TransitionFailureException;
+import Exceptions.TransitionNonExistentException;
 import Game.Field.Field;
 import Tuple.Tuple2;
 import Game.Utils.Location;
-import Utils.Signature;
-import Utils.StateMachines.State;
-import Utils.StateMachines.StateMachine;
+import StateMachines.State;
+import StateMachines.StateMachine;
 
 public class FieldObjectStateMachine extends StateMachine {
 
-    public FieldObjectStateMachine(final Signature signature) {
-        super(signature, FieldObjectState.OutOfBounds, FieldObjectTransitions.GetTransitions());
+    public FieldObjectStateMachine(final String uID) {
+        super(uID, FieldObjectState.OutOfBounds, FieldObjectTransitions.GetTransitions());
     }
 
     public final void handleMove(final Tuple2<Double, Double> newLocation){
@@ -19,7 +20,7 @@ public class FieldObjectStateMachine extends StateMachine {
         final String transition = FieldObjectTransitions.GetTransition(getCurrentState(), newState);
         try {
             transition(transition);
-        } catch (TransitionNonExistFailure | TransitionFailure transitionFailure) {
+        } catch (TransitionNonExistentException | TransitionFailureException transitionFailure) {
             transitionFailure.printStackTrace();
         }
     }

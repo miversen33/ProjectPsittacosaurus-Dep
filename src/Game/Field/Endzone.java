@@ -3,12 +3,22 @@ package Game.Field;
 import Tuple.Tuple2;
 
 public enum Endzone {
-    NORTH(CardinalDirection.NORTH), SOUTH(CardinalDirection.SOUTH);
+    NORTH(CardinalDirection.NORTH, new Tuple2<>(Field.WEST_BOUNDARY, Field.EAST_BOUNDARY), new Tuple2<>(Field.NORTH_BOUNDARY, Field.ENDZONE_HEIGHT)),
+    SOUTH(CardinalDirection.SOUTH, new Tuple2<>(Field.WEST_BOUNDARY, Field.EAST_BOUNDARY), new Tuple2<>(Field.SOUTH_BOUNDARY - Field.ENDZONE_HEIGHT, Field.SOUTH_BOUNDARY));
 
     private final CardinalDirection direction;
+    private final Tuple2<Double, Double> xRange;
+    private final Tuple2<Double, Double> yRange;
 
-    Endzone(final CardinalDirection direction){
+    Endzone(final CardinalDirection direction, final Tuple2<Double, Double> xRange, final Tuple2<Double, Double> yRange){
         this.direction = direction;
+        this.xRange = xRange;
+        this.yRange = yRange;
+    }
+
+    public final boolean contains(final Tuple2<Double, Double> location){
+        return ((xRange.getFirst() <= location.getFirst() && xRange.getSecond() >= location.getFirst()) &&
+                (yRange.getFirst() <= location.getSecond() && yRange.getSecond() >= location.getSecond()));
     }
 
     public final Endzone getOpposite(){

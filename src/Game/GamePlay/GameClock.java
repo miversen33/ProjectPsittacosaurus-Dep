@@ -3,7 +3,6 @@ package Game.GamePlay;
 import Game.GamePlay.TimeManagement.Clock;
 import Game.GamePlay.TimeManagement.Events.GameClockEmptyEvent;
 import Game.GamePlay.TimeManagement.Events.PlayClockEmptyEvent;
-import Utils.Signature;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,14 +27,11 @@ public final class GameClock{
     private Clock currentQuarterClock;
     private Clock.ClockOwner quarterClockListener;
 
-    private final Signature mSig;
-
     private Map<Integer, Clock> quarterClockManager = new HashMap<>();
 
-    public GameClock(final Signature signature, final Clock.DefaultQuarterLength quarterLength, final Clock.DefaultPlayClock playClockLength){
+    public GameClock(final Clock.DefaultQuarterLength quarterLength, final Clock.DefaultPlayClock playClockLength){
         mQuarterLength = quarterLength.getTime();
         mPlayClockLength = playClockLength.getTime();
-        mSig = signature;
         init();
     }
 
@@ -84,11 +80,11 @@ public final class GameClock{
 
     private final void handleQuarterTimeIsDun(){
 //        For now we dont care much
-        new GameClockEmptyEvent(mSig, quarter).fire();
+        new GameClockEmptyEvent(quarter).fire();
     }
 
     private final void handlePlayClockTimeIsDun(){
 //        For now we dont care much
-        new PlayClockEmptyEvent(mSig).fire();
+        new PlayClockEmptyEvent().fire();
     }
 }

@@ -1,7 +1,7 @@
 package PhysicsEngine.Movements;
 
 import Game.GamePlay.GamePlayer;
-import Game.GamePlay.StateMachine.GamePlayerState;
+import Game.StateMachine.GamePlayerState;
 
 public final class MovementAction {
 
